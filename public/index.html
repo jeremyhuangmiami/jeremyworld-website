@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jeremy's World - Home</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom font for a modern feel */
+        body {
+            font-family: 'Inter', sans-serif;
+            /* Subtle background pattern for depth */
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%239CA3AF' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0 20v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zM6 46v-4H4v4H0v2h4v4h2v-4h4v-2H6zm0-20v-4H4v4H0v2h4v4h2v-4h4v-2H6zM36 0v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zM6 10v-4H4v4H0v2h4v4h2v-4h4v-2H6zm30 10v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zM16 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm30 0v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zM16 4v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm30 0v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm10 24v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0 20v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zM46 10v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zM16 54v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm30 0v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            background-repeat: repeat;
+            background-attachment: fixed;
+            /* More subtle radial gradients for depth, blended with a darker base */
+            background: radial-gradient(circle at top left, rgba(129, 230, 217, 0.05) 0%, transparent 40%),
+                        radial-gradient(circle at bottom right, rgba(99, 179, 237, 0.05) 0%, transparent 40%),
+                        linear-gradient(135deg, #10161d 0%, #1a202c 100%); /* Darker base gradient */
+            background-blend-mode: overlay, overlay, normal;
+        }
+
+        /* Gradient for text */
+        .text-gradient {
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            background-image: linear-gradient(45deg, #81e6d9, #63b3ed); /* Teal to light blue */
+        }
+        /* Subtle glow shadow */
+        .glow-shadow-subtle {
+            box-shadow: 0 0 15px rgba(99, 179, 237, 0.4), 0 0 30px rgba(129, 230, 217, 0.2);
+        }
+        /* Hover effect for main section */
+        .hover-lift-subtle:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3), 0 0 25px rgba(99, 179, 237, 0.6);
+        }
+
+        /* More refined see-through effect */
+        .backdrop-blur-lg { /* Adjusted blur to be significant but not overwhelming */
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+        .bg-opacity-40 { /* Slightly less opaque for more transparency */
+            background-color: rgba(31, 41, 55, 0.4); /* Darker background with more transparency */
+        }
+
+        /* Keyframe for subtle pulse animation on button */
+        @keyframes pulse-subtle {
+            0% { box-shadow: 0 0 8px rgba(99, 179, 237, 0.5); }
+            50% { box-shadow: 0 0 15px rgba(99, 179, 237, 0.8); }
+            100% { box-shadow: 0 0 8px rgba(99, 179, 237, 0.5); }
+        }
+
+        .animate-pulse-subtle {
+            animation: pulse-subtle 2s infinite ease-in-out;
+        }
+
+        /* Keyframes for hero section fade-in */
+        @keyframes fadeInSlideUp {
+            0% { opacity: 0; transform: translateY(20px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        .animate-fade-in-slide-up {
+            animation: fadeInSlideUp 1s ease-out forwards;
+        }
+    </style>
+</head>
+<body class="bg-futuristic-gradient text-gray-100 flex flex-col min-h-screen">
+
+    <!-- Header -->
+    <header class="bg-gray-900 bg-opacity-40 backdrop-blur-lg p-4 shadow-xl border-b border-blue-500/30 fixed w-full z-50">
+        <div class="container mx-auto flex justify-between items-center">
+            <h1 class="text-4xl font-extrabold rounded-lg px-3 py-1 text-gradient">
+                <a href="index.html" class="hover:opacity-80 transition-opacity duration-300">Jeremy's World</a>
+            </h1>
+            <nav>
+                <ul class="flex space-x-8">
+                    <li>
+                        <a href="index.html" class="text-lg font-semibold hover:text-teal-300 transition-colors duration-300 rounded-md px-4 py-2">Home</a>
+                    </li>
+                    <li>
+                        <a href="projects.html" class="text-lg font-semibold hover:text-teal-300 transition-colors duration-300 rounded-md px-4 py-2">Projects</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content - Hero Section -->
+    <main class="flex-grow flex items-center justify-center py-16 px-4 pt-24">
+        <section class="bg-gray-800 bg-opacity-40 backdrop-blur-lg p-10 md:p-16 rounded-2xl shadow-2xl text-center max-w-3xl w-full border border-blue-500/20 glow-shadow-subtle transform transition-transform duration-500 ease-in-out hover-lift-subtle animate-fade-in-slide-up">
+            <h2 class="text-6xl font-extrabold text-gradient mb-8 leading-tight">
+                Welcome to JeremyWorld
+            </h2>
+            <p class="text-2xl text-gray-300 mb-10 leading-relaxed">
+                Explore a curated collection of AI chatbots, games, and other random stuff!!!
+                Click the button below!!!
+            </p>
+            <a href="projects.html" class="inline-block bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 px-10 rounded-full shadow-lg transform transition-all duration-300 hover:scale-105 animate-pulse-subtle">
+                Take me there!!
+            </a>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 bg-opacity-40 backdrop-blur-lg text-gray-400 p-8 text-center border-t border-blue-500/30">
+        <div class="container mx-auto">
+            <p class="text-sm">&copy; 2025 Jeremy's World. Crafted with passion.</p>
+            <div class="mt-4 text-base space-x-6">
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>
