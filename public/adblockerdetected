@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JeremyWorld - Adblocker Detected!</title>
+    <!-- Tailwind CSS CDN for easy styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom CSS for the GIF background and text shadow */
+        body {
+            background-image: url('https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExbHBoZWF0YmY5d243OW9rZnlodDJheTAxOXY4bGl4bGw4a3VxbGxwZCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/3o6ZsYPIVwgj2h7DoY/giphy.gif');
+            background-size: cover; /* Ensures the GIF covers the entire background */
+            background-position: center; /* Centers the GIF */
+            background-repeat: no-repeat; /* Prevents the GIF from repeating */
+            background-attachment: fixed; /* Keeps the GIF fixed while scrolling (though no scroll here) */
+            min-height: 100vh; /* Ensures the body takes up the full viewport height */
+            margin: 0; /* Removes default body margin */
+            font-family: 'Inter', sans-serif; /* Sets the font to Inter */
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start; /* Aligns content to the top */
+            align-items: center; /* Centers content horizontally */
+            overflow: hidden; /* Prevents any potential scrolling */
+        }
+
+        /* Custom text shadow for better readability against the GIF */
+        .text-shadow-outline {
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7); /* Adds a dark shadow for contrast */
+        }
+    </style>
+</head>
+<body class="flex items-start justify-center">
+    <!-- Container for the message, taking up the top portion of the screen -->
+    <div class="w-full h-[60vh] flex items-center justify-center p-4">
+        <h1 class="text-white text-center font-extrabold leading-tight
+                   text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl
+                   text-shadow-outline
+                   bg-black bg-opacity-60 rounded-xl p-4 sm:p-6 md:p-8 lg:p-10
+                   mx-4 sm:mx-8 md:mx-12">
+            Hey, are you trying to use an adblocker? Turn it off now, or else...
+        </h1>
+    </div>
+</body>
+</html>
