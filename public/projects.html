@@ -45,9 +45,41 @@
         .bg-opacity-40 {
             background-color: rgba(31, 41, 55, 0.4);
         }
+        /* Mobile ad container */
+        .mobile-ad-container {
+            display: block;
+            padding: 10px;
+            text-align: center;
+            background: rgba(31, 41, 55, 0.4);
+            margin: 10px auto;
+            border-radius: 8px;
+        }
+        @media (min-width: 768px) {
+            .mobile-ad-container {
+                display: none;
+            }
+        }
     </style>
 </head>
 <body class="bg-futuristic-gradient text-gray-100 flex flex-col min-h-screen">
+
+    <!-- Mobile Ad (Top on mobile) -->
+    <div class="mobile-ad-container md:hidden">
+        <div id="ezoic-pub-ad-placeholder-118"></div>
+        <script>
+            ezstandalone.cmd.push(function() { ezstandalone.showAds(118); });
+        </script>
+    </div>
+
+    <!-- Desktop Ad (Right sidebar) -->
+    <div class="hidden md:block fixed right-0 top-24 w-64 h-[calc(100vh-6rem)] p-4 z-40">
+        <div class="bg-gray-900/40 backdrop-blur-lg rounded-lg p-4 h-full">
+            <div id="ezoic-pub-ad-placeholder-118"></div>
+            <script>
+                ezstandalone.cmd.push(function() { ezstandalone.showAds(118); });
+            </script>
+        </div>
+    </div>
 
     <!-- Header -->
     <header class="bg-gray-900 bg-opacity-40 backdrop-blur-lg p-4 shadow-xl border-b border-blue-500/30 fixed w-full z-50">
@@ -68,51 +100,167 @@
         </div>
     </header>
 
-    <!-- Main Content with Sidebar -->
-    <div class="flex flex-1 pt-24">
-        <!-- Sidebar -->
-        <aside class="w-64 bg-gray-900 bg-opacity-40 backdrop-blur-lg p-4 hidden md:block sticky top-24 h-fit">
-            <!-- Ezoic Sidebar Top Ad -->
-            <div id="ezoic-pub-ad-placeholder-118"></div>
-            <script>
-                ezstandalone.cmd.push(function() {
-                    ezstandalone.showAds(118);
-                });
-            </script>
-        </aside>
+    <!-- Main Content -->
+    <main class="flex-grow py-12 px-4 pt-24">
+        <section class="container mx-auto bg-gray-800 bg-opacity-40 backdrop-blur-lg p-8 md:p-12 rounded-2xl shadow-2xl border border-blue-500/20">
+            <h2 class="text-4xl font-extrabold text-gradient mb-10 text-center">
+                My Digital Creations
+            </h2>
 
-        <!-- Main Content -->
-        <main class="flex-grow py-12 px-4">
-            <section class="container mx-auto bg-gray-800 bg-opacity-40 backdrop-blur-lg p-8 md:p-12 rounded-2xl shadow-2xl border border-blue-500/20">
-                <h2 class="text-4xl font-extrabold text-gradient mb-10 text-center">
-                    My Digital Creations
-                </h2>
-
-                <div class="space-y-8">
-                    <!-- Project Link: jerrymarkone.jeremyworld.org -->
-                    <div class="bg-gray-700 bg-opacity-60 p-6 rounded-xl shadow-lg border border-gray-600 hover:border-teal-400 transition-all duration-300 project-card-hover glow-shadow-card">
-                        <h3 class="text-2xl font-semibold text-white mb-2">
-                            <a href="https://jerrymarkone.jeremyworld.org" target="_blank" class="text-blue-400 hover:text-teal-300 hover:underline transition-colors duration-300">
-                                Jerry Mark One (Jeremy World AI)
-                            </a>
-                        </h3>
-                        <p class="text-gray-300">
-                            First Version of Jeremy World AI
-                        </p>
-                    </div>
-
-                    <!-- All other project cards remain unchanged -->
-                    <!-- ... -->
-
+            <div class="space-y-8">
+                <!-- Project Link: jerrymarkone.jeremyworld.org -->
+                <div class="bg-gray-700 bg-opacity-60 p-6 rounded-xl shadow-lg border border-gray-600 hover:border-teal-400 transition-all duration-300 project-card-hover glow-shadow-card">
+                    <h3 class="text-2xl font-semibold text-white mb-2">
+                        <a href="https://jerrymarkone.jeremyworld.org" target="_blank" class="text-blue-400 hover:text-teal-300 hover:underline transition-colors duration-300">
+                            Jerry Mark One (Jeremy World AI)
+                        </a>
+                    </h3>
+                    <p class="text-gray-300">
+                        First Version of Jeremy World AI
+                    </p>
                 </div>
-            </section>
-        </main>
-    </div>
+
+                <!-- Project Link: jerrymarkten.jeremyworld.org -->
+                <div class="bg-gray-700 bg-opacity-60 p-6 rounded-xl shadow-lg border border-gray-600 hover:border-teal-400 transition-all duration-300 project-card-hover glow-shadow-card">
+                    <h3 class="text-2xl font-semibold text-white mb-2">
+                        <a href="https://jerrymarkten.jeremyworld.org" target="_blank" class="text-blue-400 hover:text-teal-300 hover:underline transition-colors duration-300">
+                            Jerry Mark Ten (Jeremy World AI)
+                        </a>
+                    </h3>
+                    <p class="text-gray-300">
+                        Tenth Version of Jeremy World AI
+                    </p>
+                </div>
+
+                <!-- Project Link: humptydumpty.jeremyworld.org -->
+                <div class="bg-gray-700 bg-opacity-60 p-6 rounded-xl shadow-lg border border-gray-600 hover:border-teal-400 transition-all duration-300 project-card-hover glow-shadow-card">
+                    <h3 class="text-2xl font-semibold text-white mb-2">
+                        <a href="https://humptydumpty.jeremyworld.org" target="_blank" class="text-blue-400 hover:text-teal-300 hover:underline transition-colors duration-300">
+                            Humpty Dumpty
+                        </a>
+                    </h3>
+                    <p class="text-gray-300">
+                        ?????
+                    </p>
+                </div>
+
+                <!-- Project Link: streetview.jeremyworld.org -->
+                <div class="bg-gray-700 bg-opacity-60 p-6 rounded-xl shadow-lg border border-gray-600 hover:border-teal-400 transition-all duration-300 project-card-hover glow-shadow-card">
+                    <h3 class="text-2xl font-semibold text-white mb-2">
+                        <a href="https://streetview.jeremyworld.org" target="_blank" class="text-blue-400 hover:text-teal-300 hover:underline transition-colors duration-300">
+                            Street View Explorer
+                        </a>
+                    </h3>
+                    <p class="text-gray-300">
+                        Gives you random street view loactions
+                    </p>
+                </div>
+
+                <!-- Project Link: ultimatecalculator.jeremyworld.org -->
+                <div class="bg-gray-700 bg-opacity-60 p-6 rounded-xl shadow-lg border border-gray-600 hover:border-teal-400 transition-all duration-300 project-card-hover glow-shadow-card">
+                    <h3 class="text-2xl font-semibold text-white mb-2">
+                        <a href="https://ultimatecalculator.jeremyworld.org" target="_blank" class="text-blue-400 hover:text-teal-300 hover:underline transition-colors duration-300">
+                            Ultimate Calculator
+                        </a>
+                    </h3>
+                    <p class="text-gray-300">
+                        A feature-rich calculator web app.
+                    </p>
+                </div>
+
+                <!-- Project Link: epilepsy.jeremyworld.org -->
+                <div class="bg-gray-700 bg-opacity-60 p-6 rounded-xl shadow-lg border border-gray-600 hover:border-teal-400 transition-all duration-300 project-card-hover glow-shadow-card">
+                    <h3 class="text-2xl font-semibold text-white mb-2">
+                        <a href="https://epilepsy.jeremyworld.org" target="_blank" class="text-blue-400 hover:text-teal-300 hover:underline transition-colors duration-300">
+                            Epilepsy
+                        </a>
+                    </h3>
+                    <p class="text-gray-300">
+                        Flashing Lights Warning...
+                    </p>
+                </div>
+
+                <!-- Project Link: bible.jeremyworld.org -->
+                <div class="bg-gray-700 bg-opacity-60 p-6 rounded-xl shadow-lg border border-gray-600 hover:border-teal-400 transition-all duration-300 project-card-hover glow-shadow-card">
+                    <h3 class="text-2xl font-semibold text-white mb-2">
+                        <a href="https://bible.jeremyworld.org" target="_blank" class="text-blue-400 hover:text-teal-300 hover:underline transition-colors duration-300">
+                            Bible
+                        </a>
+                    </h3>
+                    <p class="text-gray-300">
+                        Just a bible...like Bible Gateway
+                    </p>
+                </div>
+
+                <!-- Project Link: encryptedchat.jeremyworld.org -->
+                <div class="bg-gray-700 bg-opacity-60 p-6 rounded-xl shadow-lg border border-gray-600 hover:border-teal-400 transition-all duration-300 project-card-hover glow-shadow-card">
+                    <h3 class="text-2xl font-semibold text-white mb-2">
+                        <a href="https://encryptedchat.jeremyworld.org" target="_blank" class="text-blue-400 hover:text-teal-300 hover:underline transition-colors duration-300">
+                            Secure Chat
+                        </a>
+                    </h3>
+                    <p class="text-gray-300">
+                        Chat with anyone easily
+                    </p>
+                </div>
+
+                <!-- Project Link: wordle.jeremyworld.org -->
+                <div class="bg-gray-700 bg-opacity-60 p-6 rounded-xl shadow-lg border border-gray-600 hover:border-teal-400 transition-all duration-300 project-card-hover glow-shadow-card">
+                    <h3 class="text-2xl font-semibold text-white mb-2">
+                        <a href="https://wordle.jeremyworld.org" target="_blank" class="text-blue-400 hover:text-teal-300 hover:underline transition-colors duration-300">
+                            Wordle
+                        </a>
+                    </h3>
+                    <p class="text-gray-300">
+                        It would be obviously Wordle...what else would it be?
+                    </p>
+                </div>
+
+                <!-- Project Link: imagesearch.jeremyworld.org -->
+                <div class="bg-gray-700 bg-opacity-60 p-6 rounded-xl shadow-lg border border-gray-600 hover:border-teal-400 transition-all duration-300 project-card-hover glow-shadow-card">
+                    <h3 class="text-2xl font-semibold text-white mb-2">
+                        <a href="https://imagesearch.jeremyworld.org" target="_blank" class="text-blue-400 hover:text-teal-300 hover:underline transition-colors duration-300">
+                            Image Search Engine
+                        </a>
+                    </h3>
+                    <p class="text-gray-300">
+                        Search for any stock image for free
+                    </p>
+                </div>
+
+                <!-- Project Link: meeting.jeremyworld.org -->
+                <div class="bg-gray-700 bg-opacity-60 p-6 rounded-xl shadow-lg border border-gray-600 hover:border-teal-400 transition-all duration-300 project-card-hover glow-shadow-card">
+                    <h3 class="text-2xl font-semibold text-white mb-2">
+                        <a href="https://meeting.jeremyworld.org" target="_blank" class="text-blue-400 hover:text-teal-300 hover:underline transition-colors duration-300">
+                            Virtual Meeting Room
+                        </a>
+                    </h3>
+                    <p class="text-gray-300">
+                        Just like Zoom...
+                    </p>
+                </div>
+
+                <!-- Project Link: pointerpointer.jeremyworld.org -->
+                <div class="bg-gray-700 bg-opacity-60 p-6 rounded-xl shadow-lg border border-gray-600 hover:border-teal-400 transition-all duration-300 project-card-hover glow-shadow-card">
+                    <h3 class="text-2xl font-semibold text-white mb-2">
+                        <a href="https://pointerpointer.jeremyworld.org" target="_blank" class="text-blue-400 hover:text-teal-300 hover:underline transition-colors duration-300">
+                            Pointer Pointer
+                        </a>
+                    </h3>
+                    <p class="text-gray-300">
+                        An amusing interactive web experiment where a pointer always points to your mouse cursor. A JeremyWorld classic.
+                    </p>
+                </div>
+            </div>
+        </section>
+    </main>
 
     <!-- Footer -->
     <footer class="bg-gray-900 bg-opacity-40 backdrop-blur-lg text-gray-400 p-8 text-center border-t border-blue-500/30">
         <div class="container mx-auto">
             <p class="text-sm">&copy; 2025 Jeremy's World. Crafted with passion.</p>
+            <div class="mt-4 text-base space-x-6">
+            </div>
         </div>
     </footer>
 
