@@ -152,5 +152,33 @@
         </div>
     </footer>
 
+    <!-- Ad Blocker Detection Script -->
+    <script>
+        // Wait for the page to fully load
+        window.addEventListener('load', function() {
+            // Create a test ad element
+            const testAd = document.createElement('div');
+            testAd.innerHTML = '&nbsp;';
+            testAd.className = 'adsbox';
+            testAd.style.position = 'absolute';
+            testAd.style.left = '-9999px';
+            testAd.style.height = '1px';
+            document.body.appendChild(testAd);
+            
+            // Check after a short delay
+            setTimeout(function() {
+                const isAdBlocked = (testAd.offsetHeight === 0 || 
+                                    testAd.style.display === 'none' || 
+                                    testAd.style.visibility === 'hidden');
+                
+                document.body.removeChild(testAd);
+                
+                if (isAdBlocked) {
+                    // Redirect to your ad blocker detected page
+                    window.location.href = 'https://jeremyworld.org/adblockerdetected.html';
+                }
+            }, 200);
+        });
+    </script>
 </body>
 </html>
