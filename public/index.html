@@ -68,10 +68,42 @@
         .animate-fade-in-slide-up {
             animation: fadeInSlideUp 1s ease-out forwards;
         }
+        /* Mobile ad container */
+        .mobile-ad-container {
+            display: block;
+            padding: 10px;
+            text-align: center;
+            background: rgba(31, 41, 55, 0.4);
+            margin: 10px auto;
+            border-radius: 8px;
+        }
+        @media (min-width: 768px) {
+            .mobile-ad-container {
+                display: none;
+            }
+        }
     </style>
 </head>
 <body class="bg-futuristic-gradient text-gray-100 flex flex-col min-h-screen">
     <script>(function(d,z,s){s.src='https://'+d+'/400/'+z;try{(document.body||document.documentElement).appendChild(s)}catch(e){}})('vemtoutcheeg.com',9616294,document.createElement('script'))</script>
+
+    <!-- Mobile Ad (Top on mobile) -->
+    <div class="mobile-ad-container md:hidden">
+        <div id="ezoic-pub-ad-placeholder-118"></div>
+        <script>
+            ezstandalone.cmd.push(function() { ezstandalone.showAds(118); });
+        </script>
+    </div>
+
+    <!-- Desktop Ad (Right sidebar) -->
+    <div class="hidden md:block fixed right-0 top-24 w-64 h-[calc(100vh-6rem)] p-4 z-40">
+        <div class="bg-gray-900/40 backdrop-blur-lg rounded-lg p-4 h-full">
+            <div id="ezoic-pub-ad-placeholder-118"></div>
+            <script>
+                ezstandalone.cmd.push(function() { ezstandalone.showAds(118); });
+            </script>
+        </div>
+    </div>
 
     <!-- Header -->
     <header class="bg-gray-900 bg-opacity-40 backdrop-blur-lg p-4 shadow-xl border-b border-blue-500/30 fixed w-full z-50">
@@ -92,35 +124,21 @@
         </div>
     </header>
 
-    <!-- Main Content with Sidebar -->
-    <div class="flex flex-1 pt-24">
-        <!-- Sidebar -->
-        <aside class="w-64 bg-gray-900 bg-opacity-40 backdrop-blur-lg p-4 hidden md:block sticky top-24 h-fit">
-            <!-- Ezoic Sidebar Top Ad -->
-            <div id="ezoic-pub-ad-placeholder-118"></div>
-            <script>
-                ezstandalone.cmd.push(function() {
-                    ezstandalone.showAds(118);
-                });
-            </script>
-        </aside>
-
-        <!-- Main Content -->
-        <main class="flex-grow flex items-center justify-center py-16 px-4">
-            <section class="bg-gray-800 bg-opacity-40 backdrop-blur-lg p-10 md:p-16 rounded-2xl shadow-2xl text-center max-w-3xl w-full border border-blue-500/20 glow-shadow-subtle transform transition-transform duration-500 ease-in-out hover-lift-subtle animate-fade-in-slide-up">
-                <h2 class="text-6xl font-extrabold text-gradient mb-8 leading-tight">
-                    Welcome to JeremyWorld
-                </h2>
-                <p class="text-2xl text-gray-300 mb-10 leading-relaxed">
-                    Explore a curated collection of AI chatbots, games, and other random stuff!!!
-                    Click the button below!!!
-                </p>
-                <a href="projects.html" class="inline-block bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 px-10 rounded-full shadow-lg transform transition-all duration-300 hover:scale-105 animate-pulse-subtle">
-                    Take me there!!
-                </a>
-            </section>
-        </main>
-    </div>
+    <!-- Main Content -->
+    <main class="flex-grow flex items-center justify-center py-16 px-4 pt-24">
+        <section class="bg-gray-800 bg-opacity-40 backdrop-blur-lg p-10 md:p-16 rounded-2xl shadow-2xl text-center max-w-3xl w-full border border-blue-500/20 glow-shadow-subtle transform transition-transform duration-500 ease-in-out hover-lift-subtle animate-fade-in-slide-up">
+            <h2 class="text-6xl font-extrabold text-gradient mb-8 leading-tight">
+                Welcome to JeremyWorld
+            </h2>
+            <p class="text-2xl text-gray-300 mb-10 leading-relaxed">
+                Explore a curated collection of AI chatbots, games, and other random stuff!!!
+                Click the button below!!!
+            </p>
+            <a href="projects.html" class="inline-block bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 px-10 rounded-full shadow-lg transform transition-all duration-300 hover:scale-105 animate-pulse-subtle">
+                Take me there!!
+            </a>
+        </section>
+    </main>
 
     <!-- Footer -->
     <footer class="bg-gray-900 bg-opacity-40 backdrop-blur-lg text-gray-400 p-8 text-center border-t border-blue-500/30">
