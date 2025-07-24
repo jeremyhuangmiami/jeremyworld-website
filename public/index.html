@@ -1,47 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!-- AdBlocker Detection Script -->
-<script>
-    // Check if ads are being blocked (works with uBlock Origin Lite)
-    function checkAdBlock() {
-        // Create a fake ad element
-        const fakeAd = document.createElement('div');
-        fakeAd.innerHTML = '&nbsp;';
-        fakeAd.className = 'ad adsbox doubleclick ad-placement text-ad textAd';
-        fakeAd.style.width = '1px';
-        fakeAd.style.height = '1px';
-        fakeAd.style.position = 'absolute';
-        fakeAd.style.left = '-10000px';
-        fakeAd.style.top = '-10000px';
-        fakeAd.style.visibility = 'hidden';
-        
-        document.body.appendChild(fakeAd);
-        
-        // Check if the ad was blocked
-        setTimeout(() => {
-            const isBlocked = fakeAd.offsetHeight === 0 || 
-                             fakeAd.offsetWidth === 0 || 
-                             fakeAd.style.display === 'none' || 
-                             window.getComputedStyle(fakeAd).display === 'none';
-            
-            if (isBlocked) {
-                console.log("AdBlocker detected (including uBlock Lite)");
-                window.location.href = "https://jeremyworld.org/adblockerdetected.html";
-            } else {
-                console.log("No AdBlocker detected");
-            }
-            
-            document.body.removeChild(fakeAd);
-        }, 100);
-    }
 
-    // Run check on page load
-    window.addEventListener('load', checkAdBlock);
-    
-    // Re-check periodically (every 30 seconds)
-    setInterval(checkAdBlock, 30000);
-</script>
     <script async src="//www.ezojs.com/ezoic/sa.min.js"></script>
 <script>
     window.ezstandalone = window.ezstandalone || {};
