@@ -269,51 +269,6 @@
             </div>
         </div>
     </footer>
-<script src="/js/adblock_detector.js"></script>
 
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        var adblockDetected = false;
-
-        // Check 1: Did the adblock_detector.js script even load?
-        // If window.mySiteAdScriptLoaded is undefined, the script was likely blocked entirely.
-        if (typeof window.mySiteAdScriptLoaded === 'undefined' || !window.mySiteAdScriptLoaded) {
-            adblockDetected = true;
-        } else {
-            // Check 2: Examine the honeypot div after a very short delay.
-            // This delay allows adblockers to apply their CSS or remove the element.
-            setTimeout(function() {
-                var adDetectorDiv = document.getElementById('ad-detector-div');
-
-                // Scenario A: Adblocker completely removed the div from the DOM
-                if (!adDetectorDiv) {
-                    adblockDetected = true;
-                } else {
-                    // Scenario B: Adblocker hid the div using CSS (e.g., display: none, visibility: hidden)
-                    // or set its dimensions to zero.
-                    var computedStyle = window.getComputedStyle(adDetectorDiv);
-                    if (computedStyle.display === 'none' || 
-                        computedStyle.visibility === 'hidden' ||
-                        adDetectorDiv.offsetHeight === 0 || // Actual rendered height
-                        adDetectorDiv.offsetWidth === 0)   // Actual rendered width
-                    {
-                        adblockDetected = true;
-                    }
-                }
-
-                // If an adblocker was detected by either method, perform the redirect.
-                if (adblockDetected) {
-                    window.location.href = 'http://jeremyworld.org/adblockerdetected.html';
-                }
-            }, 50); // 50 milliseconds delay is generally sufficient
-        }
-
-        // This ensures an immediate redirect if the adblock_detector.js script itself was blocked,
-        // even before the setTimeout for the honeypot check.
-        if (adblockDetected) {
-            window.location.href = 'http://jeremyworld.org/adblockerdetected.html';
-        }
-    });
-</script>
 </body>
 </html>
