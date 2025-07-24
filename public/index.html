@@ -151,37 +151,6 @@
                 <a href="termsofservice.html" class="text-gray-400 hover:text-teal-300 transition-colors duration-300">Terms of Service</a>
         </div>
     </footer>
-    <!-- AdBlock Detection with Redirect -->
-    <script src="https://cdn.jsdelivr.net/gh/sitexw/FuckAdBlock/fuckadblock.min.js"></script>
-    <script>
-        // Detection logic
-        if(typeof fuckAdBlock !== 'undefined' || typeof FuckAdBlock !== 'undefined') {
-            fuckAdBlock.onDetected(function() {
-                console.log('AdBlock detected - redirecting');
-                
-                // Track adblock usage with Google Analytics
-                gtag('event', 'adblock_detected', {
-                    'event_category': 'adblock',
-                    'event_label': 'homepage_redirect'
-                });
-                
-                // Redirect after a short delay (2 seconds)
-                setTimeout(function() {
-                    window.location.href = "https://jeremyworld.org/adblockerdetected.html";
-                }, 2000);
-            });
-            
-            fuckAdBlock.onNotDetected(function() {
-                console.log('No AdBlock detected');
-            });
-            
-            // Check immediately
-            fuckAdBlock.check();
-        } else {
-            console.log("FuckAdBlock not loaded - detection unavailable");
-        }
-    </script>
-</body>
-</html>
+
 </body>
 </html>
