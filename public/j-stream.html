@@ -9,47 +9,42 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
-    
     <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css" />
 
     <style>
-        /* Custom font for a modern feel */
         body {
             font-family: 'Inter', sans-serif;
-            /* Subtle background pattern for depth */
             background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%239CA3AF' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0 20v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zM6 46v-4H4v4H0v2h4v4h2v-4h4v-2H6zm0-20v-4H4v4H0v2h4v4h2v-4h4v-2H6zM36 0v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zM6 10v-4H4v4H0v2h4v4h2v-4h4v-2H6zm30 10v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zM16 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm30 0v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zM16 4v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm30 0v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm10 24v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0 20v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zM46 10v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zM16 54v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm30 0v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
             background-repeat: repeat;
             background-attachment: fixed;
-            /* More subtle radial gradients for depth, blended with a darker base */
             background: radial-gradient(circle at top left, rgba(129, 230, 217, 0.05) 0%, transparent 40%),
                         radial-gradient(circle at bottom right, rgba(99, 179, 237, 0.05) 0%, transparent 40%),
-                        linear-gradient(135deg, #10161d 0%, #1a202c 100%); /* Darker base gradient */
+                        linear-gradient(135deg, #10161d 0%, #1a202c 100%);
             background-blend-mode: overlay, overlay, normal;
         }
 
-        /* Gradient for text */
         .text-gradient {
             background-clip: text;
             -webkit-background-clip: text;
             color: transparent;
-            background-image: linear-gradient(45deg, #81e6d9, #63b3ed); /* Teal to light blue */
+            background-image: linear-gradient(45deg, #81e6d9, #63b3ed);
         }
-        /* More refined see-through effect */
+
         .backdrop-blur-lg {
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
         }
+
         .bg-opacity-40 {
             background-color: rgba(31, 41, 55, 0.4);
         }
 
-        /* Aspect ratio for the iframe within the modal (now applies to video) */
         .aspect-video {
             aspect-ratio: 16 / 9;
         }
     </style>
 </head>
-<body class="bg-futuristic-gradient text-gray-100 flex flex-col min-h-screen">
+<body class="text-gray-100 flex flex-col min-h-screen">
 
     <header class="bg-gray-900 bg-opacity-40 backdrop-blur-lg p-4 shadow-xl border-b border-blue-500/30 fixed w-full z-50">
         <div class="container mx-auto flex justify-between items-center">
@@ -58,35 +53,24 @@
             </h1>
             <nav>
                 <ul class="flex space-x-8">
-                    <li>
-                        <a href="index.html" class="text-lg font-semibold hover:text-teal-300 transition-colors duration-300 rounded-md px-4 py-2">Home</a>
-                    </li>
-                    <li>
-                        <a href="projects.html" class="text-lg font-semibold hover:text-teal-300 transition-colors duration-300 rounded-md px-4 py-2">Projects</a>
-                    </li>
-                    <li>
-                        <a href="https://login.jeremyworld.org" class="text-lg font-semibold hover:text-teal-300 transition-colors duration-300 rounded-md px-4 py-2">Projects</a>
-                    </li>
+                    <li><a href="index.html" class="text-lg font-semibold hover:text-teal-300 transition-colors duration-300 rounded-md px-4 py-2">Home</a></li>
+                    <li><a href="projects.html" class="text-lg font-semibold hover:text-teal-300 transition-colors duration-300 rounded-md px-4 py-2">Projects</a></li>
+                    <li><a href="https://login.jeremyworld.org" class="text-lg font-semibold hover:text-teal-300 transition-colors duration-300 rounded-md px-4 py-2">Login</a></li>
                 </ul>
             </nav>
         </div>
     </header>
 
-    <main class="flex-grow py-12 px-4 pt-40"> <!-- Changed from pt-24 to pt-40 for more spacing -->
+    <main class="flex-grow py-12 px-4 pt-40">
         <section class="container mx-auto">
-            <h2 class="text-4xl font-extrabold text-gradient mb-8 text-center mt-8"> <!-- Added mt-8 for extra spacing -->
-                Explore Movies on J-Stream
-            </h2>
-            <div id="movie-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-6">
-                </div>
+            <h2 class="text-4xl font-extrabold text-gradient mb-8 text-center mt-8">Explore Movies on J-Stream</h2>
+            <div id="movie-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-6"></div>
         </section>
     </main>
 
     <div id="movie-modal" class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 hidden">
         <div class="relative bg-gray-900 bg-opacity-80 backdrop-blur-xl p-6 rounded-lg shadow-2xl max-w-6xl w-full mx-4 border border-blue-500/30">
-            <button id="close-modal" class="absolute top-4 right-4 text-gray-400 hover:text-white text-3xl font-bold transition-colors duration-300 z-10">
-                ×
-            </button>
+            <button id="close-modal" class="absolute top-4 right-4 text-gray-400 hover:text-white text-3xl font-bold transition-colors duration-300 z-10">×</button>
             <div class="aspect-video w-full">
                 <video id="movie-player" controls playsinline class="w-full h-full rounded-lg"></video>
             </div>
@@ -110,144 +94,123 @@
             const movieGrid = document.getElementById('movie-grid');
             const movieModal = document.getElementById('movie-modal');
             const closeModalBtn = document.getElementById('close-modal');
-            const moviePlayer = document.getElementById('movie-player'); // Reference to the video element
+            const moviePlayer = document.getElementById('movie-player');
             const movieTitleInModal = document.getElementById('movie-title-in-modal');
 
-            let plyrInstance = null; // Variable to hold the Plyr player instance
+            // Initialize plyrInstance once globally
+            let plyrInstance = null; 
 
             const movies = [
                 {
                     title: "E.T. The Extra-Terrestrial",
                     image: "https://resizing.flixster.com/-XZAfHZM39UwaGJIFWKAE8fS0ak=/v3/t/assets/p10998_p_v13_au.jpg",
                     streamUrl: "https://archive.org/download/movies_20220526/E.T.The.Extra-Terrestrial.1982.1080p.BluRay.x265-RARBG.ia.mp4",
-                    type: "video/mp4" // Specify type for Plyr
+                    type: "video/mp4"
                 },
                 {
                     title: "Paddington Two",
                     image: "https://image.tmdb.org/t/p/original/ns0BrPfPLoqToeafVv8FmjiUCG9.jpg",
-                    streamUrl: "https://ia601405.us.archive.org/13/items/paddigton-2-2017-uhd.-blu-ray.-remux.-2160p/Paddigton%202%20%282017%29%20UHD.Blu-Ray.Remux.2160p.mp4", // Placeholder, will not play without a real video
-                    type: "video/mp4" // Assuming placeholder is for an MP4, or change to "youtube" if it was a YouTube ID
+                    streamUrl: "https://ia601405.us.archive.org/13/items/paddigton-2-2017-uhd.-blu-ray.-remux.-2160p/Paddigton%202%20%282017%29%20UHD.Blu-Ray.Remux.2160p.mp4",
+                    type: "video/mp4"
                 },
                 {
                     title: "Bee Movie",
                     image: "https://m.media-amazon.com/images/I/61Oz2ybjbCL._UF894,1000_QL80_.jpg",
-                    streamUrl: "https://ia600208.us.archive.org/1/items/Popcornarchive-beeMovie2007_5no3y/Popcornarchive-beeMovie2007_5no3y.mp4", // Placeholder
+                    streamUrl: "https://ia600208.us.archive.org/1/items/Popcornarchive-beeMovie2007_5no3y/Popcornarchive-beeMovie2007_5no3y.mp4",
                     type: "video/mp4"
                 },
                 {
                     title: "Boss Baby",
                     image: "https://m.media-amazon.com/images/I/414wEkOZyWL.jpg",
-                    streamUrl: "https://dn721603.ca.archive.org/0/items/the-boss-baby_202407/The%20Boss%20Baby.mp4", // Placeholder
+                    streamUrl: "https://dn721603.ca.archive.org/0/items/the-boss-baby_202407/The%20Boss%20Baby.mp4",
                     type: "video/mp4"
                 },
                 {
                     title: "Wall E",
                     image: "https://m.media-amazon.com/images/I/51RoZRgIHtL._UF894,1000_QL80_.jpg",
-                    streamUrl: "https://ia800500.us.archive.org/9/items/0126422442/%D8%AC%D9%85%D9%8A%D8%B9%20%D8%A3%D9%81%D9%84%D8%A7%D9%85%20%D8%A8%D9%8A%D9%83%D8%B3%D8%A7%D8%B1%20%5B1995-2023%5D%20All%20Pixar%27s%20%5B26%5D%20Movies%20%5B1080p%5D%5BDISNEY%5D%5BWEB-DL%5D%5BDDP%5D%5B5.1%5D%5BH.264%5D%5BMKV%5D%2FWall.E.2008.1080p..WEB-DL.DDP5.1.Atmos.x264-POWER.mp4", // Placeholder
+                    streamUrl: "https://ia800500.us.archive.org/9/items/0126422442/.../Wall.E.2008.1080p..WEB-DL.DDP5.1.Atmos.x264-POWER.mp4",
                     type: "video/mp4"
                 },
                 {
                     title: "Cars",
                     image: "https://i.ebayimg.com/images/g/7AkAAOSwtYtkXANt/s-l400.jpg",
-                    streamUrl: "https://ia800500.us.archive.org/9/items/0126422442/%D8%AC%D9%85%D9%8A%D8%B9%20%D8%A3%D9%81%D9%84%D8%A7%D9%85%20%D8%A8%D9%8A%D9%83%D8%B3%D8%A7%D8%B1%20%5B1995-2023%5D%20All%20Pixar%27s%20%5B26%5D%20Movies%20%5B1080p%5D%5BDISNEY%5D%5BWEB-DL%5D%5BDDP%5D%5B5.1%5D%5BH.264%5D%5BMKV%5D%2FCars.2006.1080p.DSNP.WEB-DL.DDP5.1.x264-POWER.mp4", // Placeholder
+                    streamUrl: "https://ia800500.us.archive.org/9/items/0126422442/.../Cars.2006.1080p.DSNP.WEB-DL.DDP5.1.x264-POWER.mp4",
                     type: "video/mp4"
                 },
                 {
                     title: "Toy Story",
                     image: "https://i.ebayimg.com/images/g/9fMAAOSwOzFhZOzF/s-l1200.jpg",
-                    streamUrl: "https://ia800500.us.archive.org/9/items/0126422442/%D8%AC%D9%85%D9%8A%D8%B9%20%D8%A3%D9%81%D9%84%D8%A7%D9%85%20%D8%A8%D9%8A%D9%83%D8%B3%D8%A7%D8%B1%20%5B1995-2023%5D%20All%20Pixar%27s%20%5B26%5D%20Movies%20%5B1080p%5D%5BDISNEY%5D%5BWEB-DL%5D%5BDDP%5D%5B5.1%5D%5BH.264%5D%5BMKV%5D%2FToy.Story.1995.1080p.DSNP.WEB-DL.DDP5.1.Atmos.x264-POWER.mp4", // Placeholder
+                    streamUrl: "https://ia800500.us.archive.org/9/items/0126422442/.../Toy.Story.1995.1080p.DSNP.WEB-DL.DDP5.1.Atmos.x264-POWER.mp4",
                     type: "video/mp4"
                 },
                 {
                     title: "UP",
                     image: "https://i.ebayimg.com/images/g/OLgAAOSwe-phZOzF/s-l1200.jpg",
-                    streamUrl: "https://dn721609.ca.archive.org/0/items/0126422442/%D8%AC%D9%85%D9%8A%D8%B9%20%D8%A3%D9%81%D9%84%D8%A7%D9%85%20%D8%A8%D9%8A%D9%83%D8%B3%D8%A7%D8%B1%20%5B1995-2023%5D%20All%20Pixar%27s%20%5B26%5D%20Movies%20%5B1080p%5D%5BDISNEY%5D%5BWEB-DL%5D%5BDDP%5D%5B5.1%5D%5BH.264%5D%5BMKV%5D%2FUp.2009.1080p.DSNP.WEB-DL.DDP5.1.HEVC-POWER.mp4", // Placeholder
+                    streamUrl: "https://dn721609.ca.archive.org/0/items/0126422442/.../Up.2009.1080p.DSNP.WEB-DL.DDP5.1.HEVC-POWER.mp4",
                     type: "video/mp4"
                 },
                 {
                     title: "Passion Of The Christ",
                     image: "https://m.media-amazon.com/images/I/71zKDDYG-ZL.jpg",
-                    streamUrl: "/download/the-passion-of-the-christ-2004-1080p-blu-ray-x-264_202508/The%20Passion%20of%20the%20Christ%20%282004%29%20%281080p%20BluRay%20x264%29.mp4", // Placeholder
+                    streamUrl: "archive.org/download/the-passion-of-the-christ-2004-1080p-blu-ray-x-264_202508/The%20Passion%20of%20the%20Christ%20%282004%29%20%281080p%20BluRay%20x264%29.mp4",
                     type: "video/mp4"
                 }
             ];
 
-            // Function to create a movie tile element
             function createMovieTile(movie) {
-                const movieTile = document.createElement('div');
-                movieTile.className = 'movie-tile cursor-pointer rounded-lg overflow-hidden shadow-lg transform hover:scale-105 transition-transform duration-300 bg-gray-800 bg-opacity-60 border border-blue-500/20';
-                movieTile.innerHTML = `
+                const tile = document.createElement('div');
+                tile.className = 'cursor-pointer rounded-lg overflow-hidden shadow-lg transform hover:scale-105 transition-transform duration-300 bg-gray-800 bg-opacity-60 border border-blue-500/20';
+                tile.innerHTML = `
                     <img src="${movie.image}" alt="${movie.title} Poster" class="w-full h-64 object-cover rounded-t-lg">
                     <div class="p-3">
                         <h3 class="text-md font-semibold text-gray-100 text-center">${movie.title}</h3>
                     </div>
                 `;
-                movieTile.addEventListener('click', () => {
-                    movieTitleInModal.textContent = movie.title; // Set the title in the modal
-                    movieModal.classList.remove('hidden'); // Show the modal
-                    document.body.style.overflow = 'hidden'; // Prevent scrolling when modal is open
+                tile.addEventListener('click', () => {
+                    movieTitleInModal.textContent = movie.title;
+                    movieModal.classList.remove('hidden');
+                    document.body.style.overflow = 'hidden';
+                    moviePlayer.muted = true; // Still a good idea to mute on open
 
-                    // If Plyr instance does NOT exist yet, create it
-                    if (!plyrInstance) {
-                        // Initialize Plyr on the video element for the first time
-                        plyrInstance = new Plyr(moviePlayer, {
-                            controls: ['play-large', 'play', 'progress', 'current-time', 'duration', 'mute', 'volume', 'fullscreen'],
-                            autoplay: true // Autoplay when modal opens
-                        });
-                    }
-
-                    // Always update the source via the Plyr instance's source setter
-                    // This is crucial for smoothly changing videos without re-initializing the entire UI
+                    // Update the source of the existing Plyr instance
+                    // plyrInstance is already initialized once the DOM is loaded
                     plyrInstance.source = {
-                        type: movie.type.includes('youtube') ? 'youtube' : 'video', // 'video' for HTML5 <video>
-                        sources: [
-                            {
-                                src: movie.streamUrl,
-                                type: movie.type, // e.g., 'video/mp4' or for youtube, just its URL
-                            },
-                        ],
+                        type: 'video',
+                        sources: [{ src: movie.streamUrl, type: movie.type }]
                     };
-                    
-                    // Autoplay the video (will also load the new source if needed)
+
                     plyrInstance.play();
                 });
-                return movieTile;
+                return tile;
             }
 
-            // Populate the movie grid
-            movies.forEach(movie => {
-                movieGrid.appendChild(createMovieTile(movie));
-            });
+            movies.forEach(movie => movieGrid.appendChild(createMovieTile(movie)));
 
-            // Close modal button functionality
-            closeModalBtn.addEventListener('click', () => {
-                movieModal.classList.add('hidden'); // Hide the modal
+            function closeModal() {
+                movieModal.classList.add('hidden');
                 if (plyrInstance) {
-                    plyrInstance.stop(); // Stop video playback
-                    plyrInstance.destroy(); // Destroy the Plyr instance to clean up
-                    plyrInstance = null; // Clear the instance reference
+                    plyrInstance.stop();
+                    // Do NOT destroy the plyrInstance here.
+                    // Just reset the source if you want to clear the player.
+                    plyrInstance.source = {
+                        type: 'video',
+                        sources: [{ src: '', type: 'video/mp4' }] // Clear the source
+                    };
                 }
-                // Clear attributes to ensure a clean state if Plyr is re-initialized later
-                moviePlayer.removeAttribute('src'); 
-                moviePlayer.removeAttribute('data-plyr-provider');
-                movieTitleInModal.textContent = ''; // Clear the title
-                document.body.style.overflow = ''; // Re-enable scrolling
+                movieTitleInModal.textContent = '';
+                document.body.style.overflow = '';
+            }
+
+            closeModalBtn.addEventListener('click', closeModal);
+            movieModal.addEventListener('click', e => {
+                if (e.target === movieModal) closeModal();
             });
 
-            // Close modal when clicking outside the content area
-            movieModal.addEventListener('click', (e) => {
-                if (e.target === movieModal) {
-                    movieModal.classList.add('hidden');
-                    if (plyrInstance) {
-                        plyrInstance.stop();
-                        plyrInstance.destroy();
-                        plyrInstance = null;
-                    }
-                    moviePlayer.removeAttribute('src');
-                    moviePlayer.removeAttribute('data-plyr-provider');
-                    movieTitleInModal.textContent = '';
-                    document.body.style.overflow = '';
-                }
+            // Initialize Plyr once when the DOM is ready, but don't set a source yet
+            // This ensures the Plyr UI is set up from the start
+            plyrInstance = new Plyr(moviePlayer, {
+                controls: ['play-large', 'play', 'progress', 'current-time', 'duration', 'mute', 'volume', 'fullscreen'],
+                autoplay: false // Don't autoplay on initial load
             });
         });
     </script>
