@@ -41,15 +41,6 @@
         .aspect-video {
             aspect-ratio: 16 / 9;
         }
-
-        /* Custom spinner styling to ensure it's centered and on top */
-        .loading-spinner {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            z-index: 60; /* Higher than Plyr controls, but lower than modal close button */
-        }
     </style>
 </head>
 <body class="text-gray-100 flex flex-col min-h-screen">
@@ -79,10 +70,8 @@
     <div id="movie-modal" class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 hidden">
         <div class="relative bg-gray-900 bg-opacity-80 backdrop-blur-xl p-6 rounded-lg shadow-2xl max-w-6xl w-full mx-4 border border-blue-500/30">
             <button id="close-modal" class="absolute top-4 right-4 text-gray-400 hover:text-white text-3xl font-bold transition-colors duration-300 z-10">×</button>
-            <div class="aspect-video w-full relative"> <video id="movie-player" controls playsinline class="w-full h-full rounded-lg"></video>
-                <div id="loading-spinner" class="loading-spinner hidden">
-                    <div class="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
-                </div>
+            <div class="aspect-video w-full">
+                <video id="movie-player" controls playsinline class="w-full h-full rounded-lg"></video>
             </div>
             <h3 id="movie-title-in-modal" class="text-2xl font-bold text-gradient mt-4 text-center"></h3>
         </div>
@@ -106,7 +95,6 @@
             const closeModalBtn = document.getElementById('close-modal');
             const moviePlayer = document.getElementById('movie-player');
             const movieTitleInModal = document.getElementById('movie-title-in-modal');
-            const loadingSpinner = document.getElementById('loading-spinner'); // Get the spinner element
 
             // Initialize plyrInstance once globally
             let plyrInstance = null; 
@@ -163,6 +151,7 @@
                 {
                     title: "Passion Of The Christ",
                     image: "https://m.media-amazon.com/images/I/71zKDDYG-ZL.jpg",
+                    // *** CORRECTED STREAM URL HERE ***
                     streamUrl: "https://ia801006.us.archive.org/14/items/the-passion-of-the-christ-2004-1080p-blu-ray-x-264_202508/The%20Passion%20of%20the%20Christ%20%282004%29%20%281080p%20BluRay%20x264%29.mp4",
                     type: "video/mp4"
                 }
@@ -181,10 +170,10 @@
                     movieTitleInModal.textContent = movie.title;
                     movieModal.classList.remove('hidden');
                     document.body.style.overflow = 'hidden';
-                    moviePlayer.muted = true; 
-                    loadingSpinner.classList.remove('hidden'); // Show spinner immediately on click
+                    moviePlayer.muted = true; // Still a good idea to mute on open
 
                     // Update the source of the existing Plyr instance
+                    // plyrInstance is already initialized once the DOM is loaded
                     plyrInstance.source = {
                         type: 'video',
                         sources: [{ src: movie.streamUrl, type: movie.type }]
@@ -201,13 +190,13 @@
                 movieModal.classList.add('hidden');
                 if (plyrInstance) {
                     plyrInstance.stop();
-                    // Clear the source
+                    // Do NOT destroy the plyrInstance here.
+                    // Just reset the source to clear the player content without losing the UI.
                     plyrInstance.source = {
                         type: 'video',
-                        sources: [{ src: '', type: 'video/mp4' }] 
+                        sources: [{ src: '', type: 'video/mp4' }] // Clear the source
                     };
                 }
-                loadingSpinner.classList.add('hidden'); // Hide spinner when closing modal
                 movieTitleInModal.textContent = '';
                 document.body.style.overflow = '';
             }
@@ -217,31 +206,11 @@
                 if (e.target === movieModal) closeModal();
             });
 
-            // Initialize Plyr once when the DOM is ready
+            // Initialize Plyr once when the DOM is ready, but don't set a source yet
+            // This ensures the Plyr UI is set up from the start
             plyrInstance = new Plyr(moviePlayer, {
                 controls: ['play-large', 'play', 'progress', 'current-time', 'duration', 'mute', 'volume', 'fullscreen'],
-                autoplay: false 
-            });
-
-            // Add Plyr event listeners for loading state
-            plyrInstance.on('waiting', () => {
-                loadingSpinner.classList.remove('hidden');
-            });
-
-            plyrInstance.on('playing', () => {
-                loadingSpinner.classList.add('hidden');
-            });
-
-            plyrInstance.on('canplay', () => {
-                loadingSpinner.classList.add('hidden');
-            });
-
-            // Handle errors for missing videos
-            plyrInstance.on('error', () => {
-                loadingSpinner.classList.add('hidden');
-                console.error('Error playing video. The video might be unavailable or the URL is incorrect.');
-                // You could also display an error message in the modal
-                // movieTitleInModal.textContent = 'Error: Video not available.';
+                autoplay: false // Don't autoplay on initial load
             });
         });
     </script>
