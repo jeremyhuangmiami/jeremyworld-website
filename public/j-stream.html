@@ -8,7 +8,6 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css" />
 
     <style>
         body {
@@ -41,6 +40,46 @@
         .aspect-video {
             aspect-ratio: 16 / 9;
         }
+        
+        #close-fullscreen {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            color: white;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            cursor: pointer;
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        #close-fullscreen.visible {
+            opacity: 1;
+        }
+        
+        #fullscreen-video {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: black;
+            z-index: 999;
+            display: none;
+        }
+        
+        #fullscreen-video video {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
     </style>
 </head>
 <body class="text-gray-100 flex flex-col min-h-screen">
@@ -67,15 +106,11 @@
         </section>
     </main>
 
-    <div id="movie-modal" class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 hidden">
-        <div class="relative bg-gray-900 bg-opacity-80 backdrop-blur-xl p-6 rounded-lg shadow-2xl max-w-6xl w-full mx-4 border border-blue-500/30">
-            <button id="close-modal" class="absolute top-4 right-4 text-gray-400 hover:text-white text-3xl font-bold transition-colors duration-300 z-10">×</button>
-            <div class="aspect-video w-full">
-                <video id="movie-player" controls playsinline class="w-full h-full rounded-lg"></video>
-            </div>
-            <h3 id="movie-title-in-modal" class="text-2xl font-bold text-gradient mt-4 text-center"></h3>
-        </div>
+    <div id="fullscreen-video">
+        <video id="movie-player" controls playsinline></video>
     </div>
+    
+    <div id="close-fullscreen">×</div>
 
     <footer class="bg-gray-900 bg-opacity-40 backdrop-blur-lg text-gray-400 p-8 text-center border-t border-blue-500/30">
         <div class="container mx-auto">
@@ -87,17 +122,15 @@
         </div>
     </footer>
 
-    <script src="https://cdn.plyr.io/3.7.8/plyr.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const movieGrid = document.getElementById('movie-grid');
-            const movieModal = document.getElementById('movie-modal');
-            const closeModalBtn = document.getElementById('close-modal');
             const moviePlayer = document.getElementById('movie-player');
-            const movieTitleInModal = document.getElementById('movie-title-in-modal');
-
-            // Initialize plyrInstance once globally
-            let plyrInstance = null; 
+            const fullscreenVideo = document.getElementById('fullscreen-video');
+            const closeFullscreenBtn = document.getElementById('close-fullscreen');
+            
+            let mouseMoveTimer;
+            let isFullscreen = false;
 
             const movies = [
                 {
@@ -151,7 +184,6 @@
                 {
                     title: "Passion Of The Christ",
                     image: "https://m.media-amazon.com/images/I/71zKDDYG-ZL.jpg",
-                    // *** CORRECTED STREAM URL HERE ***
                     streamUrl: "https://ia801006.us.archive.org/14/items/the-passion-of-the-christ-2004-1080p-blu-ray-x-264_202508/The%20Passion%20of%20the%20Christ%20%282004%29%20%281080p%20BluRay%20x264%29.mp4",
                     type: "video/mp4"
                 }
@@ -167,51 +199,77 @@
                     </div>
                 `;
                 tile.addEventListener('click', () => {
-                    movieTitleInModal.textContent = movie.title;
-                    movieModal.classList.remove('hidden');
-                    document.body.style.overflow = 'hidden';
-                    moviePlayer.muted = true; // Still a good idea to mute on open
-
-                    // Update the source of the existing Plyr instance
-                    // plyrInstance is already initialized once the DOM is loaded
-                    plyrInstance.source = {
-                        type: 'video',
-                        sources: [{ src: movie.streamUrl, type: movie.type }]
-                    };
-
-                    plyrInstance.play();
+                    openFullscreen(movie);
                 });
                 return tile;
             }
 
-            movies.forEach(movie => movieGrid.appendChild(createMovieTile(movie)));
-
-            function closeModal() {
-                movieModal.classList.add('hidden');
-                if (plyrInstance) {
-                    plyrInstance.stop();
-                    // Do NOT destroy the plyrInstance here.
-                    // Just reset the source to clear the player content without losing the UI.
-                    plyrInstance.source = {
-                        type: 'video',
-                        sources: [{ src: '', type: 'video/mp4' }] // Clear the source
-                    };
-                }
-                movieTitleInModal.textContent = '';
-                document.body.style.overflow = '';
+            function openFullscreen(movie) {
+                isFullscreen = true;
+                moviePlayer.src = movie.streamUrl;
+                moviePlayer.type = movie.type;
+                moviePlayer.muted = true;
+                fullscreenVideo.style.display = 'block';
+                
+                // Try to play the video
+                moviePlayer.play().catch(error => {
+                    console.error('Autoplay was prevented:', error);
+                    moviePlayer.controls = true;
+                });
+                
+                // Show close button temporarily
+                showCloseButton();
+                
+                // Hide header and footer
+                document.querySelector('header').style.display = 'none';
+                document.querySelector('footer').style.display = 'none';
+                document.querySelector('main').style.display = 'none';
             }
 
-            closeModalBtn.addEventListener('click', closeModal);
-            movieModal.addEventListener('click', e => {
-                if (e.target === movieModal) closeModal();
+            function closeFullscreen() {
+                isFullscreen = false;
+                moviePlayer.pause();
+                moviePlayer.src = '';
+                fullscreenVideo.style.display = 'none';
+                closeFullscreenBtn.classList.remove('visible');
+                
+                // Show header and footer again
+                document.querySelector('header').style.display = 'flex';
+                document.querySelector('footer').style.display = 'block';
+                document.querySelector('main').style.display = 'block';
+            }
+
+            function showCloseButton() {
+                closeFullscreenBtn.classList.add('visible');
+                resetMouseMoveTimer();
+            }
+
+            function hideCloseButton() {
+                closeFullscreenBtn.classList.remove('visible');
+            }
+
+            function resetMouseMoveTimer() {
+                clearTimeout(mouseMoveTimer);
+                mouseMoveTimer = setTimeout(hideCloseButton, 2000);
+            }
+
+            // Event listeners
+            closeFullscreenBtn.addEventListener('click', closeFullscreen);
+            
+            document.addEventListener('mousemove', () => {
+                if (isFullscreen) {
+                    showCloseButton();
+                }
+            });
+            
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && isFullscreen) {
+                    closeFullscreen();
+                }
             });
 
-            // Initialize Plyr once when the DOM is ready, but don't set a source yet
-            // This ensures the Plyr UI is set up from the start
-            plyrInstance = new Plyr(moviePlayer, {
-                controls: ['play-large', 'play', 'progress', 'current-time', 'duration', 'mute', 'volume', 'fullscreen'],
-                autoplay: false // Don't autoplay on initial load
-            });
+            // Initialize movie grid
+            movies.forEach(movie => movieGrid.appendChild(createMovieTile(movie)));
         });
     </script>
 </body>
