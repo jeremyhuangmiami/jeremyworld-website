@@ -1,128 +1,91 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>JeremyWorld Login</title>
-<style>
-  body { font-family: Arial, sans-serif; background:#111; color:#fff; display:flex; justify-content:center; align-items:center; min-height:100vh; }
-  .container { background: rgba(255,255,255,0.05); padding:2rem; border-radius:12px; backdrop-filter: blur(10px); width:100%; max-width:400px; }
-  h1 { text-align:center; margin-bottom:1rem; }
-  input { width:100%; padding:0.75rem; margin-bottom:1rem; border-radius:8px; border:none; }
-  button { width:100%; padding:0.75rem; border:none; border-radius:8px; background:#008CBA; color:#fff; cursor:pointer; margin-bottom:0.5rem; }
-  button:hover { background:#007095; }
-  .switch-form { text-align:center; cursor:pointer; color:#00ace6; text-decoration:underline; margin-top:0.5rem; }
-  .hidden { display:none; }
-</style>
-<script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-auth-compat.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JeremyWorld Login</title>
+  <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-auth-compat.js"></script>
+  <style>
+    body { font-family: sans-serif; display: flex; justify-content: center; align-items: center; min-height: 100vh; background: #111; color: #fff; }
+    .container { width: 100%; max-width: 400px; padding: 2rem; background: #222; border-radius: 12px; }
+    input, button { width: 100%; padding: 1rem; margin: 0.5rem 0; border-radius: 8px; border: none; }
+    button { background: #008CBA; color: white; cursor: pointer; }
+  </style>
 </head>
 <body>
+  <div class="container">
+    <h2>Login</h2>
+    <form id="login-form">
+      <input type="email" id="email" placeholder="Email" required>
+      <input type="password" id="password" placeholder="Password" required>
+      <button type="submit">Sign In</button>
+    </form>
+    <p>Don't have an account? <a href="#" id="show-signup">Sign Up</a></p>
 
-<div class="container">
-  <!-- Step 1: Login Form -->
-  <div id="login-form">
-    <h1>Sign In</h1>
-    <input type="email" id="email" placeholder="Email" required>
-    <input type="password" id="password" placeholder="Password" required>
-    <button id="sign-in-btn">Sign In</button>
-    <div class="switch-form" id="show-register">Don't have an account? Sign up</div>
+    <form id="signup-form" style="display:none;">
+      <input type="text" id="first-name" placeholder="First Name" required>
+      <input type="text" id="last-name" placeholder="Last Name" required>
+      <input type="email" id="signup-email" placeholder="Email" required>
+      <input type="password" id="signup-password" placeholder="Password" required>
+      <button type="submit">Sign Up</button>
+    </form>
+    <p><a href="#" id="show-login">Back to Login</a></p>
   </div>
 
-  <!-- Step 2: Registration Form -->
-  <div id="register-form" class="hidden">
-    <h1>Create Account</h1>
-    <input type="text" id="first-name" placeholder="First Name" required>
-    <input type="text" id="last-name" placeholder="Last Name" required>
-    <input type="email" id="register-email" placeholder="Email" required>
-    <input type="password" id="register-password" placeholder="Password" required>
-    <input type="password" id="confirm-password" placeholder="Confirm Password" required>
-    <button id="register-btn">Create Account</button>
-    <div class="switch-form" id="show-login">Already have an account? Sign in</div>
-  </div>
-</div>
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyCyPk7d26WwhHM34MVbSHBMrnfSTtT213Y",
+      authDomain: "jeremyworld-auth.firebaseapp.com",
+      projectId: "jeremyworld-auth",
+      storageBucket: "jeremyworld-auth.firebasestorage.app",
+      messagingSenderId: "830728575641",
+      appId: "1:830728575641:web:3d22b3b15127f0ae93f608"
+    };
+    const app = firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
 
-<script>
-  // Step 0: Initialize Firebase
-  const firebaseConfig = {
-    apiKey: "AIzaSyCyPk7d26WwhHM34MVbSHBMrnfSTtT213Y",
-    authDomain: "jeremyworld-auth.firebaseapp.com",
-    projectId: "jeremyworld-auth",
-    storageBucket: "jeremyworld-auth.appspot.com",
-    messagingSenderId: "830728575641",
-    appId: "1:830728575641:web:3d22b3b15127f0ae93f608"
-  };
-  firebase.initializeApp(firebaseConfig);
-  const auth = firebase.auth();
+    const loginForm = document.getElementById('login-form');
+    const signupForm = document.getElementById('signup-form');
+    const showSignup = document.getElementById('show-signup');
+    const showLogin = document.getElementById('show-login');
 
-  // DOM Elements
-  const loginForm = document.getElementById('login-form');
-  const registerFormDiv = document.getElementById('register-form');
-  const signInBtn = document.getElementById('sign-in-btn');
-  const registerBtn = document.getElementById('register-btn');
-  const showRegisterLink = document.getElementById('show-register');
-  const showLoginLink = document.getElementById('show-login');
+    // Toggle forms
+    showSignup.addEventListener('click', e => { e.preventDefault(); loginForm.style.display='none'; signupForm.style.display='block'; });
+    showLogin.addEventListener('click', e => { e.preventDefault(); signupForm.style.display='none'; loginForm.style.display='block'; });
 
-  // Step 1 Button: Show registration form
-  showRegisterLink.addEventListener('click', () => {
-    loginForm.classList.add('hidden');
-    registerFormDiv.classList.remove('hidden');
-  });
+    // Login
+    loginForm.addEventListener('submit', async e => {
+      e.preventDefault();
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+      try {
+        await auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
+        await auth.signInWithEmailAndPassword(email, password);
+        window.location.href = '/dashboard.html'; // Redirect after login
+      } catch (err) { alert(err.message); }
+    });
 
-  // Step 2 Button: Show login form
-  showLoginLink.addEventListener('click', () => {
-    registerFormDiv.classList.add('hidden');
-    loginForm.classList.remove('hidden');
-  });
+    // Signup
+    signupForm.addEventListener('submit', async e => {
+      e.preventDefault();
+      const firstName = document.getElementById('first-name').value;
+      const lastName = document.getElementById('last-name').value;
+      const email = document.getElementById('signup-email').value;
+      const password = document.getElementById('signup-password').value;
+      try {
+        await auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
+        const userCredential = await auth.createUserWithEmailAndPassword(email, password);
+        await userCredential.user.updateProfile({ displayName: firstName + ' ' + lastName });
+        window.location.href = '/dashboard.html';
+      } catch (err) { alert(err.message); }
+    });
 
-  // Step 3 Button: Sign In
-  signInBtn.addEventListener('click', async () => {
-    const email = document.getElementById('email').value;
-    const password = document.getElementById('password').value;
-    try {
-      signInBtn.disabled = true;
-      signInBtn.textContent = 'Signing in...';
-      await auth.signInWithEmailAndPassword(email, password);
-      window.location.href = '/dashboard.html'; // Step 3: redirect
-    } catch (err) {
-      alert(err.message);
-      signInBtn.disabled = false;
-      signInBtn.textContent = 'Sign In';
-    }
-  });
-
-  // Step 4 Button: Register
-  registerBtn.addEventListener('click', async () => {
-    const firstName = document.getElementById('first-name').value;
-    const lastName = document.getElementById('last-name').value;
-    const email = document.getElementById('register-email').value;
-    const password = document.getElementById('register-password').value;
-    const confirmPassword = document.getElementById('confirm-password').value;
-
-    if(password !== confirmPassword){
-      alert("Passwords don't match");
-      return;
-    }
-
-    try {
-      registerBtn.disabled = true;
-      registerBtn.textContent = 'Creating account...';
-      const userCredential = await auth.createUserWithEmailAndPassword(email, password);
-      await userCredential.user.updateProfile({ displayName: `${firstName} ${lastName}` });
-      window.location.href = '/dashboard.html'; // Step 4: redirect
-    } catch (err) {
-      alert(err.message);
-      registerBtn.disabled = false;
-      registerBtn.textContent = 'Create Account';
-    }
-  });
-
-  // Step 5: Protect dashboard page
-  auth.onAuthStateChanged(user => {
-    if(window.location.pathname.includes('dashboard.html') && !user){
-      window.location.href = '/login.html';
-    }
-  });
-</script>
+    // Protect dashboard redirect
+    auth.onAuthStateChanged(user => {
+      if (user && window.location.pathname === '/login.html') window.location.href='/dashboard.html';
+    });
+  </script>
 </body>
 </html>
+
