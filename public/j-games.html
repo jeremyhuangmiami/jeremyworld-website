@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Jeremy's World - Games</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background: radial-gradient(circle at top left, rgba(129, 230, 217, 0.05) 0%, transparent 40%),
+        radial-gradient(circle at bottom right, rgba(99, 179, 237, 0.05) 0%, transparent 40%),
+        linear-gradient(135deg, #10161d 0%, #1a202c 100%);
+      background-blend-mode: overlay, overlay, normal;
+    }
+    .text-gradient {
+      background-clip: text;
+      -webkit-background-clip: text;
+      color: transparent;
+      background-image: linear-gradient(45deg, #81e6d9, #63b3ed);
+    }
+    .glow-shadow-card {
+      box-shadow: 0 0 10px rgba(99, 179, 237, 0.3), 0 0 20px rgba(129, 230, 217, 0.15);
+    }
+    .project-card-hover:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4), 0 0 30px rgba(99, 179, 237, 0.5);
+    }
+    .backdrop-blur-lg {
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+    }
+  </style>
+</head>
+<body class="text-gray-100 flex flex-col min-h-screen">
+
+  <!-- Header -->
+  <header class="bg-gray-900 bg-opacity-40 backdrop-blur-lg p-4 shadow-xl border-b border-blue-500/30 fixed w-full z-50">
+    <div class="container mx-auto flex justify-between items-center">
+      <h1 class="text-4xl font-extrabold rounded-lg px-3 py-1 text-gradient">
+        <a href="https://jeremyworld.org" class="hover:opacity-80 transition-opacity duration-300">Jeremy's World</a>
+      </h1>
+      <nav>
+        <ul class="flex space-x-8">
+          <li><a href="index.html" class="text-lg font-semibold hover:text-teal-300 transition-colors duration-300 rounded-md px-4 py-2">Home</a></li>
+          <li><a href="projects.html" class="text-lg font-semibold hover:text-teal-300 transition-colors duration-300 rounded-md px-4 py-2">Projects</a></li>
+          <li><a href="https://login.jeremyworld.org" class="text-lg font-semibold hover:text-teal-300 transition-colors duration-300 rounded-md px-4 py-2">Login/Register</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="flex-grow py-12 px-4 pt-24">
+    <section class="container mx-auto bg-gray-800 bg-opacity-40 backdrop-blur-lg p-8 md:p-12 rounded-2xl shadow-2xl border border-blue-500/20">
+      <h2 class="text-4xl font-extrabold text-gradient mb-10 text-center">Games</h2>
+      <div id="gameGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6"></div>
+    </section>
+  </main>
+
+  <!-- Game Modal -->
+  <div id="gameModal" class="fixed inset-0 hidden items-center justify-center bg-black bg-opacity-70 backdrop-blur-md z-50">
+    <div class="bg-gray-900 rounded-lg shadow-lg w-full max-w-7xl h-[80vh] md:h-[90vh] flex flex-col relative">
+      <div class="flex justify-between items-center p-4 border-b border-blue-500/40">
+        <h3 id="modalGameTitle" class="text-xl font-semibold text-white"></h3>
+        <button id="closeModalBtn" aria-label="Close modal"
+          class="absolute top-4 right-4 text-white hover:text-teal-400 focus:outline-none focus:ring-2 focus:ring-teal-400 rounded-full w-10 h-10 flex items-center justify-center transition-colors duration-200 bg-gray-800 bg-opacity-70 hover:bg-teal-900/70">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"
+            stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+          </svg>
+        </button>
+      </div>
+      <iframe id="gameIframe" src="" class="flex-grow rounded-b-lg w-full" allowfullscreen></iframe>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="bg-gray-900 bg-opacity-40 backdrop-blur-lg text-gray-400 p-8 text-center border-t border-blue-500/30">
+    <div class="container mx-auto">
+      <p class="text-sm">&copy; 2025 Jeremy's World. Crafted with passion.</p>
+      <div class="mt-4 text-base space-x-6">
+        <a href="privacypolicy.html" class="text-gray-400 hover:text-teal-300 transition-colors duration-300">Privacy Policy</a>
+        <a href="termsofservice.html" class="text-gray-400 hover:text-teal-300 transition-colors duration-300">Terms of Service</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Script -->
+  <script>
+    const gameGrid = document.getElementById("gameGrid");
+    const gameModal = document.getElementById("gameModal");
+    const modalGameTitle = document.getElementById("modalGameTitle");
+    const iframe = document.getElementById("gameIframe");
+    const closeModalBtn = document.getElementById("closeModalBtn");
+
+    async function loadGames() {
+      try {
+        const corsProxy = 'https://corsproxy.io/?';
+        const jsonURL = 'https://www.onlinegames.io/media/plugins/genGames/embed.json';
+        const response = await fetch(corsProxy + encodeURIComponent(jsonURL));
+        if (!response.ok) throw new Error(`HTTP error ${response.status}`);
+        const games = await response.json();
+
+        games.forEach(game => {
+          const tile = document.createElement("div");
+          tile.className = "cursor-pointer transform hover:scale-105 transition-transform duration-300 bg-gray-700 bg-opacity-60 p-3 rounded-xl shadow-md border border-gray-600 hover:border-teal-400 project-card-hover glow-shadow-card";
+          tile.innerHTML = `
+            <img src="${game.image}" alt="${game.title}" class="w-full h-28 object-cover rounded-md mb-2">
+            <h4 class="text-center text-white font-semibold text-sm truncate">${game.title}</h4>
+          `;
+          tile.addEventListener("click", () => {
+            gameModal.classList.remove("hidden");
+            iframe.src = game.embed;
+            modalGameTitle.textContent = game.title;
+          });
+          gameGrid.appendChild(tile);
+        });
+      } catch (err) {
+        console.error("Error loading games:", err);
+        gameGrid.innerHTML = `<p class="text-center text-red-400">Failed to load games. Try again later.</p>`;
+      }
+    }
+
+    closeModalBtn?.addEventListener("click", () => {
+      gameModal.classList.add("hidden");
+      iframe.src = "";
+    });
+
+    window.addEventListener("click", e => {
+      if (e.target === gameModal) {
+        gameModal.classList.add("hidden");
+        iframe.src = "";
+      }
+    });
+
+    window.addEventListener("keydown", e => {
+      if (e.key === "Escape" && !gameModal.classList.contains("hidden")) {
+        gameModal.classList.add("hidden");
+        iframe.src = "";
+      }
+    });
+
+    loadGames();
+  </script>
+
+</body>
+</html>
