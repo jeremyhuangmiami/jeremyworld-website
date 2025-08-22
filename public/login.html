@@ -165,6 +165,11 @@
         const auth = firebase.auth();
         const workerURL = "https://jeremyworld-auth.jeremyhuangmiami.workers.dev";
 
+        // Store the referrer URL if it's not the login page itself
+        if (document.referrer && !document.referrer.includes('login.html')) {
+            localStorage.setItem('redirectAfterLogin', document.referrer);
+        }
+
         // Toggle login/signup
         const loginFormWrap = document.getElementById('login-form');
         const signupFormWrap = document.getElementById('signup-form');
@@ -283,7 +288,7 @@
             }
         });
 
-        // Send ID token to Worker
+        // Send ID token to Worker and handle redirection
         async function sendTokenToWorker(idToken, statusNode) {
             try {
                 const res = await fetch(workerURL + '/auth', {
@@ -293,7 +298,15 @@
                     credentials:"include"
                 });
                 if (res.ok) {
-                    window.location.href="https://jeremyworld.org/chatbot.html"; 
+                    // Check for a stored redirect URL
+                    const redirectUrl = localStorage.getItem('redirectAfterLogin');
+                    if (redirectUrl) {
+                        window.location.href = redirectUrl;
+                        localStorage.removeItem('redirectAfterLogin'); // Clean up the stored URL
+                    } else {
+                        // Default redirection if no previous URL is found
+                        window.location.href = "https://jeremyworld.org/chatbot.html"; 
+                    }
                     return;
                 }
                 const data = await res.json().catch(() => ({}));
