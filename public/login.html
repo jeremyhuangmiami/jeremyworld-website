@@ -132,12 +132,7 @@
           <div class="form-group">
             <label for="last-name">Last Name</label>
             <input type="text" id="last-name" required placeholder="Doe">
-          </div>
-        </div>
-        <div class="form-group">
-          <label for="register-email">Email Address</label>
-          <input type="email" id="register-email" required placeholder="your@email.com">
-               </div>
+                    </div>
         <div class="form-group">
           <label for="register-password">Password</label>
           <input type="password" id="register-password" required placeholder="••••••••" minlength="6">
@@ -169,9 +164,9 @@
     </div>
   </div>
 
-  <!-- Firebase SDKs -->
-  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js"></script>
+  <!-- Firebase v8 compat build -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
 
   <script>
     // Toggle between login and signup
@@ -212,16 +207,22 @@
       e.preventDefault();
       const email = document.getElementById('email').value.trim();
       const password = document.getElementById('password').value;
+      console.log("Attempting Firebase login…");
       try {
         const userCredential = await auth.signInWithEmailAndPassword(email, password);
+        console.log("Firebase login OK:", userCredential.user.email);
         const idToken = await userCredential.user.getIdToken();
+        console.log("Got ID token:", idToken.substring(0, 20) + "...");
         const res = await fetch("https://jeremyworld-auth.jeremyhuangmiami.workers.dev/", {
           headers: { Authorization: `Bearer ${idToken}` }
         });
-        if (!res.ok) throw new Error(await res.text());
-        // Redirect on success
+        console.log("Worker status:", res.status);
+        const text = await res.text();
+        console.log("Worker response:", text);
+        if (!res.ok) throw new Error(text);
         window.location.href = "https://jeremyworld.org/dashboard";
       } catch (err) {
+        console.error("Login error:", err);
         alert(err.message);
       }
     });
@@ -238,14 +239,19 @@
       }
       try {
         const userCredential = await auth.createUserWithEmailAndPassword(email, password);
+        console.log("Firebase signup OK:", userCredential.user.email);
         const idToken = await userCredential.user.getIdToken();
+        console.log("Got ID token:", idToken.substring(0, 20) + "...");
         const res = await fetch("https://jeremyworld-auth.jeremyhuangmiami.workers.dev/", {
           headers: { Authorization: `Bearer ${idToken}` }
         });
-        if (!res.ok) throw new Error(await res.text());
-        // Redirect on success
+        console.log("Worker status:", res.status);
+        const text = await res.text();
+        console.log("Worker response:", text);
+        if (!res.ok) throw new Error(text);
         window.location.href = "https://jeremyworld.org/dashboard";
       } catch (err) {
+        console.error("Signup error:", err);
         alert(err.message);
       }
     });
@@ -259,6 +265,7 @@
         alert("Password reset email sent!");
         document.getElementById('forgot-password-modal').style.display = 'none';
       } catch (err) {
+        console.error("Reset error:", err);
         alert(err.message);
       }
     });
