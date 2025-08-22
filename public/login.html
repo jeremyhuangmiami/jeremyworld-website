@@ -19,9 +19,7 @@
             --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
             --glass-bg: rgba(255, 255, 255, 0.05);
         }
-
         * { margin: 0; padding: 0; box-sizing: border-box; }
-
         body {
             font-family: 'Inter', sans-serif;
             background: var(--bg-dark);
@@ -35,7 +33,6 @@
                 radial-gradient(circle at 25% 25%, rgba(0, 140, 186, 0.15) 0%, transparent 50%),
                 radial-gradient(circle at 75% 75%, rgba(0, 140, 186, 0.15) 0%, transparent 50%);
         }
-
         .login-container {
             width: 100%;
             max-width: 420px;
@@ -47,16 +44,13 @@
             backdrop-filter: blur(12px);
             animation: fadeIn 0.5s ease-out;
         }
-
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
         }
-
         .logo { text-align: center; margin-bottom: 2rem; }
         .logo h1 { font-size: 1.8rem; font-weight: 600; color: var(--text-light); margin-bottom: 0.5rem; }
         .logo p { color: var(--text-medium); font-size: 0.9rem; }
-
         .auth-form { margin-top: 2rem; }
         .form-group { margin-bottom: 1.5rem; position: relative; }
         .form-group label { display: block; margin-bottom: 0.5rem; color: var(--text-medium); font-size: 0.9rem; font-weight: 500; }
@@ -76,7 +70,6 @@
             border-color: var(--accent-blue);
             box-shadow: 0 0 0 3px var(--accent-blue-light);
         }
-
         .forgot-password { text-align: right; margin-top: 0.5rem; }
         .forgot-password a {
             color: var(--accent-blue);
@@ -86,7 +79,6 @@
             font-weight: 500;
         }
         .forgot-password a:hover { text-decoration: underline; text-underline-offset: 2px; }
-
         .btn {
             width: 100%;
             padding: 1rem;
@@ -105,7 +97,6 @@
             box-shadow: 0 8px 16px rgba(0, 140, 186, 0.3);
         }
         .btn:active { transform: translateY(0); }
-
         .footer {
             text-align: center;
             margin-top: 2rem;
@@ -114,7 +105,6 @@
         }
         .footer a { color: var(--accent-blue); text-decoration: none; transition: var(--transition); font-weight: 500; }
         .footer a:hover { text-decoration: underline; text-underline-offset: 2px; }
-
         .modal {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0, 0, 0, 0.7);
@@ -139,11 +129,9 @@
         .modal p { color: var(--text-medium); margin-bottom: 1.5rem; font-size: 0.9rem; line-height: 1.5; }
         .btn-cancel { background: transparent; color: var(--text-light); border: 1px solid rgba(255, 255, 255, 0.1); margin-top: 1rem; }
         .btn-cancel:hover { background: rgba(255, 255, 255, 0.05); border-color: var(--accent-blue); }
-
         #signup-form { display: none; }
         .name-fields { display: flex; gap: 1rem; }
         .name-fields .form-group { flex: 1; margin-bottom: 1rem; }
-
         /* subtle inline status text without changing layout */
         .status {
             color: var(--text-medium);
@@ -157,13 +145,11 @@
 </head>
 <body>
     <div class="login-container">
-        <!-- Login Form -->
         <div id="login-form">
             <div class="logo">
                 <h1>Welcome Back</h1>
                 <p>Sign in to access your JeremyWorld account</p>
             </div>
-
             <form id="auth-form" class="auth-form" novalidate>
                 <div class="form-group">
                     <label for="email">Email Address</label>
@@ -179,19 +165,15 @@
                 <button type="submit" id="sign-in-btn" class="btn">Sign In</button>
                 <div class="status" id="login-status"></div>
             </form>
-
             <div class="footer">
                 Don't have an account? <a href="#" id="show-signup">Sign up</a>
             </div>
         </div>
-
-        <!-- Signup Form -->
         <div id="signup-form">
             <div class="logo">
                 <h1>Create Account</h1>
                 <p>Join JeremyWorld today</p>
             </div>
-
             <form id="register-form" class="auth-form" novalidate>
                 <div class="name-fields">
                     <div class="form-group">
@@ -218,14 +200,11 @@
                 <button type="submit" id="register-btn" class="btn">Create Account</button>
                 <div class="status" id="signup-status"></div>
             </form>
-
             <div class="footer">
                 Already have an account? <a href="#" id="show-login">Sign in</a>
             </div>
         </div>
     </div>
-
-    <!-- Forgot Password Modal -->
     <div id="forgot-password-modal" class="modal" aria-hidden="true">
         <div class="modal-content">
             <h2>Reset Password</h2>
@@ -240,8 +219,6 @@
             </form>
         </div>
     </div>
-
-    <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
     <script>
@@ -253,45 +230,37 @@
         };
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
-
-        const workerURL = "https://jeremyworld-auth.jeremyhuangmiami.workers.dev";
-
+        // Corrected URL to include the /auth path
+        const workerURL = "https://jeremyworld-auth.jeremyhuangmiami.workers.dev/auth";
         // Toggle between login and signup
         const loginFormWrap = document.getElementById('login-form');
         const signupFormWrap = document.getElementById('signup-form');
         const showSignupLink = document.getElementById('show-signup');
         const showLoginLink = document.getElementById('show-login');
-
         showSignupLink.addEventListener('click', (e) => {
             e.preventDefault();
             loginFormWrap.style.display = 'none';
             signupFormWrap.style.display = 'block';
         });
-
         showLoginLink.addEventListener('click', (e) => {
             e.preventDefault();
             signupFormWrap.style.display = 'none';
             loginFormWrap.style.display = 'block';
         });
-
         // Login submit
         const loginForm = document.getElementById('auth-form');
         const loginStatus = document.getElementById('login-status');
-
         loginForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             loginStatus.className = 'status';
             loginStatus.textContent = 'Signing in...';
-
             const email = document.getElementById('email').value.trim();
             const password = document.getElementById('password').value.trim();
-
             if (!email || !password) {
                 loginStatus.className = 'status error';
                 loginStatus.textContent = 'Please fill in all fields.';
                 return;
             }
-
             try {
                 const userCred = await auth.signInWithEmailAndPassword(email, password);
                 const idToken = await userCred.user.getIdToken();
@@ -301,22 +270,18 @@
                 loginStatus.textContent = err.message || 'Login failed.';
             }
         });
-
         // Signup submit
         const signupForm = document.getElementById('register-form');
         const signupStatus = document.getElementById('signup-status');
-
         signupForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             signupStatus.className = 'status';
             signupStatus.textContent = 'Creating your account...';
-
             const first = document.getElementById('first-name').value.trim();
             const last = document.getElementById('last-name').value.trim();
             const email = document.getElementById('register-email').value.trim();
             const password = document.getElementById('register-password').value.trim();
             const confirm = document.getElementById('confirm-password').value.trim();
-
             if (!first || !last || !email || !password || !confirm) {
                 signupStatus.className = 'status error';
                 signupStatus.textContent = 'Please fill in all fields.';
@@ -327,16 +292,13 @@
                 signupStatus.textContent = 'Passwords do not match.';
                 return;
             }
-
             try {
                 const userCred = await auth.createUserWithEmailAndPassword(email, password);
-
                 // Optional: set display name
                 const displayName = `${first} ${last}`.trim();
                 if (displayName) {
                     await userCred.user.updateProfile({ displayName });
                 }
-
                 const idToken = await userCred.user.getIdToken();
                 await sendTokenToWorker(idToken, signupStatus);
             } catch (err) {
@@ -344,14 +306,12 @@
                 signupStatus.textContent = err.message || 'Sign-up failed.';
             }
         });
-
         // Forgot password modal
         const forgotLink = document.getElementById('forgot-password-link');
         const forgotModal = document.getElementById('forgot-password-modal');
         const cancelResetBtn = document.getElementById('cancel-reset');
         const resetForm = document.getElementById('reset-password-form');
         const resetStatus = document.getElementById('reset-status');
-
         forgotLink.addEventListener('click', (e) => {
             e.preventDefault();
             resetStatus.className = 'status';
@@ -359,12 +319,10 @@
             forgotModal.style.display = 'flex';
             forgotModal.setAttribute('aria-hidden', 'false');
         });
-
         cancelResetBtn.addEventListener('click', () => {
             forgotModal.style.display = 'none';
             forgotModal.setAttribute('aria-hidden', 'true');
         });
-
         // Close modal when clicking outside content
         forgotModal.addEventListener('click', (e) => {
             if (e.target === forgotModal) {
@@ -372,19 +330,16 @@
                 forgotModal.setAttribute('aria-hidden', 'true');
             }
         });
-
         resetForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             resetStatus.className = 'status';
             resetStatus.textContent = 'Sending reset email...';
-
             const email = document.getElementById('reset-email').value.trim();
             if (!email) {
                 resetStatus.className = 'status error';
                 resetStatus.textContent = 'Please enter your email.';
                 return;
             }
-
             try {
                 await auth.sendPasswordResetEmail(email);
                 resetStatus.className = 'status ok';
@@ -398,7 +353,6 @@
                 resetStatus.textContent = err.message || 'Could not send reset email.';
             }
         });
-
         // Send ID token to Worker, handle redirect
         async function sendTokenToWorker(idToken, statusNode) {
             try {
@@ -406,21 +360,22 @@
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
+                        // This header is not used by your worker, but is good practice.
+                        // The worker is expecting the token in the JSON body.
                         "Authorization": `Bearer ${idToken}`
                     },
+                    // Send the token in the request body as JSON
+                    body: JSON.stringify({ token: idToken }),
                     credentials: "include"
                 });
-
-                // If Worker responds with 302, navigate to dashboard
-                if (res.status === 302 || res.redirected) {
-                    window.location.href = "https://jeremyworld.org/dashboard";
-                    return;
+                // The worker is now configured to return a 302 redirect on success.
+                // The browser will follow this automatically, so we don't need a specific check.
+                // We'll just handle non-redirecting errors.
+                if (!res.redirected) {
+                    const data = await res.json().catch(() => ({}));
+                    statusNode.className = 'status error';
+                    statusNode.textContent = data.error || 'Authentication failed.';
                 }
-
-                // Otherwise, parse any error JSON
-                const data = await res.json().catch(() => ({}));
-                statusNode.className = 'status error';
-                statusNode.textContent = data.error || 'Authentication failed.';
             } catch (err) {
                 statusNode.className = 'status error';
                 statusNode.textContent = err.message || 'Network error.';
