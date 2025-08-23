@@ -2,14 +2,14 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>JeremyWorld Games</title>
   <link rel="icon" href="data:,">
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     body {
       font-family: 'Inter', sans-serif;
-      background: linear-gradient(135deg, rgba(15, 23, 42, 0.95), rgba(30, 41, 59, 0.95));
+      background: linear-gradient(135deg, rgba(15,23,42,0.95), rgba(30,41,59,0.95));
       backdrop-filter: blur(12px);
       color: white;
     }
@@ -18,6 +18,19 @@
     }
     .glow-shadow-card {
       box-shadow: 0 0 10px rgba(45, 212, 191, 0.3);
+    }
+    /* Fallback button */
+    .btn-primary {
+      background: linear-gradient(90deg, #14b8a6, #06b6d4);
+      color: white;
+      font-weight: 600;
+      padding: 0.5rem 1rem;
+      border-radius: 0.375rem;
+      transition: transform .2s, box-shadow .2s;
+    }
+    .btn-primary:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 10px rgba(45, 212, 191, 0.6);
     }
   </style>
 </head>
@@ -36,113 +49,146 @@
 
   <!-- Modal -->
   <div id="gameModal" class="hidden fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-[9999]">
-    <div class="bg-gray-900 rounded-lg shadow-lg w-full h-full flex flex-col">
+    <div class="bg-gray-900 rounded-lg shadow-lg w-full h-full flex flex-col overflow-hidden relative">
       <div class="flex justify-between items-center p-4 border-b border-gray-700">
         <h2 id="modalGameTitle" class="text-lg font-semibold"></h2>
         <button id="closeModalBtn" class="text-gray-400 hover:text-white text-2xl leading-none">&times;</button>
       </div>
-      <iframe id="gameIframe" src="" frameborder="0" class="flex-1 w-full"></iframe>
+
+      <!-- Fallback overlay -->
+      <div id="fallbackOverlay"
+           class="hidden absolute inset-0 bg-gray-900 bg-opacity-75 flex flex-col items-center justify-center z-20">
+        <p class="text-red-400 mb-4">This game cannot be embedded here.</p>
+        <a id="fallbackLink" href="#" target="_blank" class="btn-primary">Open in new tab</a>
+      </div>
+
+      <!-- iframe container -->
+      <iframe id="gameIframe" src=""
+              frameborder="0"
+              class="flex-1 w-full bg-black"></iframe>
     </div>
   </div>
 
   <!-- Script -->
   <script>
-    document.addEventListener("DOMContentLoaded", () => {
-      const gameGrid = document.getElementById("gameGrid");
-      const gameModal = document.getElementById("gameModal");
-      const modalGameTitle = document.getElementById("modalGameTitle");
-      const iframe = document.getElementById("gameIframe");
-      const closeModalBtn = document.getElementById("closeModalBtn");
+  document.addEventListener("DOMContentLoaded", () => {
+    const gameGrid       = document.getElementById("gameGrid");
+    const gameModal      = document.getElementById("gameModal");
+    const modalGameTitle = document.getElementById("modalGameTitle");
+    const iframe         = document.getElementById("gameIframe");
+    const closeModalBtn  = document.getElementById("closeModalBtn");
+    const fallbackOvly   = document.getElementById("fallbackOverlay");
+    const fallbackLink   = document.getElementById("fallbackLink");
 
-      async function checkLogin() {
-        console.log("🔐 Checking login...");
-        try {
-          const res = await fetch("https://auth.jeremyworld.org/authcheck", {
-            method: "GET",
-            credentials: "include"
-          });
-
-          if (!res.ok) {
-            window.location.href = "https://jeremyworld.org/notloggedin.html";
-            return false;
-          }
-
-          const data = await res.json();
-          console.log("🔐 Login check result:", data);
-
-          if (!data.loggedIn) {
-            window.location.href = "https://jeremyworld.org/notloggedin.html";
-            return false;
-          }
-
-          return true;
-        } catch (err) {
-          console.error("❌ Login check error:", err);
-          window.location.href = "https://jeremyworld.org/notloggedin.html";
-          return false;
-        }
+    async function checkLogin() {
+      try {
+        const res = await fetch("https://auth.jeremyworld.org/authcheck", {
+          method: "GET",
+          credentials: "include"
+        });
+        if (!res.ok) throw new Error("Not logged in");
+        const { loggedIn } = await res.json();
+        if (!loggedIn) throw new Error("Not logged in");
+        return true;
+      } catch {
+        window.location.href = "https://jeremyworld.org/notloggedin.html";
+        return false;
       }
+    }
 
-      async function loadGames() {
-        console.log("🎮 Loading games...");
-        try {
-          const corsProxy = 'https://corsproxy.io/?';
-          const jsonURL = 'https://www.onlinegames.io/media/plugins/genGames/embed.json';
-          const response = await fetch(corsProxy + encodeURIComponent(jsonURL));
-          if (!response.ok) throw new Error(`HTTP error ${response.status}`);
-          const games = await response.json();
-          console.log("✅ Games loaded:", games.length);
+    function openGameModal(game) {
+      console.log("🎯 Clicked:", game.title, "Embed:", game.embed);
 
-          if (!Array.isArray(games) || games.length === 0) {
-            gameGrid.innerHTML = `<p class="text-center text-yellow-400">No games found.</p>`;
-            return;
-          }
+      // reset
+      fallbackOvly.classList.add("hidden");
+      iframe.src = "";
+      modalGameTitle.style.color = "";
+      modalGameTitle.textContent = game.title || "";
 
-          games.forEach(game => {
-            const tile = document.createElement("div");
-            tile.className = "cursor-pointer transform hover:scale-105 transition-transform duration-300 bg-gray-700 bg-opacity-60 p-3 rounded-xl shadow-md border border-gray-600 hover:border-teal-400 project-card-hover glow-shadow-card";
-            tile.innerHTML = `
-              <img src="${game.image}" alt="${game.title}" class="w-full h-28 object-cover rounded-md mb-2">
-              <h4 class="text-center text-white font-semibold text-sm truncate">${game.title}</h4>
-            `;
-            tile.addEventListener("click", () => {
-              console.log("🎯 Clicked:", game.title, "Embed URL:", game.embed);
-              gameModal.classList.remove("hidden");
-              iframe.src = game.embed || "";
-              modalGameTitle.textContent = game.title || "Untitled Game";
-              modalGameTitle.style.color = "lime"; // debug visual
-            });
-            gameGrid.appendChild(tile);
-          });
-        } catch (err) {
-          console.error("❌ Error loading games:", err);
-          gameGrid.innerHTML = `<p class="text-center text-red-400">Failed to load games. Try again later.</p>`;
+      // show modal
+      gameModal.classList.remove("hidden");
+
+      // set up fallback link
+      fallbackLink.href = game.embed;
+      
+      // try to load the embed
+      iframe.src = game.embed;
+
+      // if the iframe doesn't fire 'load' in 3s, show fallback
+      let loaded = false;
+      iframe.onload = () => {
+        loaded = true;
+        fallbackOvly.classList.add("hidden");
+      };
+      setTimeout(() => {
+        if (!loaded) {
+          console.warn("⚠️ embed failed, showing fallback");
+          fallbackOvly.classList.remove("hidden");
         }
-      }
+      }, 3000);
+    }
 
-      closeModalBtn?.addEventListener("click", () => {
+    async function loadGames() {
+      try {
+        const corsProxy = 'https://corsproxy.io/?';
+        const jsonURL   = 'https://www.onlinegames.io/media/plugins/genGames/embed.json';
+        const res       = await fetch(corsProxy + encodeURIComponent(jsonURL));
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const games     = await res.json();
+        if (!Array.isArray(games) || !games.length) {
+          gameGrid.innerHTML = `<p class="text-center text-yellow-400">No games found.</p>`;
+          return;
+        }
+        games.forEach(game => {
+          const tile = document.createElement("div");
+          tile.className = [
+            "cursor-pointer",
+            "transform hover:scale-105 transition-transform duration-300",
+            "bg-gray-700 bg-opacity-60 p-3 rounded-xl shadow-md",
+            "border border-gray-600 hover:border-teal-400",
+            "project-card-hover glow-shadow-card"
+          ].join(" ");
+
+          tile.innerHTML = `
+            <img src="${game.image}" alt="${game.title}"
+                 class="w-full h-28 object-cover rounded-md mb-2">
+            <h4 class="text-center text-white font-semibold text-sm truncate">
+              ${game.title}
+            </h4>
+          `;
+
+          tile.addEventListener("click", () => openGameModal(game));
+          gameGrid.appendChild(tile);
+        });
+      } catch (err) {
+        console.error("❌ Error loading games:", err);
+        gameGrid.innerHTML = `<p class="text-center text-red-400">Failed to load games.</p>`;
+      }
+    }
+
+    closeModalBtn.addEventListener("click", () => {
+      gameModal.classList.add("hidden");
+      iframe.src = "";
+    });
+
+    window.addEventListener("click", e => {
+      if (e.target === gameModal) {
         gameModal.classList.add("hidden");
         iframe.src = "";
-      });
-
-      window.addEventListener("click", e => {
-        if (e.target === gameModal) {
-          gameModal.classList.add("hidden");
-          iframe.src = "";
-        }
-      });
-
-      window.addEventListener("keydown", e => {
-        if (e.key === "Escape" && !gameModal.classList.contains("hidden")) {
-          gameModal.classList.add("hidden");
-          iframe.src = "";
-        }
-      });
-
-      checkLogin().then(ok => {
-        if (ok) loadGames();
-      });
+      }
     });
+
+    window.addEventListener("keydown", e => {
+      if (e.key === "Escape" && !gameModal.classList.contains("hidden")) {
+        gameModal.classList.add("hidden");
+        iframe.src = "";
+      }
+    });
+
+    checkLogin().then(ok => {
+      if (ok) loadGames();
+    });
+  });
   </script>
 </body>
 </html>
