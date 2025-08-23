@@ -1,88 +1,148 @@
-<script>
-  const gameGrid = document.getElementById("gameGrid");
-  const gameModal = document.getElementById("gameModal");
-  const modalGameTitle = document.getElementById("modalGameTitle");
-  const iframe = document.getElementById("gameIframe");
-  const closeModalBtn = document.getElementById("closeModalBtn");
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JeremyWorld Games</title>
+  <link rel="icon" href="data:,">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(135deg, rgba(15, 23, 42, 0.95), rgba(30, 41, 59, 0.95));
+      backdrop-filter: blur(12px);
+      color: white;
+    }
+    .project-card-hover:hover {
+      box-shadow: 0 0 15px rgba(45, 212, 191, 0.6);
+    }
+    .glow-shadow-card {
+      box-shadow: 0 0 10px rgba(45, 212, 191, 0.3);
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col">
 
-  // 🔐 Login check before loading games
-  async function checkLogin() {
-    try {
-      const res = await fetch("https://auth.jeremyworld.org/authcheck", {
-        method: "GET",
-        credentials: "include"
-      });
+  <!-- Header -->
+  <header class="p-6 text-center border-b border-gray-700">
+    <h1 class="text-3xl font-bold text-teal-400">🎮 JeremyWorld Games</h1>
+    <p class="text-gray-300">Play instantly in your browser</p>
+  </header>
 
-      if (!res.ok) {
-        window.location.href = "https://jeremyworld.org/notloggedin.html";
-        return false;
+  <!-- Game Grid -->
+  <main class="flex-1 p-6">
+    <div id="gameGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4"></div>
+  </main>
+
+  <!-- Modal -->
+  <div id="gameModal" class="hidden fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50">
+    <div class="bg-gray-900 rounded-lg shadow-lg w-11/12 md:w-3/4 lg:w-2/3 xl:w-1/2 overflow-hidden">
+      <div class="flex justify-between items-center p-4 border-b border-gray-700">
+        <h2 id="modalGameTitle" class="text-lg font-semibold"></h2>
+        <button id="closeModalBtn" class="text-gray-400 hover:text-white">&times;</button>
+      </div>
+      <div class="aspect-w-16 aspect-h-9">
+        <iframe id="gameIframe" src="" frameborder="0" class="w-full h-[70vh]"></iframe>
+      </div>
+    </div>
+  </div>
+
+  <!-- Script -->
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const gameGrid = document.getElementById("gameGrid");
+      const gameModal = document.getElementById("gameModal");
+      const modalGameTitle = document.getElementById("modalGameTitle");
+      const iframe = document.getElementById("gameIframe");
+      const closeModalBtn = document.getElementById("closeModalBtn");
+
+      async function checkLogin() {
+        console.log("🔐 Checking login...");
+        try {
+          const res = await fetch("https://auth.jeremyworld.org/authcheck", {
+            method: "GET",
+            credentials: "include"
+          });
+
+          if (!res.ok) {
+            window.location.href = "https://jeremyworld.org/notloggedin.html";
+            return false;
+          }
+
+          const data = await res.json();
+          console.log("🔐 Login check result:", data);
+
+          if (!data.loggedIn) {
+            window.location.href = "https://jeremyworld.org/notloggedin.html";
+            return false;
+          }
+
+          return true;
+        } catch (err) {
+          console.error("❌ Login check error:", err);
+          window.location.href = "https://jeremyworld.org/notloggedin.html";
+          return false;
+        }
       }
 
-      const data = await res.json();
-      if (!data.loggedIn) {
-        window.location.href = "https://jeremyworld.org/notloggedin.html";
-        return false;
+      async function loadGames() {
+        console.log("🎮 Loading games...");
+        try {
+          const corsProxy = 'https://corsproxy.io/?';
+          const jsonURL = 'https://www.onlinegames.io/media/plugins/genGames/embed.json';
+          const response = await fetch(corsProxy + encodeURIComponent(jsonURL));
+          if (!response.ok) throw new Error(`HTTP error ${response.status}`);
+          const games = await response.json();
+          console.log("✅ Games loaded:", games.length);
+
+          if (!Array.isArray(games) || games.length === 0) {
+            gameGrid.innerHTML = `<p class="text-center text-yellow-400">No games found.</p>`;
+            return;
+          }
+
+          games.forEach(game => {
+            const tile = document.createElement("div");
+            tile.className = "cursor-pointer transform hover:scale-105 transition-transform duration-300 bg-gray-700 bg-opacity-60 p-3 rounded-xl shadow-md border border-gray-600 hover:border-teal-400 project-card-hover glow-shadow-card";
+            tile.innerHTML = `
+              <img src="${game.image}" alt="${game.title}" class="w-full h-28 object-cover rounded-md mb-2">
+              <h4 class="text-center text-white font-semibold text-sm truncate">${game.title}</h4>
+            `;
+            tile.addEventListener("click", () => {
+              gameModal.classList.remove("hidden");
+              iframe.src = game.embed;
+              modalGameTitle.textContent = game.title;
+            });
+            gameGrid.appendChild(tile);
+          });
+        } catch (err) {
+          console.error("❌ Error loading games:", err);
+          gameGrid.innerHTML = `<p class="text-center text-red-400">Failed to load games. Try again later.</p>`;
+        }
       }
 
-      return true;
-    } catch (err) {
-      console.error("Login check failed:", err);
-      window.location.href = "https://jeremyworld.org/notloggedin.html";
-      return false;
-    }
-  }
-
-  // 🎮 Load games after login check
-  async function loadGames() {
-    try {
-      const corsProxy = 'https://corsproxy.io/?';
-      const jsonURL = 'https://www.onlinegames.io/media/plugins/genGames/embed.json';
-      const response = await fetch(corsProxy + encodeURIComponent(jsonURL));
-      if (!response.ok) throw new Error(`HTTP error ${response.status}`);
-      const games = await response.json();
-
-      games.forEach(game => {
-        const tile = document.createElement("div");
-        tile.className = "cursor-pointer transform hover:scale-105 transition-transform duration-300 bg-gray-700 bg-opacity-60 p-3 rounded-xl shadow-md border border-gray-600 hover:border-teal-400 project-card-hover glow-shadow-card";
-        tile.innerHTML = `
-          <img src="${game.image}" alt="${game.title}" class="w-full h-28 object-cover rounded-md mb-2">
-          <h4 class="text-center text-white font-semibold text-sm truncate">${game.title}</h4>
-        `;
-        tile.addEventListener("click", () => {
-          gameModal.classList.remove("hidden");
-          iframe.src = game.embed;
-          modalGameTitle.textContent = game.title;
-        });
-        gameGrid.appendChild(tile);
+      closeModalBtn?.addEventListener("click", () => {
+        gameModal.classList.add("hidden");
+        iframe.src = "";
       });
-    } catch (err) {
-      console.error("Error loading games:", err);
-      gameGrid.innerHTML = `<p class="text-center text-red-400">Failed to load games. Try again later.</p>`;
-    }
-  }
 
-  // 🧼 Modal cleanup
-  closeModalBtn?.addEventListener("click", () => {
-    gameModal.classList.add("hidden");
-    iframe.src = "";
-  });
+      window.addEventListener("click", e => {
+        if (e.target === gameModal) {
+          gameModal.classList.add("hidden");
+          iframe.src = "";
+        }
+      });
 
-  window.addEventListener("click", e => {
-    if (e.target === gameModal) {
-      gameModal.classList.add("hidden");
-      iframe.src = "";
-    }
-  });
+      window.addEventListener("keydown", e => {
+        if (e.key === "Escape" && !gameModal.classList.contains("hidden")) {
+          gameModal.classList.add("hidden");
+          iframe.src = "";
+        }
+      });
 
-  window.addEventListener("keydown", e => {
-    if (e.key === "Escape" && !gameModal.classList.contains("hidden")) {
-      gameModal.classList.add("hidden");
-      iframe.src = "";
-    }
-  });
-
-  // 🚀 Start the page
-  checkLogin().then(ok => {
-    if (ok) loadGames();
-  });
-</script>
+      checkLogin().then(ok => {
+        if (ok) loadGames();
+      });
+    });
+  </script>
+</body>
+</html>
