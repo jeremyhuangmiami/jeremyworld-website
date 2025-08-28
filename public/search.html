@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>J-Search</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-950 flex flex-col items-center justify-center min-h-screen font-sans text-gray-100">
+  
+  <!-- Logo / Title -->
+  <div class="text-center mb-12">
+    <h1 class="text-6xl font-extrabold text-white tracking-tight mb-3">Jeremy Search</h1>
+    <p class="text-gray-400 text-lg">Search smarter. Search faster. Google Quality.</p>
+  </div>
+
+  <!-- Search Box -->
+  <div class="w-full max-w-3xl">
+    <div class="gcse-search"></div>
+  </div>
+
+  <!-- Google CSE -->
+  <script async src="https://cse.google.com/cse.js?cx=1776e5a6fbe8545eb"></script>
+
+  <style>
+    /* Kill the outer white container */
+    .gsc-control-cse,
+    .gsc-control-wrapper-cse {
+      background: transparent !important;
+      border: none !important;
+      box-shadow: none !important;
+      padding: 0 !important;
+      margin: 0 !important;
+    }
+
+    /* Remove white border from input wrapper */
+    .gsc-input-box,
+    .gsc-input-box-hover,
+    .gsc-input-box-focus {
+      border: none !important;
+      background: transparent !important;
+      box-shadow: none !important;
+    }
+
+    /* Search box */
+    input.gsc-input {
+      background: #0f172a !important; /* dark navy */
+      color: #f9fafb !important;
+      border: 2px solid #1e293b !important;
+      border-radius: 9999px !important; /* pill */
+      padding: 12px 20px !important;
+      font-size: 1rem !important;
+      transition: all 0.2s ease-in-out;
+    }
+    input.gsc-input:focus {
+      outline: none !important;
+      border-color: #3b82f6 !important;
+      box-shadow: 0 0 12px #3b82f6 !important;
+    }
+
+    /* Search button */
+    .gsc-search-button-v2 {
+      background: #3b82f6 !important;
+      border: none !important;
+      border-radius: 9999px !important;
+      padding: 10px 22px !important;
+      margin-left: 10px !important;
+      transition: background 0.2s ease-in-out;
+    }
+    .gsc-search-button-v2:hover {
+      background: #2563eb !important;
+    }
+
+    /* Tab buttons (Web / Image) */
+    .gsc-tabHeader {
+      background: transparent !important;
+      color: #ffffff !important;
+      border: none !important;
+      font-weight: 500 !important;
+      padding: 8px 16px !important;
+      transition: color 0.2s ease-in-out;
+    }
+    .gsc-tabHeader.gsc-tabHeader-selected {
+      background: #1e293b !important;
+      color: #3b82f6 !important;
+      border-radius: 9999px !important;
+    }
+
+    /* Results cards */
+    .gsc-webResult, .gsc-result {
+      background: #111827 !important;
+      border: 1px solid #1f2937 !important;
+      border-radius: 12px !important;
+      padding: 16px !important;
+      margin: 12px 0 !important;
+      transition: transform 0.15s ease-in-out, border-color 0.15s ease-in-out;
+    }
+    .gsc-webResult:hover {
+      transform: scale(1.01);
+      border-color: #3b82f6 !important;
+    }
+
+    /* Result titles */
+    a.gs-title, a.gs-title b {
+      color: #60a5fa !important; 
+      font-size: 1.1rem !important;
+      font-weight: 600 !important;
+      text-decoration: none !important;
+    }
+    a.gs-title:hover {
+      color: #93c5fd !important;
+    }
+
+    /* Result snippets */
+    .gs-snippet {
+      color: #d1d5db !important;
+      font-size: 0.95rem !important;
+      line-height: 1.5 !important;
+    }
+
+    /* Hide Google junk branding */
+    .gcsc-more-maybe-branding-root, 
+    .gcsc-find-more-on-google, 
+    .gcsc-branding {
+      display: none !important;
+    }
+  </style>
+</body>
+</html>
