@@ -91,14 +91,15 @@
         <ul class="hidden md:flex items-center gap-2">
           <li><a href="index.html" class="focus-ring px-3 py-2 rounded-md text-sm font-semibold text-gray-200 hover:text-white hover:bg-white/5 transition">Home</a></li>
           <li><a href="projects.html" class="focus-ring px-3 py-2 rounded-md text-sm font-semibold text-gray-200 hover:text-white hover:bg-white/5 transition">Projects</a></li>
-          <li><a href="https://login.jeremyworld.org" class="focus-ring px-3 py-2 rounded-md text-sm font-semibold text-gray-200 hover:text-white hover:bg-white/5 transition">Login/Register</a></li>
+          <li><a href="login.html" class="focus-ring px-3 py-2 rounded-md text-sm font-semibold text-gray-200 hover:text-white hover:bg-white/5 transition">Login</a></li>
+          <li><a href="register.html" class="focus-ring px-3 py-2 rounded-md text-sm font-semibold text-gray-200 hover:text-white hover:bg-white/5 transition">Register</a></li>
         </ul>
       </nav>
       <div id="mobileNav" class="hidden md:hidden mt-2">
         <div class="glass rounded-2xl px-4 py-3">
           <a href="index.html" class="block px-3 py-2 rounded-md text-sm font-semibold text-gray-200 hover:text-white hover:bg-white/5">Home</a>
           <a href="projects.html" class="block px-3 py-2 rounded-md text-sm font-semibold text-gray-200 hover:text-white hover:bg-white/5">Projects</a>
-          <a href="https://login.jeremyworld.org" class="block px-3 py-2 rounded-md text-sm font-semibold text-gray-200 hover:text-white hover:bg-white/5">Login/Register</a>
+          <a href="login.html" class="block px-3 py-2 rounded-md text-sm font-semibold text-gray-200 hover:text-white hover:bg-white/5">Login/Register</a>
         </div>
       </div>
     </div>
@@ -157,22 +158,6 @@
       const closeModalBtn = document.getElementById("closeModalBtn");
       const statusMsg     = document.getElementById("statusMsg");
 
-      async function checkLogin() {
-        try {
-          const res = await fetch("https://auth.jeremyworld.org/authcheck", {
-            method: "GET",
-            credentials: "include"
-          });
-          if (!res.ok) throw new Error("Not logged in");
-          const data = await res.json();
-          if (!data || !data.loggedIn) throw new Error("Not logged in");
-          return true;
-        } catch {
-          window.location.href = "https://jeremyworld.org/notloggedin.html";
-          return false;
-        }
-      }
-
       function openGameModal(game) {
         document.body.style.overflow = "hidden";
         gameModal.classList.remove("hidden");
@@ -185,45 +170,118 @@
         iframe.src = "";
       }
 
+      function createTile(game) {
+        const tile = document.createElement("button");
+        tile.type = "button";
+        tile.className = "tile rounded-xl p-3 text-left cursor-pointer focus-ring w-full transition";
+        tile.setAttribute("aria-label", `Play ${game.title}`);
+        const imgSrc = game.image || "";
+        const safeTitle = (game.title || "Untitled").toString();
+
+        tile.innerHTML = `
+          <div class="relative">
+            <img src="${imgSrc}" alt="${safeTitle}" loading="lazy" class="w-full h-28 object-cover rounded-md" />
+          </div>
+          <h4 class="mt-2 text-white font-semibold text-sm line-clamp-2">${safeTitle}</h4>
+        `;
+
+        tile.addEventListener("click", () => openGameModal(game));
+        return tile;
+      }
+
+      // Normalize feeds into { title, image, embed }
+      function normalizeOnlineGamesIO(item) {
+        return {
+          title: item.title || item.name || "Untitled",
+          image: item.image || item.thumbnail || item.thumb || "",
+          // embed must be a URL (not full iframe markup)
+          embed: item.embed || item.url || item.src || ""
+        };
+      }
+
+      function normalizeGameMonetize(item) {
+        return {
+          title: item.title || item.name || "Untitled",
+          image: item.thumb || item.thumbnail || item.image || "",
+          embed: item.iframe || item.url || item.link || ""
+        };
+      }
+
+      async function fetchJSON(url) {
+        // Use a simple CORS proxy for client-side fetching
+        const corsProxy = 'https://corsproxy.io/?';
+        const proxied = corsProxy + encodeURIComponent(url);
+        const res = await fetch(proxied);
+        if (!res.ok) throw new Error(`Fetch failed ${res.status} for ${url}`);
+        return res.json();
+      }
+
       async function loadGames() {
         statusMsg.textContent = "Loading games…";
-        try {
-          const corsProxy = 'https://corsproxy.io/?';
-          const jsonURL   = 'https://www.onlinegames.io/media/plugins/genGames/embed.json';
-          const res       = await fetch(corsProxy + encodeURIComponent(jsonURL));
-          if (!res.ok) throw new Error(`HTTP ${res.status}`);
-          const games     = await res.json();
 
-          if (!Array.isArray(games) || games.length === 0) {
-            statusMsg.textContent = "No games found.";
-            return;
+        const sources = [
+          {
+            name: "OnlineGames.io",
+            url: "https://www.onlinegames.io/media/plugins/genGames/embed.json",
+            normalizer: normalizeOnlineGamesIO
+          },
+          {
+            name: "GameMonetize",
+            url: "https://gamemonetize.com/feed.json",
+            normalizer: normalizeGameMonetize
           }
+        ];
 
-          const fragment = document.createDocumentFragment();
+        const allGames = [];
+        const errors = [];
 
-          games.forEach(game => {
-            const tile = document.createElement("button");
-            tile.type = "button";
-            tile.className = "tile rounded-xl p-3 text-left cursor-pointer focus-ring w-full transition";
-            tile.setAttribute("aria-label", `Play ${game.title}`);
+        for (const src of sources) {
+          try {
+            const data = await fetchJSON(src.url);
 
-            tile.innerHTML = `
-              <div class="relative">
-                <img src="${game.image}" alt="${game.title}" loading="lazy" class="w-full h-28 object-cover rounded-md" />
-              </div>
-              <h4 class="mt-2 text-white font-semibold text-sm line-clamp-2">${game.title}</h4>
-            `;
+            // Handle various shapes: array at root, or nested under keys
+            const items = Array.isArray(data)
+              ? data
+              : Array.isArray(data?.games) ? data.games
+              : Array.isArray(data?.result) ? data.result
+              : Array.isArray(data?.data) ? data.data
+              : [];
 
-            tile.addEventListener("click", () => openGameModal(game));
-            fragment.appendChild(tile);
-          });
+            const normalized = items
+              .map(src.normalizer)
+              .filter(g => g.embed && g.title);
 
-          gameGrid.appendChild(fragment);
-          statusMsg.textContent = "";
-        } catch (err) {
-          console.error("Error loading games:", err);
-          statusMsg.textContent = "Failed to load games. Please try again later.";
+            allGames.push(...normalized);
+          } catch (e) {
+            console.error(`Error loading ${src.name}:`, e);
+            errors.push(src.name);
+          }
         }
+
+        if (allGames.length === 0) {
+          statusMsg.textContent = errors.length
+            ? `Failed to load: ${errors.join(", ")}`
+            : "No games found.";
+          return;
+        }
+
+        // Dedupe by embed URL (fallback title)
+        const seen = new Set();
+        const deduped = [];
+        for (const g of allGames) {
+          const key = (g.embed || g.title).toLowerCase();
+          if (seen.has(key)) continue;
+          seen.add(key);
+          deduped.push(g);
+        }
+
+        const fragment = document.createDocumentFragment();
+        deduped.forEach(game => fragment.appendChild(createTile(game)));
+        gameGrid.appendChild(fragment);
+
+        statusMsg.textContent = errors.length
+          ? `Loaded ${deduped.length} games. Skipped: ${errors.join(", ")}`
+          : "";
       }
 
       // Modal events
@@ -235,8 +293,8 @@
         if (e.key === "Escape" && !gameModal.classList.contains("hidden")) closeGameModal();
       });
 
-      // Initialize
-      checkLogin().then(ok => { if (ok) loadGames(); });
+      // Initialize (no login detection)
+      loadGames();
     });
   </script>
 </body>
