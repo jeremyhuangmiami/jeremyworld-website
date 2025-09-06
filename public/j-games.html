@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Jeremy’s World — J‑Games</title>
+  <title>Jeremy’s World — J-Games</title>
   <meta name="description" content="Play a big collection of free-to-play web games instantly in your browser on Jeremy’s World." />
 
   <!-- Inter font -->
@@ -107,7 +107,7 @@
   <!-- Main -->
   <main id="main" class="flex-grow pt-32 pb-16">
     <section class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-      <h1 class="text-3xl sm:text-4xl font-extrabold text-gradient text-center">J‑Games</h1>
+      <h1 class="text-3xl sm:text-4xl font-extrabold text-gradient text-center">J-Games</h1>
       <p class="mt-3 text-center text-gray-300">Play instantly in your browser — no downloads, just click and play!</p>
       <div id="gameGrid" class="mt-8 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4"></div>
       <div id="statusMsg" class="mt-6 text-center text-sm text-gray-400"></div>
@@ -139,7 +139,7 @@
   </footer>
 
   <script>
-    // Mobile nav
+    // Mobile nav toggle
     const btn = document.getElementById('menuBtn');
     const mobile = document.getElementById('mobileNav');
     if (btn && mobile) {
@@ -151,11 +151,16 @@
     }
 
     document.addEventListener("DOMContentLoaded", () => {
-      const gameGrid      = document.getElementById("gameGrid");
-      const gameModal     = document.getElementById("gameModal");
-      const iframe        = document.getElementById("gameIframe");
+      const gameGrid = document.getElementById("gameGrid");
+      const gameModal = document.getElementById("gameModal");
+      const iframe = document.getElementById("gameIframe");
       const closeModalBtn = document.getElementById("closeModalBtn");
-      const statusMsg     = document.getElementById("statusMsg");
+      const statusMsg = document.getElementById("statusMsg");
+
+      let allGames = [];
+      let currentIndex = 0;
+      const PAGE_SIZE = 15;
+      let loading = false;
 
       function openGameModal(game) {
         document.body.style.overflow = "hidden";
@@ -174,128 +179,70 @@
         tile.type = "button";
         tile.className = "tile rounded-xl p-3 text-left cursor-pointer focus-ring w-full transition";
         tile.setAttribute("aria-label", `Play ${game.title}`);
-        const imgSrc = game.image || "";
-        const safeTitle = (game.title || "Untitled").toString();
-
         tile.innerHTML = `
           <div class="relative">
-            <img src="${imgSrc}" alt="${safeTitle}" loading="lazy" class="w-full h-28 object-cover rounded-md" />
+            <img src="${game.image}" alt="${game.title}" loading="lazy" class="w-full h-28 object-cover rounded-md" />
           </div>
-          <h4 class="mt-2 text-white font-semibold text-sm line-clamp-2">${safeTitle}</h4>
+          <h4 class="mt-2 text-white font-semibold text-sm line-clamp-2">${game.title}</h4>
         `;
-
         tile.addEventListener("click", () => openGameModal(game));
         return tile;
       }
 
-      // Normalize feeds into { title, image, embed }
-      function normalizeOnlineGamesIO(item) {
-        return {
-          title: item.title || item.name || "Untitled",
-          image: item.image || item.thumbnail || item.thumb || "",
-          // embed must be a URL (not full iframe markup)
-          embed: item.embed || item.url || item.src || ""
-        };
+      function renderNextBatch() {
+        if (loading || currentIndex >= allGames.length) return;
+        loading = true;
+        const nextBatch = allGames.slice(currentIndex, currentIndex + PAGE_SIZE);
+        const fragment = document.createDocumentFragment();
+        nextBatch.forEach(game => fragment.appendChild(createTile(game)));
+        gameGrid.appendChild(fragment);
+        currentIndex += nextBatch.length;
+        loading = false;
       }
 
-      function normalizeGameMonetize(item) {
-        return {
-          title: item.title || item.name || "Untitled",
-          image: item.thumb || item.thumbnail || item.image || "",
-          embed: item.iframe || item.url || item.link || ""
-        };
-      }
-
-      async function fetchJSON(url) {
-        // Use a simple CORS proxy for client-side fetching
-        const corsProxy = 'https://corsproxy.io/?';
-        const proxied = corsProxy + encodeURIComponent(url);
-        const res = await fetch(proxied);
-        if (!res.ok) throw new Error(`Fetch failed ${res.status} for ${url}`);
-        return res.json();
-      }
-
-      async function loadGames() {
+      async function fetchGames() {
         statusMsg.textContent = "Loading games…";
-
+        const corsProxy = 'https://corsproxy.io/?';
         const sources = [
-          {
-            name: "OnlineGames.io",
-            url: "https://www.onlinegames.io/media/plugins/genGames/embed.json",
-            normalizer: normalizeOnlineGamesIO
-          },
-          {
-            name: "GameMonetize",
-            url: "https://gamemonetize.com/feed.json",
-            normalizer: normalizeGameMonetize
-          }
+          { url: "https://www.onlinegames.io/media/plugins/genGames/embed.json", normalizer: item => ({ title: item.title || "Untitled", image: item.image || "", embed: item.embed || item.url || "" }) },
+          { url: "https://gamemonetize.com/feed.json", normalizer: item => ({ title: item.title || "Untitled", image: item.thumb || "", embed: item.iframe || item.url || "" }) }
         ];
 
-        const allGames = [];
-        const errors = [];
-
+        const tempGames = [];
         for (const src of sources) {
           try {
-            const data = await fetchJSON(src.url);
-
-            // Handle various shapes: array at root, or nested under keys
-            const items = Array.isArray(data)
-              ? data
-              : Array.isArray(data?.games) ? data.games
-              : Array.isArray(data?.result) ? data.result
-              : Array.isArray(data?.data) ? data.data
-              : [];
-
-            const normalized = items
-              .map(src.normalizer)
-              .filter(g => g.embed && g.title);
-
-            allGames.push(...normalized);
-          } catch (e) {
-            console.error(`Error loading ${src.name}:`, e);
-            errors.push(src.name);
-          }
+            const data = await fetch(corsProxy + encodeURIComponent(src.url)).then(r => r.json());
+            const items = Array.isArray(data) ? data : Array.isArray(data?.games) ? data.games : [];
+            tempGames.push(...items.map(src.normalizer).filter(g => g.embed));
+          } catch (e) { console.error(`Failed to load ${src.url}`, e); }
         }
 
-        if (allGames.length === 0) {
-          statusMsg.textContent = errors.length
-            ? `Failed to load: ${errors.join(", ")}`
-            : "No games found.";
-          return;
-        }
-
-        // Dedupe by embed URL (fallback title)
         const seen = new Set();
-        const deduped = [];
-        for (const g of allGames) {
-          const key = (g.embed || g.title).toLowerCase();
-          if (seen.has(key)) continue;
+        allGames = tempGames.filter(g => {
+          const key = g.embed.toLowerCase();
+          if (seen.has(key)) return false;
           seen.add(key);
-          deduped.push(g);
-        }
+          return true;
+        });
 
-        const fragment = document.createDocumentFragment();
-        deduped.forEach(game => fragment.appendChild(createTile(game)));
-        gameGrid.appendChild(fragment);
-
-        statusMsg.textContent = errors.length
-          ? `Loaded ${deduped.length} games. Skipped: ${errors.join(", ")}`
-          : "";
+        statusMsg.textContent = `Loaded ${allGames.length} games.`;
+        renderNextBatch(); // first 15 only
       }
+
+      // Infinite scroll
+      window.addEventListener("scroll", () => {
+        if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 300) {
+          renderNextBatch();
+        }
+      });
 
       // Modal events
       closeModalBtn.addEventListener("click", closeGameModal);
-      gameModal.addEventListener("click", (e) => {
-        if (e.target === gameModal) closeGameModal();
-      });
-      window.addEventListener("keydown", (e) => {
-        if (e.key === "Escape" && !gameModal.classList.contains("hidden")) closeGameModal();
-      });
+      gameModal.addEventListener("click", e => { if (e.target === gameModal) closeGameModal(); });
+      window.addEventListener("keydown", e => { if (e.key === "Escape") closeGameModal(); });
 
-      // Initialize (no login detection)
-      loadGames();
+      fetchGames();
     });
   </script>
 </body>
 </html>
-```
