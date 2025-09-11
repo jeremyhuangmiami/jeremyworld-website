@@ -1,389 +1,373 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JeremyWorld Login</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --bg-dark: #202020;
-            --bg-medium: #303030;
-            --bg-light: #404040;
-            --text-light: #f0f0f0;
-            --text-medium: #b0b0b0;
-            --accent-blue: #008CBA;
-            --accent-blue-dark: #007095;
-            --accent-blue-light: rgba(0, 140, 186, 0.2);
-            --border-radius: 12px;
-            --transition: all 0.3s cubic-bezier(0.25,0.8,0.25,1);
-            --glass-bg: rgba(255,255,255,0.05);
-        }
-        * { margin:0; padding:0; box-sizing:border-box; }
-        body {
-            font-family:'Inter',sans-serif;
-            background:var(--bg-dark);
-            color:var(--text-light);
-            min-height:100vh;
-            display:flex;
-            justify-content:center;
-            align-items:center;
-            padding:1rem;
-            background-image:
-                radial-gradient(circle at 25% 25%, rgba(0,140,186,0.15) 0%, transparent 50%),
-                radial-gradient(circle at 75% 75%, rgba(0,140,186,0.15) 0%, transparent 50%);
-        }
-        .login-container {
-            width:100%;
-            max-width:420px;
-            background:var(--glass-bg);
-            border-radius:var(--border-radius);
-            padding:2.5rem;
-            box-shadow:0 8px 32px rgba(0,0,0,0.3);
-            border:1px solid rgba(255,255,255,0.1);
-            backdrop-filter: blur(12px);
-            animation: fadeIn 0.5s ease-out;
-        }
-        @keyframes fadeIn { from {opacity:0; transform:translateY(20px);} to {opacity:1; transform:translateY(0);} }
-        .logo{text-align:center;margin-bottom:2rem;}
-        .logo h1{font-size:1.8rem;font-weight:600;color:var(--text-light);margin-bottom:0.5rem;}
-        .logo p{color:var(--text-medium);font-size:0.9rem;}
-        .auth-form{margin-top:2rem;}
-        .form-group{margin-bottom:1.5rem;position:relative;}
-        .form-group label{display:block;margin-bottom:0.5rem;color:var(--text-medium);font-size:0.9rem;font-weight:500;}
-        .form-group input{
-            width:100%;padding:1rem;background:var(--bg-light);
-            border:none;border-radius:var(--border-radius);color:var(--text-light);
-            font-size:1rem;transition:var(--transition);border:1px solid transparent;
-        }
-        .form-group input:focus{outline:none;border-color:var(--accent-blue);box-shadow:0 0 0 3px var(--accent-blue-light);}
-        .forgot-password{text-align:right;margin-top:0.5rem;}
-        .forgot-password a{color:var(--accent-blue);font-size:0.8rem;text-decoration:none;transition:var(--transition);font-weight:500;}
-        .forgot-password a:hover{text-decoration:underline;text-underline-offset:2px;}
-        .btn{
-            width:100%;padding:1rem;background:var(--accent-blue);color:white;border:none;
-            border-radius:var(--border-radius);font-size:1rem;font-weight:600;cursor:pointer;transition:var(--transition);
-        }
-        .btn:hover{background:var(--accent-blue-dark);transform:translateY(-2px);box-shadow:0 8px 16px rgba(0,140,186,0.3);}
-        .btn:active{transform:translateY(0);}
-        .btn[disabled]{opacity:0.7;cursor:not-allowed;transform:none;box-shadow:none;}
-        .footer{text-align:center;margin-top:2rem;color:var(--text-medium);font-size:0.8rem;}
-        .footer a{color:var(--accent-blue);text-decoration:none;transition:var(--transition);font-weight:500;}
-        .footer a:hover{text-decoration:underline;text-underline-offset:2px;}
-        .status{color:var(--text-medium);font-size:0.85rem;margin-top:0.75rem;min-height:1.2em;}
-        .status.error{color:#ff6b6b;}
-        .status.ok{color:#7dd87d;}
-        .modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.7);justify-content:center;align-items:center;z-index:1000;backdrop-filter:blur(5px);}
-        .modal-content{
-            background:var(--glass-bg);padding:2rem;border-radius:var(--border-radius);
-            width:100%;max-width:400px;box-shadow:0 8px 32px rgba(0,0,0,0.3);
-            border:1px solid rgba(255,255,255,0.1);animation: modalFadeIn 0.3s ease-out;
-        }
-        @keyframes modalFadeIn{from{opacity:0;transform:translateY(-20px);} to{opacity:1;transform:translateY(0);}}
-        .modal h2{margin-bottom:1rem;color:var(--text-light);font-size:1.5rem;}
-        .modal p{color:var(--text-medium);margin-bottom:1.5rem;font-size:0.9rem;line-height:1.5;}
-        .btn-cancel{background:transparent;color:var(--text-light);border:1px solid rgba(255,255,255,0.1);margin-top:1rem;}
-        .btn-cancel:hover{background:rgba(255,255,255,0.05);border-color:var(--accent-blue);}
-        #signup-form{display:none;}
-        .name-fields{display:flex;gap:1rem;}
-        .name-fields .form-group{flex:1;margin-bottom:1rem;}
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JeremyWorld Login</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    /* your CSS kept the same */
+    :root {
+      --bg-dark: #202020;
+      --bg-medium: #303030;
+      --bg-light: #404040;
+      --text-light: #f0f0f0;
+      --text-medium: #b0b0b0;
+      --accent-blue: #008CBA;
+      --accent-blue-dark: #007095;
+      --accent-blue-light: rgba(0, 140, 186, 0.2);
+      --border-radius: 12px;
+      --transition: all 0.3s cubic-bezier(0.25,0.8,0.25,1);
+      --glass-bg: rgba(255,255,255,0.05);
+    }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body {
+      font-family:'Inter',sans-serif;
+      background:var(--bg-dark);
+      color:var(--text-light);
+      min-height:100vh;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      padding:1rem;
+      background-image:
+        radial-gradient(circle at 25% 25%, rgba(0,140,186,0.15) 0%, transparent 50%),
+        radial-gradient(circle at 75% 75%, rgba(0,140,186,0.15) 0%, transparent 50%);
+    }
+    .login-container {
+      width:100%;
+      max-width:420px;
+      background:var(--glass-bg);
+      border-radius:var(--border-radius);
+      padding:2.5rem;
+      box-shadow:0 8px 32px rgba(0,0,0,0.3);
+      border:1px solid rgba(255,255,255,0.1);
+      backdrop-filter: blur(12px);
+      animation: fadeIn 0.5s ease-out;
+    }
+    @keyframes fadeIn { from {opacity:0; transform:translateY(20px);} to {opacity:1; transform:translateY(0);} }
+    .logo{text-align:center;margin-bottom:2rem;}
+    .logo h1{font-size:1.8rem;font-weight:600;color:var(--text-light);margin-bottom:0.5rem;}
+    .logo p{color:var(--text-medium);font-size:0.9rem;}
+    .auth-form{margin-top:2rem;}
+    .form-group{margin-bottom:1.5rem;position:relative;}
+    .form-group label{display:block;margin-bottom:0.5rem;color:var(--text-medium);font-size:0.9rem;font-weight:500;}
+    .form-group input{
+      width:100%;padding:1rem;background:var(--bg-light);
+      border:none;border-radius:var(--border-radius);color:var(--text-light);
+      font-size:1rem;transition:var(--transition);border:1px solid transparent;
+    }
+    .form-group input:focus{outline:none;border-color:var(--accent-blue);box-shadow:0 0 0 3px var(--accent-blue-light);}
+    .forgot-password{text-align:right;margin-top:0.5rem;}
+    .forgot-password a{color:var(--accent-blue);font-size:0.8rem;text-decoration:none;transition:var(--transition);font-weight:500;}
+    .forgot-password a:hover{text-decoration:underline;text-underline-offset:2px;}
+    .btn{
+      width:100%;padding:1rem;background:var(--accent-blue);color:white;border:none;
+      border-radius:var(--border-radius);font-size:1rem;font-weight:600;cursor:pointer;transition:var(--transition);
+    }
+    .btn:hover{background:var(--accent-blue-dark);transform:translateY(-2px);box-shadow:0 8px 16px rgba(0,140,186,0.3);}
+    .btn:active{transform:translateY(0);}
+    .btn[disabled]{opacity:0.7;cursor:not-allowed;transform:none;box-shadow:none;}
+    .footer{text-align:center;margin-top:2rem;color:var(--text-medium);font-size:0.8rem;}
+    .footer a{color:var(--accent-blue);text-decoration:none;transition:var(--transition);font-weight:500;}
+    .footer a:hover{text-decoration:underline;text-underline-offset:2px;}
+    .status{color:var(--text-medium);font-size:0.85rem;margin-top:0.75rem;min-height:1.2em;}
+    .status.error{color:#ff6b6b;}
+    .status.ok{color:#7dd87d;}
+    .modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.7);justify-content:center;align-items:center;z-index:1000;backdrop-filter:blur(5px);}
+    .modal-content{
+      background:var(--glass-bg);padding:2rem;border-radius:var(--border-radius);
+      width:100%;max-width:400px;box-shadow:0 8px 32px rgba(0,0,0,0.3);
+      border:1px solid rgba(255,255,255,0.1);animation: modalFadeIn 0.3s ease-out;
+    }
+    @keyframes modalFadeIn{from{opacity:0;transform:translateY(-20px);} to{opacity:1;transform:translateY(0);}}
+    .modal h2{margin-bottom:1rem;color:var(--text-light);font-size:1.5rem;}
+    .modal p{color:var(--text-medium);margin-bottom:1.5rem;font-size:0.9rem;line-height:1.5;}
+    .btn-cancel{background:transparent;color:var(--text-light);border:1px solid rgba(255,255,255,0.1);margin-top:1rem;}
+    .btn-cancel:hover{background:rgba(255,255,255,0.05);border-color:var(--accent-blue);}
+    #signup-form{display:none;}
+    .name-fields{display:flex;gap:1rem;}
+    .name-fields .form-group{flex:1;margin-bottom:1rem;}
+    .resend-link {display:block;margin-top:0.5rem;font-size:0.8rem;color:var(--accent-blue);cursor:pointer;}
+  </style>
 </head>
 <body>
-    <div class="login-container">
-        <div id="login-form">
-            <div class="logo">
-                <h1>Welcome Back</h1>
-                <p>Sign in to access your JeremyWorld account</p>
-            </div>
-            <form id="auth-form" class="auth-form" novalidate>
-                <div class="form-group">
-                    <label for="email">Email Address</label>
-                    <input type="email" id="email" required placeholder="you@email.com" autocomplete="email">
-                </div>
-                <div class="form-group">
-                    <label for="password">Password</label>
-                    <input type="password" id="password" required placeholder="••••••••" autocomplete="current-password">
-                    <div class="forgot-password">
-                        <a href="#" id="forgot-password-link">Forgot password?</a>
-                    </div>
-                </div>
-                <button type="submit" id="sign-in-btn" class="btn">Sign In</button>
-                <div class="status" id="login-status"></div>
-            </form>
-            <div class="footer">
-                Don't have an account? <a href="#" id="show-signup">Sign up</a>
-            </div>
+  <div class="login-container">
+    <div id="login-form">
+      <div class="logo">
+        <h1>Welcome Back</h1>
+        <p>Sign in to access your JeremyWorld account</p>
+      </div>
+      <form id="auth-form" class="auth-form" novalidate>
+        <div class="form-group">
+          <label for="email">Email Address</label>
+          <input type="email" id="email" required placeholder="you@email.com" autocomplete="email">
         </div>
-
-        <div id="signup-form">
-            <div class="logo">
-                <h1>Create Account</h1>
-                <p>Join JeremyWorld today</p>
-            </div>
-            <form id="register-form" class="auth-form" novalidate>
-                <div class="name-fields">
-                    <div class="form-group">
-                        <label for="first-name">First Name</label>
-                        <input type="text" id="first-name" required placeholder="John" autocomplete="given-name">
-                    </div>
-                    <div class="form-group">
-                        <label for="last-name">Last Name</label>
-                        <input type="text" id="last-name" required placeholder="Doe" autocomplete="family-name">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="register-email">Email Address</label>
-                    <input type="email" id="register-email" required placeholder="you@email.com" autocomplete="email">
-                </div>
-                <div class="form-group">
-                    <label for="register-password">Password</label>
-                    <input type="password" id="register-password" required placeholder="••••••••" minlength="6" autocomplete="new-password">
-                </div>
-                <div class="form-group">
-                    <label for="confirm-password">Confirm Password</label>
-                    <input type="password" id="confirm-password" required placeholder="••••••••" minlength="6" autocomplete="new-password">
-                </div>
-                <button type="submit" id="register-btn" class="btn">Create Account</button>
-                <div class="status" id="signup-status"></div>
-            </form>
-            <div class="footer">
-                Already have an account? <a href="#" id="show-login">Sign in</a>
-            </div>
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input type="password" id="password" required placeholder="••••••••" autocomplete="current-password">
+          <div class="forgot-password">
+            <a href="#" id="forgot-password-link">Forgot password?</a>
+          </div>
         </div>
+        <button type="submit" id="sign-in-btn" class="btn">Sign In</button>
+        <div class="status" id="login-status"></div>
+        <a href="#" id="resend-verification" class="resend-link">Resend verification email</a>
+      </form>
+      <div class="footer">
+        Don't have an account? <a href="#" id="show-signup">Sign up</a>
+      </div>
     </div>
 
-    <div id="forgot-password-modal" class="modal" aria-hidden="true">
-        <div class="modal-content">
-            <h2>Reset Password</h2>
-            <p>Enter your email address and we'll send you a link to reset your password. Check your spam folder if you don't see it!!!!</p>
-            <form id="reset-password-form" novalidate>
-                <div class="form-group">
-                    <input type="email" id="reset-email" required placeholder="you@email.com" autocomplete="email">
-                </div>
-                <button type="submit" class="btn">Send Reset Link</button>
-                <button type="button" id="cancel-reset" class="btn btn-cancel">Cancel</button>
-                <div class="status" id="reset-status"></div>
-            </form>
+    <div id="signup-form">
+      <div class="logo">
+        <h1>Create Account</h1>
+        <p>Join JeremyWorld today</p>
+      </div>
+      <form id="register-form" class="auth-form" novalidate>
+        <div class="name-fields">
+          <div class="form-group">
+            <label for="first-name">First Name</label>
+            <input type="text" id="first-name" required placeholder="John" autocomplete="given-name">
+          </div>
+          <div class="form-group">
+            <label for="last-name">Last Name</label>
+            <input type="text" id="last-name" required placeholder="Doe" autocomplete="family-name">
+          </div>
         </div>
+        <div class="form-group">
+          <label for="register-email">Email Address</label>
+          <input type="email" id="register-email" required placeholder="you@email.com" autocomplete="email">
+        </div>
+        <div class="form-group">
+          <label for="register-password">Password</label>
+          <input type="password" id="register-password" required placeholder="••••••••" minlength="6" autocomplete="new-password">
+        </div>
+        <div class="form-group">
+          <label for="confirm-password">Confirm Password</label>
+          <input type="password" id="confirm-password" required placeholder="••••••••" minlength="6" autocomplete="new-password">
+        </div>
+        <button type="submit" id="register-btn" class="btn">Create Account</button>
+        <div class="status" id="signup-status"></div>
+      </form>
+      <div class="footer">
+        Already have an account? <a href="#" id="show-login">Sign in</a>
+      </div>
     </div>
+  </div>
 
-    <!-- Firebase SDKs -->
-    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+  <div id="forgot-password-modal" class="modal" aria-hidden="true">
+    <div class="modal-content">
+      <h2>Reset Password</h2>
+      <p>Enter your email address and we'll send you a link to reset your password. Check your spam folder if you don't see it.</p>
+      <form id="reset-password-form" novalidate>
+        <div class="form-group">
+          <input type="email" id="reset-email" required placeholder="you@email.com" autocomplete="email">
+        </div>
+        <button type="submit" class="btn">Send Reset Link</button>
+        <button type="button" id="cancel-reset" class="btn btn-cancel">Cancel</button>
+        <div class="status" id="reset-status"></div>
+      </form>
+    </div>
+  </div>
 
-    <script>
-        // IMPORTANT: point to your Worker mapped under your domain
-        const workerURL = "https://auth.jeremyworld.org";
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
 
-        const firebaseConfig = {
-            apiKey: "AIzaSyCyPk7d26WwhHM34MVbSHBMrnfSTtT213Y",
-            authDomain: "jeremyworld-auth.firebaseapp.com",
-            projectId: "jeremyworld-auth",
-        };
-        firebase.initializeApp(firebaseConfig);
-        const auth = firebase.auth();
+  <script>
+    const workerURL = "https://auth.jeremyworld.org";
+    const firebaseConfig = {
+      apiKey: "AIzaSyCyPk7d26WwhHM34MVbSHBMrnfSTtT213Y",
+      authDomain: "jeremyworld-auth.firebaseapp.com",
+      projectId: "jeremyworld-auth",
+    };
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
 
-        // Store a safe referrer URL (same-origin only) for post-login redirect
-        (function storeSafeReferrer() {
-            try {
-                if (!document.referrer) return;
-                const ref = new URL(document.referrer);
-                const here = new URL(window.location.href);
-                // Only accept same-origin and not the login page itself
-                if (ref.origin === here.origin && !ref.pathname.includes('login')) {
-                    localStorage.setItem('redirectAfterLogin', ref.href);
-                }
-            } catch (_) { /* ignore */ }
-        })();
+    // toggle login/signup
+    const loginFormWrap = document.getElementById('login-form');
+    const signupFormWrap = document.getElementById('signup-form');
+    document.getElementById('show-signup').addEventListener('click', e => {
+      e.preventDefault();
+      loginFormWrap.style.display='none';
+      signupFormWrap.style.display='block';
+    });
+    document.getElementById('show-login').addEventListener('click', e => {
+      e.preventDefault();
+      signupFormWrap.style.display='none';
+      loginFormWrap.style.display='block';
+    });
 
-        // Toggle login/signup
-        const loginFormWrap = document.getElementById('login-form');
-        const signupFormWrap = document.getElementById('signup-form');
-        document.getElementById('show-signup').addEventListener('click', e => {
-            e.preventDefault();
-            loginFormWrap.style.display='none';
-            signupFormWrap.style.display='block';
-        });
-        document.getElementById('show-login').addEventListener('click', e => {
-            e.preventDefault();
-            signupFormWrap.style.display='none';
-            loginFormWrap.style.display='block';
-        });
+    function setLoading(btn, isLoading) { if (btn) btn.disabled = isLoading; }
 
-        // Utility: disable/enable a button during async ops
-        function setLoading(btn, isLoading) {
-            if (!btn) return;
-            btn.disabled = isLoading;
+    // login
+    const loginForm = document.getElementById('auth-form');
+    const loginStatus = document.getElementById('login-status');
+    const signInBtn = document.getElementById('sign-in-btn');
+
+    loginForm.addEventListener('submit', async e => {
+      e.preventDefault();
+      loginStatus.className='status';
+      loginStatus.textContent='Signing in...';
+      setLoading(signInBtn, true);
+
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value.trim();
+      if (!email || !password) {
+        loginStatus.className='status error';
+        loginStatus.textContent='Please fill in all fields.';
+        setLoading(signInBtn, false);
+        return;
+      }
+      try {
+        const userCred = await auth.signInWithEmailAndPassword(email, password);
+
+        if (!userCred.user.emailVerified) {
+          loginStatus.className = 'status error';
+          loginStatus.textContent = 'Please verify your email before signing in.';
+          await auth.signOut();
+          return;
         }
 
-        // Login
-        const loginForm = document.getElementById('auth-form');
-        const loginStatus = document.getElementById('login-status');
-        const signInBtn = document.getElementById('sign-in-btn');
+        const idToken = await userCred.user.getIdToken();
+        await sendTokenToWorker(idToken, loginStatus);
+      } catch (err) {
+        loginStatus.className='status error';
+        loginStatus.textContent=err?.message || 'Login failed.';
+      } finally {
+        setLoading(signInBtn, false);
+      }
+    });
 
-        loginForm.addEventListener('submit', async e => {
-            e.preventDefault();
-            loginStatus.className='status';
-            loginStatus.textContent='Signing in...';
-            setLoading(signInBtn, true);
+    // resend verification
+    document.getElementById('resend-verification').addEventListener('click', async e => {
+      e.preventDefault();
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value.trim();
+      if (!email || !password) {
+        loginStatus.className='status error';
+        loginStatus.textContent='Enter your email & password to resend verification.';
+        return;
+      }
+      try {
+        const userCred = await auth.signInWithEmailAndPassword(email, password);
+        await userCred.user.sendEmailVerification();
+        loginStatus.className='status ok';
+        loginStatus.textContent='Verification email resent. Check your inbox.';
+        await auth.signOut();
+      } catch (err) {
+        loginStatus.className='status error';
+        loginStatus.textContent=err?.message || 'Could not resend verification.';
+      }
+    });
 
-            const email = document.getElementById('email').value.trim();
-            const password = document.getElementById('password').value.trim();
-            if (!email || !password) {
-                loginStatus.className='status error';
-                loginStatus.textContent='Please fill in all fields.';
-                setLoading(signInBtn, false);
-                return;
-            }
-            try {
-                const userCred = await auth.signInWithEmailAndPassword(email, password);
-                const idToken = await userCred.user.getIdToken();
-                console.log('Login successful, sending token to Worker:', workerURL + '/auth');
-                await sendTokenToWorker(idToken, loginStatus);
-            } catch (err) {
-                loginStatus.className='status error';
-                loginStatus.textContent=err && err.message ? err.message : 'Login failed.';
-            } finally {
-                setLoading(signInBtn, false);
-            }
+    // signup
+    const signupForm = document.getElementById('register-form');
+    const signupStatus = document.getElementById('signup-status');
+    const registerBtn = document.getElementById('register-btn');
+
+    signupForm.addEventListener('submit', async e => {
+      e.preventDefault();
+      signupStatus.className='status';
+      signupStatus.textContent='Creating your account...';
+      setLoading(registerBtn, true);
+
+      const first = document.getElementById('first-name').value.trim();
+      const last = document.getElementById('last-name').value.trim();
+      const email = document.getElementById('register-email').value.trim();
+      const password = document.getElementById('register-password').value.trim();
+      const confirm = document.getElementById('confirm-password').value.trim();
+
+      if (!first || !last || !email || !password || !confirm) {
+        signupStatus.className='status error';
+        signupStatus.textContent='Please fill in all fields.';
+        setLoading(registerBtn, false);
+        return;
+      }
+      if (password !== confirm) {
+        signupStatus.className='status error';
+        signupStatus.textContent='Passwords do not match.';
+        setLoading(registerBtn, false);
+        return;
+      }
+      try {
+        const userCred = await auth.createUserWithEmailAndPassword(email, password);
+        const displayName = `${first} ${last}`.trim();
+        if (displayName) await userCred.user.updateProfile({ displayName });
+
+        await userCred.user.sendEmailVerification();
+        signupStatus.className = 'status ok';
+        signupStatus.textContent = 'Account created! Please verify your email before signing in.';
+        await auth.signOut();
+      } catch (err) {
+        signupStatus.className='status error';
+        signupStatus.textContent=err?.message || 'Sign-up failed.';
+      } finally {
+        setLoading(registerBtn, false);
+      }
+    });
+
+    // forgot password modal
+    const forgotModal = document.getElementById('forgot-password-modal');
+    document.getElementById('forgot-password-link').addEventListener('click', e => {
+      e.preventDefault();
+      document.getElementById('reset-status').textContent='';
+      forgotModal.style.display='flex';
+      forgotModal.setAttribute('aria-hidden','false');
+    });
+    document.getElementById('cancel-reset').addEventListener('click', () => {
+      forgotModal.style.display='none';
+      forgotModal.setAttribute('aria-hidden','true');
+    });
+    forgotModal.addEventListener('click', e => {
+      if (e.target === forgotModal) {
+        forgotModal.style.display='none';
+        forgotModal.setAttribute('aria-hidden','true');
+      }
+    });
+    document.getElementById('reset-password-form').addEventListener('submit', async e => {
+      e.preventDefault();
+      const resetStatus = document.getElementById('reset-status');
+      resetStatus.className='status';
+      resetStatus.textContent='Sending reset email...';
+      const email = document.getElementById('reset-email').value.trim();
+      if (!email) {
+        resetStatus.className='status error';
+        resetStatus.textContent='Please enter your email.';
+        return;
+      }
+      try {
+        await auth.sendPasswordResetEmail(email);
+        resetStatus.className='status ok';
+        resetStatus.textContent='Password reset email sent.';
+        setTimeout(() => {
+          forgotModal.style.display='none';
+          forgotModal.setAttribute('aria-hidden','true');
+        }, 1200);
+      } catch (err) {
+        resetStatus.className='status error';
+        resetStatus.textContent=err?.message || 'Could not send reset email.';
+      }
+    });
+
+    async function sendTokenToWorker(idToken, statusNode) {
+      try {
+        const res = await fetch(workerURL + '/auth', {
+          method:"POST",
+          headers: {"Content-Type":"application/json"},
+          body: JSON.stringify({ token: idToken }),
+          credentials:"include"
         });
-
-        // Signup
-        const signupForm = document.getElementById('register-form');
-        const signupStatus = document.getElementById('signup-status');
-        const registerBtn = document.getElementById('register-btn');
-
-        signupForm.addEventListener('submit', async e => {
-            e.preventDefault();
-            signupStatus.className='status';
-            signupStatus.textContent='Creating your account...';
-            setLoading(registerBtn, true);
-
-            const first = document.getElementById('first-name').value.trim();
-            const last = document.getElementById('last-name').value.trim();
-            const email = document.getElementById('register-email').value.trim();
-            const password = document.getElementById('register-password').value.trim();
-            const confirm = document.getElementById('confirm-password').value.trim();
-
-            if (!first || !last || !email || !password || !confirm) {
-                signupStatus.className='status error';
-                signupStatus.textContent='Please fill in all fields.';
-                setLoading(registerBtn, false);
-                return;
-            }
-            if (password !== confirm) {
-                signupStatus.className='status error';
-                signupStatus.textContent='Passwords do not match.';
-                setLoading(registerBtn, false);
-                return;
-            }
-            try {
-                const userCred = await auth.createUserWithEmailAndPassword(email, password);
-                const displayName = `${first} ${last}`.trim();
-                if (displayName) await userCred.user.updateProfile({ displayName });
-                const idToken = await userCred.user.getIdToken();
-                console.log('Signup successful, sending token to Worker:', workerURL + '/auth');
-                await sendTokenToWorker(idToken, signupStatus);
-            } catch (err) {
-                signupStatus.className='status error';
-                signupStatus.textContent=err && err.message ? err.message : 'Sign-up failed.';
-            } finally {
-                setLoading(registerBtn, false);
-            }
-        });
-
-        // Forgot password modal
-        const forgotModal = document.getElementById('forgot-password-modal');
-        document.getElementById('forgot-password-link').addEventListener('click', e => {
-            e.preventDefault();
-            const rs = document.getElementById('reset-status');
-            rs.className='status';
-            rs.textContent='';
-            forgotModal.style.display='flex';
-            forgotModal.setAttribute('aria-hidden','false');
-        });
-        document.getElementById('cancel-reset').addEventListener('click', () => {
-            forgotModal.style.display='none';
-            forgotModal.setAttribute('aria-hidden','true');
-        });
-        forgotModal.addEventListener('click', e => {
-            if (e.target === forgotModal) {
-                forgotModal.style.display='none';
-                forgotModal.setAttribute('aria-hidden','true');
-            }
-        });
-        document.getElementById('reset-password-form').addEventListener('submit', async e => {
-            e.preventDefault();
-            const resetStatus = document.getElementById('reset-status');
-            resetStatus.className='status';
-            resetStatus.textContent='Sending reset email...';
-            const email = document.getElementById('reset-email').value.trim();
-            if (!email) {
-                resetStatus.className='status error';
-                resetStatus.textContent='Please enter your email.';
-                return;
-            }
-            try {
-                await auth.sendPasswordResetEmail(email);
-                resetStatus.className='status ok';
-                resetStatus.textContent='Password reset email sent.';
-                setTimeout(() => {
-                    forgotModal.style.display='none';
-                    forgotModal.setAttribute('aria-hidden','true');
-                }, 1200);
-            } catch (err) {
-                resetStatus.className='status error';
-                resetStatus.textContent=err && err.message ? err.message : 'Could not send reset email.';
-            }
-        });
-
-        // Safe redirect logic
-        function getSafeRedirect() {
-            const stored = localStorage.getItem('redirectAfterLogin');
-            try {
-                if (!stored) return null;
-                const url = new URL(stored);
-                if (url.origin === window.location.origin) return url.href;
-            } catch (_) { /* ignore */ }
-            return null;
+        if (!res.ok) throw new Error('Worker error');
+        window.location.href='/'; // redirect on success
+      } catch (err) {
+        if (statusNode) {
+          statusNode.className='status error';
+          statusNode.textContent='Error storing session: '+err.message;
         }
-
-        // Send ID token to Worker and handle redirection
-        async function sendTokenToWorker(idToken, statusNode) {
-            try {
-                const res = await fetch(workerURL + '/auth', {
-                    method:"POST",
-                    headers: {"Content-Type":"application/json"},
-                    body: JSON.stringify({ token: idToken }),
-                    credentials:"include"
-                });
-
-                // Helpful debug when inspecting in DevTools Network
-                console.log('POST', workerURL + '/auth', 'status:', res.status);
-
-                if (res.ok) {
-                    // Tiny delay to ensure cookie is flushed before navigation
-                    await new Promise(r => setTimeout(r, 200));
-
-                    const redirectUrl = getSafeRedirect();
-                    if (redirectUrl) {
-                        localStorage.removeItem('redirectAfterLogin');
-                        window.location.href = redirectUrl;
-                    } else {
-                        window.location.href = "https://jeremyworld.org/dashboard";
-                    }
-                    return;
-                }
-
-                const data = await res.json().catch(() => ({}));
-                statusNode.className='status error';
-                statusNode.textContent = data.error || 'Authentication failed.';
-            } catch (err) {
-                statusNode.className='status error';
-                statusNode.textContent = err && err.message ? err.message : 'Network error.';
-            }
-        }
-    </script>
+      }
+    }
+  </script>
 </body>
 </html>
