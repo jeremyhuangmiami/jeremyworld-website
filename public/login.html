@@ -6,7 +6,6 @@
   <title>JeremyWorld Login</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <style>
-    /* your CSS kept the same */
     :root {
       --bg-dark: #202020;
       --bg-medium: #303030;
@@ -88,7 +87,6 @@
     #signup-form{display:none;}
     .name-fields{display:flex;gap:1rem;}
     .name-fields .form-group{flex:1;margin-bottom:1rem;}
-    .resend-link {display:block;margin-top:0.5rem;font-size:0.8rem;color:var(--accent-blue);cursor:pointer;}
   </style>
 </head>
 <body>
@@ -112,7 +110,6 @@
         </div>
         <button type="submit" id="sign-in-btn" class="btn">Sign In</button>
         <div class="status" id="login-status"></div>
-        <a href="#" id="resend-verification" class="resend-link">Resend verification email</a>
       </form>
       <div class="footer">
         Don't have an account? <a href="#" id="show-signup">Sign up</a>
@@ -159,7 +156,7 @@
   <div id="forgot-password-modal" class="modal" aria-hidden="true">
     <div class="modal-content">
       <h2>Reset Password</h2>
-      <p>Enter your email address and we'll send you a link to reset your password. Check your spam folder if you don't see it.</p>
+      <p>Enter your email address and we'll send you a link to reset your password. Check your spam folder if you don't see it!!!!</p>
       <form id="reset-password-form" novalidate>
         <div class="form-group">
           <input type="email" id="reset-email" required placeholder="you@email.com" autocomplete="email">
@@ -177,6 +174,7 @@
 
   <script>
     const workerURL = "https://auth.jeremyworld.org";
+
     const firebaseConfig = {
       apiKey: "AIzaSyCyPk7d26WwhHM34MVbSHBMrnfSTtT213Y",
       authDomain: "jeremyworld-auth.firebaseapp.com",
@@ -185,7 +183,7 @@
     firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
 
-    // toggle login/signup
+    // Toggle login/signup
     const loginFormWrap = document.getElementById('login-form');
     const signupFormWrap = document.getElementById('signup-form');
     document.getElementById('show-signup').addEventListener('click', e => {
@@ -199,9 +197,12 @@
       loginFormWrap.style.display='block';
     });
 
-    function setLoading(btn, isLoading) { if (btn) btn.disabled = isLoading; }
+    function setLoading(btn, isLoading) {
+      if (!btn) return;
+      btn.disabled = isLoading;
+    }
 
-    // login
+    // Login
     const loginForm = document.getElementById('auth-form');
     const loginStatus = document.getElementById('login-status');
     const signInBtn = document.getElementById('sign-in-btn');
@@ -222,47 +223,17 @@
       }
       try {
         const userCred = await auth.signInWithEmailAndPassword(email, password);
-
-        if (!userCred.user.emailVerified) {
-          loginStatus.className = 'status error';
-          loginStatus.textContent = 'Please verify your email before signing in.';
-          await auth.signOut();
-          return;
-        }
-
         const idToken = await userCred.user.getIdToken();
         await sendTokenToWorker(idToken, loginStatus);
       } catch (err) {
         loginStatus.className='status error';
-        loginStatus.textContent=err?.message || 'Login failed.';
+        loginStatus.textContent=err && err.message ? err.message : 'Login failed.';
       } finally {
         setLoading(signInBtn, false);
       }
     });
 
-    // resend verification
-    document.getElementById('resend-verification').addEventListener('click', async e => {
-      e.preventDefault();
-      const email = document.getElementById('email').value.trim();
-      const password = document.getElementById('password').value.trim();
-      if (!email || !password) {
-        loginStatus.className='status error';
-        loginStatus.textContent='Enter your email & password to resend verification.';
-        return;
-      }
-      try {
-        const userCred = await auth.signInWithEmailAndPassword(email, password);
-        await userCred.user.sendEmailVerification();
-        loginStatus.className='status ok';
-        loginStatus.textContent='Verification email resent. Check your inbox.';
-        await auth.signOut();
-      } catch (err) {
-        loginStatus.className='status error';
-        loginStatus.textContent=err?.message || 'Could not resend verification.';
-      }
-    });
-
-    // signup
+    // Signup (with email verification only here)
     const signupForm = document.getElementById('register-form');
     const signupStatus = document.getElementById('signup-status');
     const registerBtn = document.getElementById('register-btn');
@@ -296,23 +267,29 @@
         const displayName = `${first} ${last}`.trim();
         if (displayName) await userCred.user.updateProfile({ displayName });
 
+        // Send email verification
         await userCred.user.sendEmailVerification();
-        signupStatus.className = 'status ok';
-        signupStatus.textContent = 'Account created! Please verify your email before signing in.';
+        signupStatus.className='status ok';
+        signupStatus.textContent='Account created! Please check your email to verify before logging in.';
+        
+        // Sign out immediately until verified
         await auth.signOut();
+
       } catch (err) {
         signupStatus.className='status error';
-        signupStatus.textContent=err?.message || 'Sign-up failed.';
+        signupStatus.textContent=err && err.message ? err.message : 'Sign-up failed.';
       } finally {
         setLoading(registerBtn, false);
       }
     });
 
-    // forgot password modal
+    // Forgot password modal
     const forgotModal = document.getElementById('forgot-password-modal');
     document.getElementById('forgot-password-link').addEventListener('click', e => {
       e.preventDefault();
-      document.getElementById('reset-status').textContent='';
+      const rs = document.getElementById('reset-status');
+      rs.className='status';
+      rs.textContent='';
       forgotModal.style.display='flex';
       forgotModal.setAttribute('aria-hidden','false');
     });
@@ -347,10 +324,11 @@
         }, 1200);
       } catch (err) {
         resetStatus.className='status error';
-        resetStatus.textContent=err?.message || 'Could not send reset email.';
+        resetStatus.textContent=err && err.message ? err.message : 'Could not send reset email.';
       }
     });
 
+    // Send token to worker (login only)
     async function sendTokenToWorker(idToken, statusNode) {
       try {
         const res = await fetch(workerURL + '/auth', {
@@ -359,13 +337,16 @@
           body: JSON.stringify({ token: idToken }),
           credentials:"include"
         });
-        if (!res.ok) throw new Error('Worker error');
-        window.location.href='/'; // redirect on success
-      } catch (err) {
-        if (statusNode) {
-          statusNode.className='status error';
-          statusNode.textContent='Error storing session: '+err.message;
+        if (res.ok) {
+          window.location.href = "https://jeremyworld.org/dashboard";
+          return;
         }
+        const data = await res.json().catch(() => ({}));
+        statusNode.className='status error';
+        statusNode.textContent = data.error || 'Authentication failed.';
+      } catch (err) {
+        statusNode.className='status error';
+        statusNode.textContent = err && err.message ? err.message : 'Network error.';
       }
     }
   </script>
