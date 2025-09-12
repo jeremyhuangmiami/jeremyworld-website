@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Public Chat Room</title>
+<style>
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #1e1e2f;
+    color: #fff;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+  }
+
+  header {
+    background-color: #2b2b4a;
+    padding: 15px;
+    text-align: center;
+    font-size: 1.5em;
+    font-weight: bold;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.5);
+  }
+
+  #chat {
+    flex: 1;
+    padding: 15px;
+    overflow-y: auto;
+    background: #28283d;
+  }
+
+  .message {
+    background: #3b3b5a;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 10px;
+    word-break: break-word;
+    max-width: 80%;
+    position: relative;
+  }
+
+  .timestamp {
+    font-size: 0.7em;
+    color: #bbb;
+    position: absolute;
+    bottom: 5px;
+    right: 10px;
+  }
+
+  #inputArea {
+    display: flex;
+    background: #2b2b4a;
+    padding: 10px;
+  }
+
+  #msgInput {
+    flex: 1;
+    padding: 10px;
+    border: none;
+    border-radius: 10px;
+    margin-right: 10px;
+    font-size: 1em;
+  }
+
+  #msgInput:focus {
+    outline: none;
+  }
+
+  #sendBtn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 10px;
+    background-color: #5c5cff;
+    color: #fff;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+
+  #sendBtn:hover {
+    background-color: #4141ff;
+  }
+</style>
+
+<script src="https://www.gstatic.com/firebasejs/10.1.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.1.0/firebase-database.js"></script>
+</head>
+<body>
+<header>Public Chat Room</header>
+
+<div id="chat"></div>
+
+<div id="inputArea">
+  <input type="text" id="msgInput" placeholder="Type your message...">
+  <button id="sendBtn">Send</button>
+</div>
+
+<script>
+  // ===== Your Firebase Config =====
+  const firebaseConfig = {
+    apiKey: "AIzaSyDRCjaHC1Ao-r5GcZwMeqBYmcG1nrq09FU",
+    authDomain: "jeremy-world-4b4cc.firebaseapp.com",
+    databaseURL: "https://jeremy-world-4b4cc-default-rtdb.firebaseio.com",
+    projectId: "jeremy-world-4b4cc",
+    storageBucket: "jeremy-world-4b4cc.firebasestorage.app",
+    messagingSenderId: "1018598758300",
+    appId: "1:1018598758300:web:aeb0ce95c26786d5771a59",
+    measurementId: "G-X9XTNM16BV"
+  };
+
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.database();
+
+  const chatDiv = document.getElementById('chat');
+  const msgInput = document.getElementById('msgInput');
+  const sendBtn = document.getElementById('sendBtn');
+
+  // ===== Display messages =====
+  db.ref('messages').on('child_added', snapshot => {
+    const data = snapshot.val();
+    const div = document.createElement('div');
+    div.className = 'message';
+    div.textContent = data.text;
+
+    const ts = document.createElement('span');
+    ts.className = 'timestamp';
+    ts.textContent = data.time;
+    div.appendChild(ts);
+
+    chatDiv.appendChild(div);
+    chatDiv.scrollTop = chatDiv.scrollHeight; // Auto-scroll
+  });
+
+  // ===== Send message =====
+  sendBtn.addEventListener('click', sendMessage);
+  msgInput.addEventListener('keypress', e => {
+    if (e.key === "Enter") sendMessage();
+  });
+
+  function sendMessage() {
+    let msg = msgInput.value.trim();
+    if (!msg) return;
+
+    // Sanitize
+    msg = msg.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+
+    const timestamp = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+
+    db.ref('messages').push({
+      text: msg,
+      time: timestamp
+    });
+
+    msgInput.value = '';
+  }
+</script>
+</body>
+</html>
