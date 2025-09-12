@@ -23,6 +23,11 @@
         "type": 302
       },
       {
+        "source": "surface",
+        "destination": "https://lumpy-servant-f8d.notion.site/26cf0be1688c8009b84cc53d7b57715a",
+        "type": 301
+      },
+      {
         "source": "/wcs",
         "destination": "https://www.wcsmiami.org",
         "type": 302
