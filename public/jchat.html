@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Public Chat Room</title>
+<title>J-Chat (Public Chat Room)</title>
 
 <!-- Optional favicon -->
 <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/4712/4712025.png" type="image/png">
@@ -87,6 +87,19 @@
   #sendBtn:hover {
     background-color: #4141ff;
   }
+
+  footer {
+    text-align: center;
+    font-size: 0.65em;
+    color: #aaa;
+    padding: 5px;
+    background: #1e1e2f;
+  }
+
+  footer a {
+    color: #bbb;
+    text-decoration: underline;
+  }
 </style>
 
 <!-- Firebase SDK v8 -->
@@ -94,7 +107,7 @@
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 </head>
 <body>
-<header>Public Chat Room</header>
+<header>J-Chat (Public Chat Room)</header>
 
 <div id="chat"></div>
 
@@ -102,6 +115,11 @@
   <input type="text" id="msgInput" placeholder="Type your message...">
   <button id="sendBtn">Send</button>
 </div>
+
+<footer>
+  To report or remove a message, visit 
+  <a href="https://jeremyworld.org/contact" target="_blank">jeremyworld.org/contact</a>
+</footer>
 
 <script>
   // ===== Your Firebase Config =====
