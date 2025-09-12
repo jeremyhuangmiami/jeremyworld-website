@@ -38,6 +38,11 @@
         "type": 302
       },
       {
+        "source": "/contact",
+        "destination": "https://lumpy-servant-f8d.notion.site/26cf0be1688c8009b84cc53d7b57715a?pvs=143",
+        "type": 302
+      },
+      {
         "source": "/johnanathony",
         "destination": "https://1drv.ms/u/c/5e89d275ec9951c1/EaMDTSdC4QJPpLze87KA1tIBKFoaV9BbpF2TaB46bAfReQ?e=5uyTNF",
         "type": 302
