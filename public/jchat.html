@@ -100,6 +100,56 @@
     color: #bbb;
     text-decoration: underline;
   }
+
+  /* ===== Name Modal ===== */
+  #nameModal {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0,0,0,0.85);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+  }
+
+  #nameBox {
+    background: #2b2b4a;
+    padding: 30px;
+    border-radius: 15px;
+    text-align: center;
+    box-shadow: 0 0 20px rgba(0,0,0,0.7);
+    width: 90%;
+    max-width: 400px;
+  }
+
+  #nameBox h2 {
+    margin-bottom: 15px;
+  }
+
+  #usernameInput {
+    padding: 10px;
+    border: none;
+    border-radius: 8px;
+    width: 80%;
+    margin-bottom: 15px;
+    font-size: 1em;
+  }
+
+  #continueBtn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 10px;
+    background-color: #5c5cff;
+    color: #fff;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+
+  #continueBtn:hover {
+    background-color: #4141ff;
+  }
 </style>
 
 <!-- Firebase SDK v8 -->
@@ -121,6 +171,17 @@
   <a href="https://jeremyworld.org/contact" target="_blank">jeremyworld.org/contact</a>
 </footer>
 
+<!-- Name Modal -->
+<div id="nameModal">
+  <div id="nameBox">
+    <h2>Welcome to J-Chat</h2>
+    <p>Enter your name (or leave blank for anonymous):</p>
+    <input type="text" id="usernameInput" maxlength="20" placeholder="Your name...">
+    <br>
+    <button id="continueBtn">Continue</button>
+  </div>
+</div>
+
 <script>
   // ===== Your Firebase Config =====
   const firebaseConfig = {
@@ -141,6 +202,19 @@
   const chatDiv = document.getElementById('chat');
   const msgInput = document.getElementById('msgInput');
   const sendBtn = document.getElementById('sendBtn');
+
+  let username = "";
+
+  // Handle modal
+  const nameModal = document.getElementById("nameModal");
+  const usernameInput = document.getElementById("usernameInput");
+  const continueBtn = document.getElementById("continueBtn");
+
+  continueBtn.addEventListener("click", () => {
+    username = usernameInput.value.trim();
+    if (username.length > 20) username = username.slice(0, 20);
+    nameModal.style.display = "none";
+  });
 
   // ===== Display messages =====
   db.ref('messages').on('child_added', snapshot => {
@@ -170,6 +244,11 @@
 
     // Sanitize and limit length to 500
     msg = msg.replace(/</g, "&lt;").replace(/>/g, "&gt;").slice(0, 500);
+
+    // Prepend name if provided
+    if (username) {
+      msg = `[${username}]: ${msg}`;
+    }
 
     const timestamp = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
 
