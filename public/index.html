@@ -96,6 +96,61 @@
       outline: 2px solid #22D3EE;
       outline-offset: 2px;
     }
+    /* Employees Corner styles */
+    #overlay {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      background: rgba(0,0,0,0.7);
+      color: #fff;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+    #nametags {
+      margin-bottom: 1em;
+    }
+    #nametags div {
+      font-size: 1.3em;
+      margin: 0.5em 0;
+    }
+    #passwordPrompt {
+      position: fixed;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      background: #222;
+      padding: 2em;
+      border-radius: 8px;
+      color: #fff;
+      box-shadow: 0 2px 10px #000;
+      z-index: 1100;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+    }
+    #passwordPrompt input[type="password"] {
+      font-size: 1.1em;
+      padding: 0.4em;
+      margin: 0.5em 0;
+      border-radius: 4px;
+      border: none;
+    }
+    #passwordPrompt button {
+      background: #3b82f6;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      padding: 0.5em 1em;
+      margin-top: 0.5em;
+      cursor: pointer;
+    }
+    #errorMsg {
+      color: #ff6b6b;
+      margin-top: 0.5em;
+      font-size: 1em;
+    }
   </style>
 </head>
 <body class="font-sans text-gray-100 antialiased">
@@ -113,7 +168,7 @@
           <span class="text-2xl sm:text-3xl font-extrabold leading-none text-gradient">Jeremy’s World</span>
           <span class="h-2 w-2 rounded-full bg-brand-500/70 group-hover:bg-skybrand-500 transition"></span>
         </a>
-        <button id="menuBtn" class="md:hidden inline-flex items-center justify-center h-10 w-10 rounded-md bg-white/5 hover:bg-white/10 transition focus-ring" aria-expanded="false" aria-controls="mobileNav" aria-label="Toggle menu">
+        <button id="menuBtn" class="md:hidden inline-flex items-center justify-center h-10 w-10 rounded-md bg-white/5 hover:bg-white/10 transition focus-ring" aria-expanded="false" aria-controls="mobileNav">
           <svg class="h-6 w-6 text-gray-300" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/>
           </svg>
@@ -139,6 +194,8 @@
   <main id="main" class="pt-36 sm:pt-40">
     <section class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
       <div class="text-center">
+        <!-- Employees Corner Button -->
+        <button id="employeesCornerBtn" style="margin-bottom: 1em; background:#3b82f6; color:#fff; border-radius:8px; padding:0.5em 1em; font-weight:bold; font-size:1.1em; box-shadow:0 2px 6px #0003;">Employees Corner</button>
         <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold leading-[1.05] tracking-tight">
           Welcome to <span class="text-gradient">JeremyWorld</span>
         </h1>
@@ -157,9 +214,26 @@
         </div>
         <div class="mt-5 flex items-center justify-center gap-3 text-sm text-gray-400">
           <span class="inline-flex h-2 w-2 rounded-full bg-emerald-400 animate-pulse"></span>
-          <span>Always evolving. Always fun. [BONUS: NEW EASTER EGGS COMING SOON! JOIN THE E.E.L. TO FIND EVEN MORE! (ALL COMING OUT NO FURTHER THAN OCT. 6TH 2025) ALSO, CADE CAN EDIT THIS NOW. IF YOU WANT TO EDIT A WEBSITE, TOO BAD. BUTTTT U CAN CALL (715)-999-7483 AND EDIT 7159997483.COM NOT JOKING]</span>
+          <span>Always evolving. Always fun. [BONUS: NEW EASTER EGGS COMING SOON! JOIN THE E.E.L. TO FIND EVEN MORE! (ALL COMING OUT NO FURTHER THAN OCT. 6TH 2025) ALSO, CADE CAN EDIT THIS NOW. IF YOU WANT TO BE ABLE TO EDIT, CONTACT JEREMY]</span>
         </div>
       </div>
+
+      <!-- Employees Corner Overlay HTML -->
+      <div id="overlay">
+        <div id="nametags">
+          <div>🛠️Jeremy</div>
+          <div>🛠️Cade</div>
+        </div>
+        <a href="https://github.com/jeremyhuangmiami/jeremyworld-website" style="color:#81e6d9; text-decoration:underline;">GitHub Repo</a>
+      </div>
+      <!-- Password Popup HTML -->
+      <div id="passwordPrompt">
+        <div>Enter Employees Corner Password:</div>
+        <input type="password" id="empPassword" placeholder="Password" autocomplete="current-password">
+        <button id="submitPassword">Submit</button>
+        <div id="errorMsg"></div>
+      </div>
+      <!-- End Employees Corner HTML -->
 
       <!-- Mini highlights (kept: AI Chatbots, Games; removed Experiments & Snappy UX) -->
       <div class="mt-10 grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-3xl mx-auto">
@@ -238,8 +312,6 @@
             <a href="projects.html" class="text-gray-300 hover:text-white focus-ring rounded-md px-2 py-1">Projects</a>
             <a href="contact.html" class="text-gray-300 hover:text-white focus-ring rounded-md px-2 py-1">Contact</a>
             <a href="about.html" class="text-gray-300 hover:text-white focus-ring rounded-md px-2 py-1">About</a>
-
-
           </div>
         </div>
       </div>
@@ -248,6 +320,7 @@
   </footer>
 
   <script>
+    // Mobile nav logic
     const btn = document.getElementById('menuBtn');
     const mobile = document.getElementById('mobileNav');
     if (btn && mobile) {
@@ -257,6 +330,42 @@
         mobile.classList.toggle('hidden');
       });
     }
+    // Employees Corner logic
+    const empBtn = document.getElementById('employeesCornerBtn');
+    const overlay = document.getElementById('overlay');
+    const passwordPrompt = document.getElementById('passwordPrompt');
+    const empPassword = document.getElementById('empPassword');
+    const submitPassword = document.getElementById('submitPassword');
+    const errorMsg = document.getElementById('errorMsg');
+
+    empBtn.onclick = () => {
+      passwordPrompt.style.display = 'flex';
+      empPassword.value = '';
+      errorMsg.textContent = '';
+      empPassword.focus();
+    };
+
+    submitPassword.onclick = () => {
+      if(empPassword.value === 'j312gh') {
+        passwordPrompt.style.display = 'none';
+        overlay.style.display = 'flex';
+      } else {
+        errorMsg.textContent = 'Incorrect password. Please try again.';
+        empPassword.value = '';
+        empPassword.focus();
+      }
+    };
+
+    empPassword.addEventListener('keyup', function(e) {
+      if (e.key === 'Enter') {
+        submitPassword.onclick();
+      }
+    });
+
+    // Allow closing overlay by clicking outside
+    overlay.onclick = (e) => {
+      if (e.target === overlay) overlay.style.display = 'none';
+    };
   </script>
 </body>
 </html>
