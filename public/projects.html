@@ -16,6 +16,79 @@
         y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
     })(window, document, "clarity", "script", "tidz5x6kwe");
 </script>
+<!-- Rate Us Popup (bottom right) -->
+<div id="ratePopup" class="fixed bottom-4 right-4 w-80 bg-gray-900 text-white rounded-lg shadow-lg overflow-hidden z-[2000]"
+     style="display: none; animation: fadeIn 0.3s ease-out;">
+  <div class="p-4">
+    <div class="flex justify-between items-start">
+      <h3 class="text-lg font-semibold">Rate Us</h3>
+      <button id="closeRatePopup" class="text-gray-400 hover:text-white">&times;</button>
+    </div>
+    <div class="mt-2" style="height: 300px; overflow: hidden;">
+      <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSfbD1R12ojSI9mvLF_c83OLZF8vn7jAh0s-8jAznpleUp32wg/viewform?usp=header"
+              style="width:100%; height:100%; border:0;" allowfullscreen>
+        Loading…
+      </iframe>
+    </div>
+    <div class="mt-3 flex items-center gap-2 text-sm">
+      <input type="checkbox" id="dontShowRateAgain" class="accent-sky-500" />
+      <label for="dontShowRateAgain">Do not show this again</label>
+    </div>
+  </div>
+</div>
+
+<style>
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+</style>
+
+<script>
+  const ratePopup = document.getElementById("ratePopup");
+  const closeRatePopup = document.getElementById("closeRatePopup");
+  const dontShowRateAgain = document.getElementById("dontShowRateAgain");
+
+  const POPUP_INTERVAL_MS = 5 * 60 * 1000; // 5 minutes
+
+  function showRatePopup() {
+    // only show if user hasn't opted out
+    if (!localStorage.getItem("hideRatePopup")) {
+      ratePopup.style.display = "block";
+    }
+  }
+
+  function hideRatePopup() {
+    ratePopup.style.display = "none";
+  }
+
+  // On page load, schedule repeating popup
+  window.addEventListener("load", () => {
+    // Try showing it initially (or after some delay)
+    setTimeout(showRatePopup, 1000); // show after 1 second on first load
+
+    // Then schedule every 5 minutes
+    setInterval(() => {
+      showRatePopup();
+    }, POPUP_INTERVAL_MS);
+  });
+
+  // Close button logic
+  closeRatePopup.addEventListener("click", () => {
+    if (dontShowRateAgain.checked) {
+      localStorage.setItem("hideRatePopup", "true");
+    }
+    hideRatePopup();
+  });
+
+  // If user checks the box *while popup is open*, you might optionally store immediately
+  dontShowRateAgain.addEventListener("change", () => {
+    if (dontShowRateAgain.checked) {
+      localStorage.setItem("hideRatePopup", "true");
+    }
+  });
+</script>
+
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Jeremy’s World — Projects</title>
