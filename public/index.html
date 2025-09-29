@@ -19,6 +19,47 @@
         y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
     })(window, document, "clarity", "script", "tidz5x6kwe");
 </script>
+<!-- Hiring Popup -->
+<div id="hiringPopup" class="fixed inset-0 bg-black/60 flex items-center justify-center z-[2000] hidden">
+  <div class="glass rounded-2xl p-6 w-80 text-center">
+    <h2 class="text-xl font-bold mb-4">We’re looking for employees!</h2>
+    <div class="flex flex-col gap-3">
+      <a href="https://jeremyworld.org/gethired.html" 
+         class="btn-primary text-white px-4 py-2 rounded-lg shadow-md">
+        Get Hired
+      </a>
+      <label class="flex items-center gap-2 text-sm text-gray-300 justify-center">
+        <input type="checkbox" id="dontAskAgain" class="accent-sky-500">
+        Don’t ask me again
+      </label>
+      <button id="closePopup" class="bg-gray-700 hover:bg-gray-600 px-4 py-2 rounded-lg">
+        Close this message
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+  const hiringPopup = document.getElementById("hiringPopup");
+  const closePopup = document.getElementById("closePopup");
+  const dontAskAgain = document.getElementById("dontAskAgain");
+
+  // Show popup only if "dontAskAgain" not set
+  window.addEventListener("load", () => {
+    if (!localStorage.getItem("hideHiringPopup")) {
+      hiringPopup.classList.remove("hidden");
+    }
+  });
+
+  // Close button logic
+  closePopup.addEventListener("click", () => {
+    if (dontAskAgain.checked) {
+      localStorage.setItem("hideHiringPopup", "true");
+    }
+    hiringPopup.classList.add("hidden");
+  });
+</script>
+
 
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
