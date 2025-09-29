@@ -1,0 +1,339 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Stressed Pixel Quartet</title>
+  <style>
+    /* Page background using the provided image */
+    :root{
+      --bg-url: url("https://t4.ftcdn.net/jpg/08/10/37/95/360_F_810379599_2glhuczbIbqAup67KofqfhGv67TTaHdd.jpg");
+    }
+
+    html,body{
+      height:100%;
+      margin:0;
+      font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      background-image: var(--bg-url);
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:24px;
+      box-sizing:border-box;
+    }
+
+    /* translucent panel to help visibility */
+    .panel{
+      width:100%;
+      max-width:980px;
+      background: rgba(0,0,0,0.32);
+      padding:18px;
+      border-radius:16px;
+      backdrop-filter: blur(6px);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.45);
+      color: #fff;
+    }
+
+    h1{
+      margin:0 0 14px 0;
+      font-size:22px;
+      text-align:center;
+      letter-spacing:0.4px;
+    }
+
+    /* layout for the 4 pixel people */
+    .row{
+      display:grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap:18px;
+      align-items:end;
+    }
+
+    /* wrapper for each person */
+    .person{
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      gap:8px;
+    }
+
+    .label{
+      font-weight:600;
+      user-select:none;
+      font-size:13px;
+      text-align:center;
+    }
+    .subtitle{
+      font-size:11px;
+      color: rgba(255,255,255,0.8);
+      margin-top:-6px;
+    }
+
+    /* we force pixelated rendering for SVG */
+    .pixel-svg{
+      image-rendering: pixelated;
+      width: 128px;
+      height: 128px;
+      display:block;
+    }
+
+    /* small shake animation to appear stressed */
+    .shake {
+      animation: shake 900ms ease-in-out infinite;
+      transform-origin: center;
+    }
+    @keyframes shake {
+      0% { transform: translateX(0) rotate(0deg); }
+      20% { transform: translateX(-2px) rotate(-1deg); }
+      40% { transform: translateX(2px) rotate(1deg); }
+      60% { transform: translateX(-1px) rotate(-0.6deg); }
+      80% { transform: translateX(1px) rotate(0.6deg); }
+      100% { transform: translateX(0) rotate(0deg); }
+    }
+
+    /* tear animation: fall and fade */
+    .tear {
+      animation: fall 1.6s linear infinite;
+      transform-origin: center;
+    }
+    .tear.delay {
+      animation-delay: .35s;
+    }
+    @keyframes fall {
+      0% { transform: translateY(0) scale(1); opacity: 0.98; }
+      45% { transform: translateY(18px) scale(1.02); opacity: .8; }
+      80% { transform: translateY(34px) scale(.95); opacity: .4; }
+      100% { transform: translateY(46px) scale(.85); opacity: 0; }
+    }
+
+    /* Slight color variants for each person using CSS classes */
+    .shirt-leo { fill: rgb(59,130,246); }        /* blue */
+    .shirt-john { fill: rgb(14,165,233); }       /* cyan */
+    .shirt-sebastian { fill: rgb(234,88,12); }   /* orange */
+    .shirt-bob { fill: rgb(16,185,129); }        /* green */
+
+    /* eye & mouth colors */
+    .eye { fill: #0b0b0b; }
+    .mouth { fill: #2b2b2b; }
+
+    /* ensure tears look watery */
+    .tear-fill { fill: #60a5fa; filter: drop-shadow(0 1px 0 rgba(0,0,0,0.25)); }
+
+    /* responsive tweak */
+    @media (max-width:760px){
+      .row{ grid-template-columns: repeat(2, 1fr); gap:12px; }
+      .pixel-svg { width: 96px; height:96px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="panel" role="main" aria-label="Stressed pixel quartet">
+    <h1>Welcome to my Dungeon</h1>
+
+    <div class="row" aria-hidden="false">
+      <!-- Leo -->
+      <div class="person" title="Leo">
+        <!-- simple 8x8 pixel art made with SVG rects -->
+        <svg class="pixel-svg shake" viewBox="0 0 96 96" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Leo pixel person">
+          <!-- grid cell size = 12 -->
+          <!-- hair row -->
+          <rect x="24" y="0" width="12" height="12" fill="#222"/>
+          <rect x="36" y="0" width="12" height="12" fill="#222"/>
+          <rect x="48" y="0" width="12" height="12" fill="#222"/>
+          <rect x="60" y="0" width="12" height="12" fill="#222"/>
+          <!-- hair/skin -->
+          <rect x="12" y="12" width="12" height="12" fill="#222"/>
+          <rect x="24" y="12" width="12" height="12" fill="#ffd9b3"/>
+          <rect x="36" y="12" width="12" height="12" fill="#ffd9b3"/>
+          <rect x="48" y="12" width="12" height="12" fill="#ffd9b3"/>
+          <rect x="60" y="12" width="12" height="12" fill="#ffd9b3"/>
+          <rect x="72" y="12" width="12" height="12" fill="#222"/>
+          <!-- eyes -->
+          <rect x="12" y="24" width="12" height="12" fill="#222"/>
+          <rect x="24" y="24" width="12" height="12" fill="#ffd9b3"/>
+          <rect x="36" y="24" width="12" height="12" class="eye"/>
+          <rect x="48" y="24" width="12" height="12" class="eye"/>
+          <rect x="60" y="24" width="12" height="12" fill="#ffd9b3"/>
+          <rect x="72" y="24" width="12" height="12" fill="#222"/>
+          <!-- cheeks/mouth -->
+          <rect x="24" y="36" width="12" height="12" fill="#ffd9b3"/>
+          <rect x="36" y="36" width="12" height="12" fill="#ffd9b3"/>
+          <rect x="48" y="36" width="12" height="12" class="mouth"/>
+          <rect x="60" y="36" width="12" height="12" fill="#ffd9b3"/>
+          <!-- neck/shirt top -->
+          <rect x="36" y="48" width="12" height="12" fill="#ffd9b3"/>
+          <rect x="48" y="48" width="12" height="12" class="shirt-leo"/>
+          <!-- shirt -->
+          <rect x="24" y="60" width="12" height="12" class="shirt-leo"/>
+          <rect x="36" y="60" width="12" height="12" class="shirt-leo"/>
+          <rect x="48" y="60" width="12" height="12" class="shirt-leo"/>
+          <rect x="60" y="60" width="12" height="12" class="shirt-leo"/>
+          <rect x="12" y="72" width="12" height="12" class="shirt-leo"/>
+          <rect x="72" y="72" width="12" height="12" class="shirt-leo"/>
+          <!-- pants -->
+          <rect x="24" y="84" width="12" height="12" fill="#121212"/>
+          <rect x="36" y="84" width="12" height="12" fill="#121212"/>
+          <rect x="48" y="84" width="12" height="12" fill="#121212"/>
+          <rect x="60" y="84" width="12" height="12" fill="#121212"/>
+
+          <!-- Tears (two) -->
+          <g transform="translate(0,0)" aria-hidden="true">
+            <circle class="tear tear-fill" cx="42" cy="36" r="4" />
+            <circle class="tear tear-fill delay" cx="54" cy="36" r="4" />
+          </g>
+        </svg>
+
+        <div class="label">Leo</div>
+        <div class="subtitle">very stressed</div>
+      </div>
+
+      <!-- John -->
+      <div class="person" title="John">
+        <svg class="pixel-svg shake" viewBox="0 0 96 96" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="John pixel person">
+          <!-- same layout, different shirt color -->
+          <rect x="24" y="0" width="12" height="12" fill="#222"/>
+          <rect x="36" y="0" width="12" height="12" fill="#222"/>
+          <rect x="48" y="0" width="12" height="12" fill="#222"/>
+          <rect x="60" y="0" width="12" height="12" fill="#222"/>
+          <rect x="12" y="12" width="12" height="12" fill="#222"/>
+          <rect x="24" y="12" width="12" height="12" fill="#ffd9b3"/>
+          <rect x="36" y="12" width="12" height="12" fill="#ffd9b3"/>
+          <rect x="48" y="12" width="12" height="12" fill="#ffd9b3"/>
+          <rect x="60" y="12" width="12" height="12" fill="#ffd9b3"/>
+          <rect x="72" y="12" width="12" height="12" fill="#222"/>
+          <rect x="12" y="24" width="12" height="12" fill="#222"/>
+          <rect x="24" y="24" width="12" height="12" fill="#ffd9b3"/>
+          <rect x="36" y="24" width="12" height="12" class="eye"/>
+          <rect x="48" y="24" width="12" height="12" class="eye"/>
+          <rect x="60" y="24" width="12" height="12" fill="#ffd9b3"/>
+          <rect x="72" y="24" width="12" height="12" fill="#222"/>
+          <rect x="24" y="36" width="12" height="12" fill="#ffd9b3"/>
+          <rect x="36" y="36" width="12" height="12" fill="#ffd9b3"/>
+          <rect x="48" y="36" width="12" height="12" class="mouth"/>
+          <rect x="60" y="36" width="12" height="12" fill="#ffd9b3"/>
+          <rect x="36" y="48" width="12" height="12" fill="#ffd9b3"/>
+          <rect x="48" y="48" width="12" height="12" class="shirt-john"/>
+          <rect x="24" y="60" width="12" height="12" class="shirt-john"/>
+          <rect x="36" y="60" width="12" height="12" class="shirt-john"/>
+          <rect x="48" y="60" width="12" height="12" class="shirt-john"/>
+          <rect x="60" y="60" width="12" height="12" class="shirt-john"/>
+          <rect x="12" y="72" width="12" height="12" class="shirt-john"/>
+          <rect x="72" y="72" width="12" height="12" class="shirt-john"/>
+          <rect x="24" y="84" width="12" height="12" fill="#121212"/>
+          <rect x="36" y="84" width="12" height="12" fill="#121212"/>
+          <rect x="48" y="84" width="12" height="12" fill="#121212"/>
+          <rect x="60" y="84" width="12" height="12" fill="#121212"/>
+
+          <g transform="translate(0,0)" aria-hidden="true">
+            <circle class="tear tear-fill" cx="42" cy="36" r="4" />
+            <circle class="tear tear-fill delay" cx="54" cy="36" r="4" />
+          </g>
+        </svg>
+
+        <div class="label">John</div>
+        <div class="subtitle">very stressed</div>
+      </div>
+
+      <!-- Sebastian -->
+      <div class="person" title="Sebastian">
+        <svg class="pixel-svg shake" viewBox="0 0 96 96" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Sebastian pixel person">
+          <rect x="24" y="0" width="12" height="12" fill="#222"/>
+          <rect x="36" y="0" width="12" height="12" fill="#222"/>
+          <rect x="48" y="0" width="12" height="12" fill="#222"/>
+          <rect x="60" y="0" width="12" height="12" fill="#222"/>
+          <rect x="12" y="12" width="12" height="12" fill="#222"/>
+          <rect x="24" y="12" width="12" height="12" fill="#ffd9b3"/>
+          <rect x="36" y="12" width="12" height="12" fill="#ffd9b3"/>
+          <rect x="48" y="12" width="12" height="12" fill="#ffd9b3"/>
+          <rect x="60" y="12" width="12" height="12" fill="#ffd9b3"/>
+          <rect x="72" y="12" width="12" height="12" fill="#222"/>
+          <rect x="12" y="24" width="12" height="12" fill="#222"/>
+          <rect x="24" y="24" width="12" height="12" fill="#ffd9b3"/>
+          <rect x="36" y="24" width="12" height="12" class="eye"/>
+          <rect x="48" y="24" width="12" height="12" class="eye"/>
+          <rect x="60" y="24" width="12" height="12" fill="#ffd9b3"/>
+          <rect x="72" y="24" width="12" height="12" fill="#222"/>
+          <rect x="24" y="36" width="12" height="12" fill="#ffd9b3"/>
+          <rect x="36" y="36" width="12" height="12" fill="#ffd9b3"/>
+          <rect x="48" y="36" width="12" height="12" class="mouth"/>
+          <rect x="60" y="36" width="12" height="12" fill="#ffd9b3"/>
+          <rect x="36" y="48" width="12" height="12" fill="#ffd9b3"/>
+          <rect x="48" y="48" width="12" height="12" class="shirt-sebastian"/>
+          <rect x="24" y="60" width="12" height="12" class="shirt-sebastian"/>
+          <rect x="36" y="60" width="12" height="12" class="shirt-sebastian"/>
+          <rect x="48" y="60" width="12" height="12" class="shirt-sebastian"/>
+          <rect x="60" y="60" width="12" height="12" class="shirt-sebastian"/>
+          <rect x="12" y="72" width="12" height="12" class="shirt-sebastian"/>
+          <rect x="72" y="72" width="12" height="12" class="shirt-sebastian"/>
+          <rect x="24" y="84" width="12" height="12" fill="#121212"/>
+          <rect x="36" y="84" width="12" height="12" fill="#121212"/>
+          <rect x="48" y="84" width="12" height="12" fill="#121212"/>
+          <rect x="60" y="84" width="12" height="12" fill="#121212"/>
+
+          <g transform="translate(0,0)" aria-hidden="true">
+            <circle class="tear tear-fill" cx="42" cy="36" r="4" />
+            <circle class="tear tear-fill delay" cx="54" cy="36" r="4" />
+          </g>
+        </svg>
+
+        <div class="label">Sebastian</div>
+        <div class="subtitle">very stressed</div>
+      </div>
+
+      <!-- Bob -->
+      <div class="person" title="Bob">
+        <svg class="pixel-svg shake" viewBox="0 0 96 96" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Bob pixel person">
+          <rect x="24" y="0" width="12" height="12" fill="#222"/>
+          <rect x="36" y="0" width="12" height="12" fill="#222"/>
+          <rect x="48" y="0" width="12" height="12" fill="#222"/>
+          <rect x="60" y="0" width="12" height="12" fill="#222"/>
+          <rect x="12" y="12" width="12" height="12" fill="#222"/>
+          <rect x="24" y="12" width="12" height="12" fill="#ffd9b3"/>
+          <rect x="36" y="12" width="12" height="12" fill="#ffd9b3"/>
+          <rect x="48" y="12" width="12" height="12" fill="#ffd9b3"/>
+          <rect x="60" y="12" width="12" height="12" fill="#ffd9b3"/>
+          <rect x="72" y="12" width="12" height="12" fill="#222"/>
+          <rect x="12" y="24" width="12" height="12" fill="#222"/>
+          <rect x="24" y="24" width="12" height="12" fill="#ffd9b3"/>
+          <rect x="36" y="24" width="12" height="12" class="eye"/>
+          <rect x="48" y="24" width="12" height="12" class="eye"/>
+          <rect x="60" y="24" width="12" height="12" fill="#ffd9b3"/>
+          <rect x="72" y="24" width="12" height="12" fill="#222"/>
+          <rect x="24" y="36" width="12" height="12" fill="#ffd9b3"/>
+          <rect x="36" y="36" width="12" height="12" fill="#ffd9b3"/>
+          <rect x="48" y="36" width="12" height="12" class="mouth"/>
+          <rect x="60" y="36" width="12" height="12" fill="#ffd9b3"/>
+          <rect x="36" y="48" width="12" height="12" fill="#ffd9b3"/>
+          <rect x="48" y="48" width="12" height="12" class="shirt-bob"/>
+          <rect x="24" y="60" width="12" height="12" class="shirt-bob"/>
+          <rect x="36" y="60" width="12" height="12" class="shirt-bob"/>
+          <rect x="48" y="60" width="12" height="12" class="shirt-bob"/>
+          <rect x="60" y="60" width="12" height="12" class="shirt-bob"/>
+          <rect x="12" y="72" width="12" height="12" class="shirt-bob"/>
+          <rect x="72" y="72" width="12" height="12" class="shirt-bob"/>
+          <rect x="24" y="84" width="12" height="12" fill="#121212"/>
+          <rect x="36" y="84" width="12" height="12" fill="#121212"/>
+          <rect x="48" y="84" width="12" height="12" fill="#121212"/>
+          <rect x="60" y="84" width="12" height="12" fill="#121212"/>
+
+          <g transform="translate(0,0)" aria-hidden="true">
+            <circle class="tear tear-fill" cx="42" cy="36" r="4" />
+            <circle class="tear tear-fill delay" cx="54" cy="36" r="4" />
+          </g>
+        </svg>
+
+        <div class="label">Bob</div>
+        <div class="subtitle">very stressed</div>
+      </div>
+    </div>
+
+    <p style="margin-top:14px; font-size:12px; color:rgba(255,255,255,0.85); text-align:center;">
+JeremyWorld.org    </p>
+  </div>
+</body>
+</html>
