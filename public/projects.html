@@ -88,6 +88,62 @@
     }
   });
 </script>
+<!-- Donate Popup (center window) -->
+<div id="donatePopup" class="fixed inset-0 bg-black/60 flex items-center justify-center z-[2100]" style="display:none;">
+  <div class="glass rounded-2xl p-6 w-96 text-center relative">
+    <button id="closeDonatePopup" class="absolute top-2 right-2 text-gray-400 hover:text-white text-xl">&times;</button>
+    <h2 class="text-2xl font-bold mb-4">Support JeremyWorld</h2>
+    <p class="mb-4 text-gray-300">Your donations keep this project alive and growing 🚀</p>
+    <a href="https://jeremyworld.org/donate.html"
+       class="btn-primary text-white px-5 py-3 rounded-lg shadow-md inline-block mb-3">
+       Donate Now
+    </a>
+    <div class="flex items-center justify-center gap-2 text-sm">
+      <input type="checkbox" id="dontShowDonateAgain" class="accent-sky-500" />
+      <label for="dontShowDonateAgain">Do not show this again</label>
+    </div>
+  </div>
+</div>
+
+<script>
+  const donatePopup = document.getElementById("donatePopup");
+  const closeDonatePopup = document.getElementById("closeDonatePopup");
+  const dontShowDonateAgain = document.getElementById("dontShowDonateAgain");
+
+  const DONATE_INTERVAL_MS = 3 * 60 * 1000; // 3 minutes
+
+  function showDonatePopup() {
+    if (!localStorage.getItem("hideDonatePopup")) {
+      donatePopup.style.display = "flex";
+    }
+  }
+
+  function hideDonatePopup() {
+    donatePopup.style.display = "none";
+  }
+
+  // Show popup on page load (after short delay) and then every 3 minutes
+  window.addEventListener("load", () => {
+    setTimeout(showDonatePopup, 2000); // first show after 2s
+    setInterval(showDonatePopup, DONATE_INTERVAL_MS);
+  });
+
+  // Close button logic
+  closeDonatePopup.addEventListener("click", () => {
+    if (dontShowDonateAgain.checked) {
+      localStorage.setItem("hideDonatePopup", "true");
+    }
+    hideDonatePopup();
+  });
+
+  // Also immediately persist "do not show again"
+  dontShowDonateAgain.addEventListener("change", () => {
+    if (dontShowDonateAgain.checked) {
+      localStorage.setItem("hideDonatePopup", "true");
+    }
+  });
+</script>
+
 
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
