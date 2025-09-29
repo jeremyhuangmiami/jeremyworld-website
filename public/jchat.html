@@ -190,15 +190,14 @@
 <div id="nameModal">
   <div id="nameBox">
     <h2>Welcome to J-Chat</h2>
-    <p>Enter your name (we take cybercommunication very seriously. false usernames or anonymous messages will be reported and could result in a ban from jeremyworld.):</p>
+    <p>Enter your name; you may stay anonymous by leaving it blank. Please read our rules before posting or chatting at https://jeremyworld.org/termsofservice.html</p>
     <input type="text" id="usernameInput" maxlength="20" placeholder="Your name...">
     <br>
-    <button id="continueBtn">Continue</button>
+    <button id="continueBtn">Start Chatting!!! ;)</button>
   </div>
 </div>
 
 <script>
-  // ===== Your Firebase Config =====
   const firebaseConfig = {
     apiKey: "AIzaSyDRCjaHC1Ao-r5GcZwMeqBYmcG1nrq09FU",
     authDomain: "jeremy-world-4b4cc.firebaseapp.com",
@@ -210,7 +209,6 @@
     measurementId: "G-X9XTNM16BV"
   };
 
-  // Initialize Firebase
   firebase.initializeApp(firebaseConfig);
   const db = firebase.database();
 
@@ -231,7 +229,6 @@
     nameModal.style.display = "none";
   });
 
-  // ===== Display messages =====
   db.ref('messages').on('child_added', snapshot => {
     const data = snapshot.val();
     const div = document.createElement('div');
