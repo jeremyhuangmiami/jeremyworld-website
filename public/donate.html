@@ -29,28 +29,16 @@
 
   <!-- Donate Section -->
   <main class="flex-grow flex flex-col items-center justify-center p-6 space-y-6">
-    <div class="bg-gray-800/40 backdrop-blur-lg border border-gray-700 shadow-2xl rounded-3xl p-8 text-center max-w-lg w-full">
-      <h2 class="text-2xl font-bold mb-4">Choose Your Way to Give 🎁</h2>
-      <p class="text-gray-300 mb-6">
-        Click below to donate securely with PayPal.  
-        Every contribution helps us reach more dreamers 🌟
-      </p>
+    <div class="bg-gray-800/40 backdrop-blur-lg border border-gray-700 shadow-2xl rounded-3xl p-8 w-full max-w-3xl">
+      <h2 class="text-2xl font-bold mb-6 text-center">Choose Your Gift 🎁</h2>
 
-      <!-- PayPal Form -->
-      <form action="https://www.paypal.com/donate" method="post" target="_top" class="inline-block">
-        <input type="hidden" name="hosted_button_id" value="79XCXV8RUN65J" />
-        <input type="image"
-          src="https://wiki-images.artofproblemsolving.com//5/54/Donate.jpeg"
-          border="0"
-          name="submit"
-          title="Donate with PayPal"
-          alt="Donate with PayPal button"
-          class="w-48 mx-auto float rounded-lg shadow-lg hover:scale-105 transition"/>
-        <img alt="" border="0"
-             src="https://www.paypal.com/en_US/i/scr/pixel.gif" width="1" height="1"/>
-      </form>
+      <!-- Donately Form -->
+      <div id="dntly-donation-form"></div>
+    </div>
 
-      <p class="mt-6 text-gray-200">
+    <!-- Donor info -->
+    <div class="text-center max-w-xl">
+      <p class="text-lg text-gray-200">
         🌟 When you donate, your name will shine forever on our  
         <a href="https://jeremyworld.org/donors" 
            class="text-yellow-300 hover:text-yellow-200 font-semibold underline decoration-dotted">
@@ -65,7 +53,41 @@
     Made with 💙 by JeremyWorld • © <span id="year"></span>
   </footer>
 
+  <!-- Donately Embed -->
+  <script src="https://cdn.donately.com/core/6.0/donately.min.js?v=6.0.67" async></script>
   <script>
+    dntlyReady("Donately", function(t) {
+      const configOptions = {
+        selector: '#dntly-donation-form',
+        options: {
+          'donately-id':'act_abc385319bcd',
+          'stripe-publishable-key':"null",
+          'donately-currency':'USD',
+          'donately-donor-pays-fees':"{\"cc\":{\"processor_percent\":0.029,\"processor_fixed\":0.3,\"processor_cap\":0,\"dntly_percent\":0.04,\"complex_calc\":true},\"paypal\":{\"processor_percent\":0.029,\"processor_fixed\":0.3,\"processor_cap\":0,\"dntly_percent\":0.04,\"complex_calc\":true}}",
+          'donately-recurring-frequency':"[\"false\",\"1.month\"]",
+          'donately-form-id':'frm_03b8d9ad1520',
+          'donately-i18n-locale':'en_US',
+          'donately-payment-options':'cc,paypal',
+          'donately-presets':'20,50,100,500',
+          'donately-form-navigation':"{\"steps\":[[\"presets\",\"amount\",\"donorpaysfees\",\"recurringgroup\"],[\"namegroup\",\"email\"],[\"paymentmethods\",\"submit\"]]}",
+          'donately-theme':'clean',
+        },
+        afterFormLoad: function() {},
+        afterNavigateHook: function(stepNumber) {},
+        onSuccess: function(donation){},
+        onError: function(error){}          
+      }
+      Donately.init(configOptions);
+    });
+
+    function dntlyReady(name, callback) {
+      window.setTimeout(function() {
+        if (window[name]) {callback(window[name])} 
+        else {dntlyReady(name, callback)}
+      }, 10);
+    }
+
+    // auto update year
     document.getElementById("year").textContent = new Date().getFullYear();
   </script>
 </body>
