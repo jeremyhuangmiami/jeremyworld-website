@@ -32,10 +32,12 @@
     <div class="bg-gray-800/40 backdrop-blur-lg border border-gray-700 shadow-2xl rounded-3xl p-8 w-full max-w-3xl">
       <h2 class="text-2xl font-bold mb-6 text-center">Choose Your Gift 🎁</h2>
 
-      <!-- Donately Form -->
-      <div id="dntly-donation-form"></div>
-    </div>
-
+<iframe src="https://cdn.donately.com/core/6.0/donate-form.html?form_id=frm_03b8d9ad1520&account_id=act_abc385319bcd" 
+	width="100%" 
+	height="1215px" 
+	frameborder="0" 
+	allowtransparency="true" allow="payment *" 
+	style="background-color: transparent; border: 0px none transparent; overflow: hidden; display: inline-block; visibility: visible; margin: 0px; padding: 0px; height: 1215px; width: 100%"></iframe>
     <!-- Donor info -->
     <div class="text-center max-w-xl">
       <p class="text-lg text-gray-200">
@@ -53,38 +55,6 @@
     Made with 💙 by JeremyWorld • © <span id="year"></span>
   </footer>
 
-<div id="dntly-donation-form"></div>
-<script src="https://cdn.donately.com/core/6.0/donately.min.js?v=6.0.67" async="async"></script>
-<script>
-  dntlyReady("Donately", function(t) {
-    const configOptions = {
-      selector: '#dntly-donation-form',
-      options: {
-				'donately-id':'act_abc385319bcd',
-				'stripe-publishable-key':"null",
-				'donately-currency':'USD',
-				'donately-donor-pays-fees':"{\"cc\":{\"processor_percent\":0.029,\"processor_fixed\":0.3,\"processor_cap\":0,\"dntly_percent\":0.04,\"complex_calc\":true},\"paypal\":{\"processor_percent\":0.029,\"processor_fixed\":0.3,\"processor_cap\":0,\"dntly_percent\":0.04,\"complex_calc\":true}}",
-				'donately-recurring-frequency':"[\"false\",\"1.month\"]",
-				'donately-form-id':'frm_03b8d9ad1520',
-				'donately-i18n-locale':'en_US',
-				'donately-payment-options':'cc,paypal',
-				'donately-presets':'20,50,100,500',
-				'donately-form-navigation':"{\"steps\":[[\"presets\",\"amount\",\"donorpaysfees\",\"recurringgroup\"],[\"paymentmethods\",\"email\",\"namegroup\",\"submit\"]]}",
-				'donately-theme':'clean',},
-      afterFormLoad: function() {},
-      afterNavigateHook: function(stepNumber) {},
-      onSuccess: function(donation){},
-      onError: function(error){}          
-    }
-    Donately.init(configOptions);
-  });
-  function dntlyReady(name, callback) {
-    window.setTimeout(function() {
-      if (window[name]) {callback(window[name])} 
-      else {dntlyReady(name, callback)}
-    }, 10);
-  }
-</script>    
 
   </script>
 </body>
