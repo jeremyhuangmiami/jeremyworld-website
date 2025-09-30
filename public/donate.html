@@ -53,42 +53,39 @@
     Made with 💙 by JeremyWorld • © <span id="year"></span>
   </footer>
 
-  <!-- Donately Embed -->
-  <script src="https://cdn.donately.com/core/6.0/donately.min.js?v=6.0.67" async></script>
-  <script>
-    dntlyReady("Donately", function(t) {
-      const configOptions = {
-        selector: '#dntly-donation-form',
-        options: {
-          'donately-id':'act_abc385319bcd',
-          'stripe-publishable-key':"null",
-          'donately-currency':'USD',
-          'donately-donor-pays-fees':"{\"cc\":{\"processor_percent\":0.029,\"processor_fixed\":0.3,\"processor_cap\":0,\"dntly_percent\":0.04,\"complex_calc\":true},\"paypal\":{\"processor_percent\":0.029,\"processor_fixed\":0.3,\"processor_cap\":0,\"dntly_percent\":0.04,\"complex_calc\":true}}",
-          'donately-recurring-frequency':"[\"false\",\"1.month\"]",
-          'donately-form-id':'frm_03b8d9ad1520',
-          'donately-i18n-locale':'en_US',
-          'donately-payment-options':'cc,paypal',
-          'donately-presets':'20,50,100,500',
-          'donately-form-navigation':"{\"steps\":[[\"presets\",\"amount\",\"donorpaysfees\",\"recurringgroup\"],[\"namegroup\",\"email\"],[\"paymentmethods\",\"submit\"]]}",
-          'donately-theme':'clean',
-        },
-        afterFormLoad: function() {},
-        afterNavigateHook: function(stepNumber) {},
-        onSuccess: function(donation){},
-        onError: function(error){}          
-      }
-      Donately.init(configOptions);
-    });
-
-    function dntlyReady(name, callback) {
-      window.setTimeout(function() {
-        if (window[name]) {callback(window[name])} 
-        else {dntlyReady(name, callback)}
-      }, 10);
+<div id="dntly-donation-form"></div>
+<script src="https://cdn.donately.com/core/6.0/donately.min.js?v=6.0.67" async="async"></script>
+<script>
+  dntlyReady("Donately", function(t) {
+    const configOptions = {
+      selector: '#dntly-donation-form',
+      options: {
+				'donately-id':'act_abc385319bcd',
+				'stripe-publishable-key':"null",
+				'donately-currency':'USD',
+				'donately-donor-pays-fees':"{\"cc\":{\"processor_percent\":0.029,\"processor_fixed\":0.3,\"processor_cap\":0,\"dntly_percent\":0.04,\"complex_calc\":true},\"paypal\":{\"processor_percent\":0.029,\"processor_fixed\":0.3,\"processor_cap\":0,\"dntly_percent\":0.04,\"complex_calc\":true}}",
+				'donately-recurring-frequency':"[\"false\",\"1.month\"]",
+				'donately-form-id':'frm_03b8d9ad1520',
+				'donately-i18n-locale':'en_US',
+				'donately-payment-options':'cc,paypal',
+				'donately-presets':'20,50,100,500',
+				'donately-form-navigation':"{\"steps\":[[\"presets\",\"amount\",\"donorpaysfees\",\"recurringgroup\"],[\"paymentmethods\",\"email\",\"namegroup\",\"submit\"]]}",
+				'donately-theme':'clean',},
+      afterFormLoad: function() {},
+      afterNavigateHook: function(stepNumber) {},
+      onSuccess: function(donation){},
+      onError: function(error){}          
     }
+    Donately.init(configOptions);
+  });
+  function dntlyReady(name, callback) {
+    window.setTimeout(function() {
+      if (window[name]) {callback(window[name])} 
+      else {dntlyReady(name, callback)}
+    }, 10);
+  }
+</script>    
 
-    // auto update year
-    document.getElementById("year").textContent = new Date().getFullYear();
   </script>
 </body>
 </html>
