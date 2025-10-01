@@ -28,7 +28,7 @@
             margin-bottom: 15px;
             border: 1px solid #ccc;
             border-radius: 4px;
-            box-sizing: border-box; /* Include padding in the element's total width and height */
+            box-sizing: border-box; 
         }
         #generate-button {
             width: 100%;
@@ -50,8 +50,8 @@
             border: 1px solid #ddd;
             border-radius: 4px;
             background-color: #e9ecef;
-            white-space: pre-wrap; /* Preserve whitespace and wrap text */
-            word-break: break-all; /* Break words if they are too long */
+            white-space: pre-wrap;
+            word-break: break-all;
         }
         .note {
             margin-top: 15px;
@@ -82,8 +82,8 @@
 </div>
 
 <script>
-    // *** ENSURE THIS URL MATCHES YOUR DEPLOYED CLOUDFLARE WORKER DOMAIN ***
-    const WORKER_URL = 'https://j-image-worker.jeremyhuangmiami.workers.dev/';
+    // FIX #2: Targeted Worker URL for the specific API path
+    const WORKER_URL = 'https://j-image-worker.jeremyhuangmiami.workers.dev/api/generate';
 
     async function generate() {
         const promptValue = document.getElementById('prompt-input').value;
@@ -96,11 +96,11 @@
 
         outputArea.innerHTML = '⏳ Submitting task to worker...';
         
-        // --- FIXED REQUEST BODY for Runway Gen-4 API ---
+        // Request Body required by Runway Gen-4 API
         const requestBody = JSON.stringify({
-            "model": "gen4_image",         // MANDATORY: Specify the model variant for Text-to-Image
-            "ratio": "1024:1024",          // MANDATORY: Specify the aspect ratio (Square)
-            "promptText": promptValue      // MANDATORY: The text prompt from the user input
+            "model": "gen4_image",         
+            "ratio": "1024:1024",          
+            "promptText": promptValue      
         });
 
         try {
@@ -113,22 +113,22 @@
             });
 
             // Handle the response
-            const result = await response.json();
-
+            const resultText = await response.text();
+            
             if (response.ok) {
-                // Successful submission (Runway often returns 202 Accepted)
+                // Try to parse JSON for success message
+                const result = JSON.parse(resultText); 
                 outputArea.innerHTML = `✅ **Task Submitted Successfully!**\n\n` + 
                                        `Task ID: ${result.id}\n\n` +
                                        `Full Response: \n${JSON.stringify(result, null, 2)}`;
             } else {
-                // The worker or Runway API returned an error status
+                // Non-200 response, output the raw error text
                 outputArea.innerHTML = `❌ **API Error (${response.status})**\n\n` + 
-                                       `Message: ${result.message || JSON.stringify(result)}\n\n` +
-                                       `Check your prompt, Cloudflare Worker logs, or API Key.`;
+                                       `Runway/Worker Response: \n${resultText}`;
             }
         } catch (error) {
             console.error('Fetch error:', error);
-            outputArea.innerHTML = 'Fatal Network or Worker error. Check console for details.';
+            outputArea.innerHTML = 'Fatal Network or JSON Parsing error. Check console for details.';
         }
     }
 </script>
