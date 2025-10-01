@@ -3,12 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>J-Image</title>
+  <title>AI Image Generator</title>
   <style>
-    /* Google Fonts */
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
 
-    /* Reset & base */
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
       font-family: 'Inter', sans-serif;
@@ -87,9 +85,9 @@
 </head>
 <body>
 
-  <h1>Jerry-generator</h1>
+  <h1>AI Image Generator</h1>
   <div class="container">
-    <input type="text" id="prompt" placeholder="Enter your prompt for Jerry to make...." />
+    <input type="text" id="prompt" placeholder="Enter your prompt..." />
     <button onclick="generate()">Generate</button>
     <div class="loading" id="loading" style="display:none;">Generating image...</div>
     <img id="result" style="display:none;" />
@@ -107,17 +105,19 @@
       loadingText.style.display = "block";
 
       try {
-        // Replace this URL with your Cloudflare Worker endpoint or API
-        const res = await fetch("/api/generate", {
+        const res = await fetch("https://j-image-worker.jeremyhuangmiami.workers.dev", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ prompt })
         });
 
-        const blob = await res.blob();
-        const url = URL.createObjectURL(blob);
+        if (!res.ok) {
+          const text = await res.text();
+          throw new Error(text);
+        }
 
-        resultImg.src = url;
+        const blob = await res.blob();
+        resultImg.src = URL.createObjectURL(blob);
         resultImg.style.display = "block";
       } catch (err) {
         alert("Error generating image: " + err.message);
