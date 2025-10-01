@@ -2,130 +2,44 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AI Image Generator</title>
+  <title>Jeremy’s Image Generator</title>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
-
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      font-family: 'Inter', sans-serif;
-      background: #f5f7fa;
-      color: #1a1a1a;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      min-height: 100vh;
-      padding: 2rem;
-    }
-
-    h1 {
-      margin-bottom: 1rem;
-      font-size: 2rem;
-      color: #111827;
-    }
-
-    .container {
-      background: #ffffff;
-      padding: 2rem;
-      border-radius: 1rem;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-      max-width: 600px;
-      width: 100%;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-
-    input[type="text"] {
-      width: 100%;
-      padding: 0.75rem 1rem;
-      border-radius: 0.5rem;
-      border: 1px solid #d1d5db;
-      font-size: 1rem;
-      margin-bottom: 1rem;
-      transition: border 0.2s;
-    }
-
-    input[type="text"]:focus {
-      border-color: #2563eb;
-      outline: none;
-    }
-
-    button {
-      background-color: #2563eb;
-      color: white;
-      padding: 0.75rem 1.5rem;
-      border: none;
-      border-radius: 0.5rem;
-      font-size: 1rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: background 0.2s, transform 0.1s;
-    }
-
-    button:hover {
-      background-color: #1e40af;
-      transform: translateY(-1px);
-    }
-
-    img {
-      margin-top: 1.5rem;
-      max-width: 100%;
-      border-radius: 1rem;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-    }
-
-    .loading {
-      margin-top: 1rem;
-      font-size: 1rem;
-      color: #6b7280;
-    }
+    body { font-family: Arial, sans-serif; text-align: center; margin: 40px; }
+    input, button { padding: 10px; margin: 10px; width: 300px; }
+    img { margin-top: 20px; max-width: 512px; border-radius: 10px; }
   </style>
 </head>
 <body>
-
-  <h1>AI Image Generator</h1>
-  <div class="container">
-    <input type="text" id="prompt" placeholder="Enter your prompt..." />
-    <button onclick="generate()">Generate</button>
-    <div class="loading" id="loading" style="display:none;">Generating image...</div>
-    <img id="result" style="display:none;" />
-  </div>
+  <h1>Jeremy’s AI Image Generator (Runway Gen-4)</h1>
+  <input id="prompt" type="text" placeholder="Enter your prompt (e.g. A tree in space)">
+  <button onclick="generate()">Generate</button>
+  <div id="result"></div>
 
   <script>
     async function generate() {
-      const prompt = document.getElementById("prompt").value.trim();
-      if (!prompt) return alert("Please enter a prompt!");
-
-      const resultImg = document.getElementById("result");
-      const loadingText = document.getElementById("loading");
-
-      resultImg.style.display = "none";
-      loadingText.style.display = "block";
+      const prompt = document.getElementById("prompt").value;
+      const resultDiv = document.getElementById("result");
+      resultDiv.innerHTML = "Generating...";
 
       try {
-        const res = await fetch("https://j-image-worker.jeremyhuangmiami.workers.dev", {
+        const response = await fetch("https://j-image-worker.jeremyhuangmiami.workers.dev/", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ prompt })
         });
 
-        if (!res.ok) {
-          const text = await res.text();
-          throw new Error(text);
+        const data = await response.json();
+
+        if (data && data.url) {
+          resultDiv.innerHTML = `<img src="${data.url}" alt="Generated Image">`;
+        } else {
+          resultDiv.innerHTML = "Error: No image returned.";
         }
 
-        const blob = await res.blob();
-        resultImg.src = URL.createObjectURL(blob);
-        resultImg.style.display = "block";
-      } catch (err) {
-        alert("Error generating image: " + err.message);
-      } finally {
-        loadingText.style.display = "none";
+      } catch (e) {
+        resultDiv.innerHTML = "Error: " + e.message;
       }
     }
   </script>
-
 </body>
 </html>
