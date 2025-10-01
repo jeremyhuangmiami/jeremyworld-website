@@ -18,8 +18,8 @@
         "type": 301
       },
       {
-        "source": "/google",
-        "destination": "https://www.google.com",
+        "source": "/donate.html",
+        "destination": "https://www.paypal.com/donate/?hosted_button_id=686R9BYVH3Y2W",
         "type": 302
       },
       {
