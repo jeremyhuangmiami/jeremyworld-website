@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>J-Image</title>
+  <style>
+    /* Google Fonts */
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
+
+    /* Reset & base */
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #f5f7fa;
+      color: #1a1a1a;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      padding: 2rem;
+    }
+
+    h1 {
+      margin-bottom: 1rem;
+      font-size: 2rem;
+      color: #111827;
+    }
+
+    .container {
+      background: #ffffff;
+      padding: 2rem;
+      border-radius: 1rem;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+      max-width: 600px;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      border-radius: 0.5rem;
+      border: 1px solid #d1d5db;
+      font-size: 1rem;
+      margin-bottom: 1rem;
+      transition: border 0.2s;
+    }
+
+    input[type="text"]:focus {
+      border-color: #2563eb;
+      outline: none;
+    }
+
+    button {
+      background-color: #2563eb;
+      color: white;
+      padding: 0.75rem 1.5rem;
+      border: none;
+      border-radius: 0.5rem;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.1s;
+    }
+
+    button:hover {
+      background-color: #1e40af;
+      transform: translateY(-1px);
+    }
+
+    img {
+      margin-top: 1.5rem;
+      max-width: 100%;
+      border-radius: 1rem;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+
+    .loading {
+      margin-top: 1rem;
+      font-size: 1rem;
+      color: #6b7280;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Jerry-generator</h1>
+  <div class="container">
+    <input type="text" id="prompt" placeholder="Enter your prompt for Jerry to make...." />
+    <button onclick="generate()">Generate</button>
+    <div class="loading" id="loading" style="display:none;">Generating image...</div>
+    <img id="result" style="display:none;" />
+  </div>
+
+  <script>
+    async function generate() {
+      const prompt = document.getElementById("prompt").value.trim();
+      if (!prompt) return alert("Please enter a prompt!");
+
+      const resultImg = document.getElementById("result");
+      const loadingText = document.getElementById("loading");
+
+      resultImg.style.display = "none";
+      loadingText.style.display = "block";
+
+      try {
+        // Replace this URL with your Cloudflare Worker endpoint or API
+        const res = await fetch("/api/generate", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ prompt })
+        });
+
+        const blob = await res.blob();
+        const url = URL.createObjectURL(blob);
+
+        resultImg.src = url;
+        resultImg.style.display = "block";
+      } catch (err) {
+        alert("Error generating image: " + err.message);
+      } finally {
+        loadingText.style.display = "none";
+      }
+    }
+  </script>
+
+</body>
+</html>
