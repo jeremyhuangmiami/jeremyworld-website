@@ -18,7 +18,7 @@
         "type": 301
       },
       {
-        "source": "/donate.html",
+        "source": "/donate",
         "destination": "https://www.paypal.com/donate/?hosted_button_id=686R9BYVH3Y2W",
         "type": 302
       },
