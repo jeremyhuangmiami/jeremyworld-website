@@ -1,101 +1,532 @@
-import React, { useState } from 'react';
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Flappy Bird, Space Invaders & Pac-Man</title>
+  <style>
+    body {
+      background: #222;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      overflow: hidden;
+    }
+    #game {
+      background: #70c5ce;
+      border: 2px solid #222;
+      border-radius: 8px;
+      display: block;
+      margin: 0 auto;
+    }
+    #score {
+      font-family: 'Arial', sans-serif;
+      font-size: 2em;
+      color: #fff;
+      text-shadow: 2px 2px 5px #333;
+      pointer-events: none;
+      margin-bottom: 10px;
+      margin-top: 30px;
+      text-align: center;
+      width: 400px;
+    }
+    #next-btn {
+      margin-top: 16px;
+      padding: 10px 22px;
+      font-size: 1.1em;
+      background: #38a1db;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      outline: none;
+      transition: background 0.2s;
+    }
+    #next-btn:focus {
+      outline: none;
+    }
+    #next-btn:hover {
+      background: #21618c;
+    }
+  </style>
+</head>
+<body>
+  <div id="score">Score: 0</div>
+  <canvas id="game" width="400" height="600"></canvas>
+  <button id="next-btn" tabindex="-1">Next</button>
+  <script>
+    let gameList = ["flappy", "space", "pacman"];
+    let currentGameIdx = 0;
+    let frameId = null;
+    const nextBtn = document.getElementById('next-btn');
+    const scoreDiv = document.getElementById('score');
+    const canvas = document.getElementById('game');
+    const ctx = canvas.getContext('2d');
 
-function HomeScreen({ onSelectGame }) {
-  return (
-    <div style={styles.screen}>
-      <h1 style={styles.title}>Welcome to Leo World, select a game to play.</h1>
-      <button style={styles.button} onClick={() => onSelectGame('pacman')}>Pac-Man</button>
-      <button style={styles.button} onClick={() => onSelectGame('spaceinvaders')}>Space Invaders</button>
-      <button style={styles.button} onClick={() => onSelectGame('flappybird')}>Flappy Bird</button>
-    </div>
-  );
-}
+    // Remove focus from button after click
+    nextBtn.addEventListener('click', () => {
+      // Stop current game
+      if (gameList[currentGameIdx] === "flappy") stopFlappyBird();
+      if (gameList[currentGameIdx] === "space") stopSpaceInvaders();
+      if (gameList[currentGameIdx] === "pacman") stopPacman();
+      currentGameIdx = (currentGameIdx + 1) % gameList.length;
+      if (gameList[currentGameIdx] === "flappy") startFlappyBird();
+      if (gameList[currentGameIdx] === "space") startSpaceInvaders();
+      if (gameList[currentGameIdx] === "pacman") startPacman();
+      // Remove focus so Spacebar does not activate button
+      nextBtn.blur();
+    });
 
-function PacManScreen({ onReturn }) {
-  return (
-    <div style={styles.screen}>
-      <h2>Pac-Man Screen</h2>
-      <div style={styles.gameArea}>Pac-Man Game goes here</div>
-      <button style={styles.returnButton} onClick={onReturn}>Return</button>
-    </div>
-  );
-}
+    function removeAllListeners() {
+      window.onkeydown = null;
+      window.onkeyup = null;
+      canvas.onclick = null;
+    }
 
-function SpaceInvadersScreen({ onReturn }) {
-  return (
-    <div style={styles.screen}>
-      <h2>Space Invaders Screen</h2>
-      <div style={styles.gameArea}>Space Invaders Game goes here</div>
-      <button style={styles.returnButton} onClick={onReturn}>Return</button>
-    </div>
-  );
-}
+    // =========================
+    // ---- FLAPPY BIRD --------
+    // =========================
+    let bird, pipes, pipeWidth, pipeGap, pipeSpeed, frame, score, highScore, gameOver;
+    function resetFlappyBird() {
+      bird = {
+        x: 60,
+        y: canvas.height / 2,
+        w: 34,
+        h: 24,
+        velocity: 0,
+        gravity: 0.5,
+        jump: -8
+      };
+      pipes = [];
+      pipeWidth = 60;
+      pipeGap = 140;
+      pipeSpeed = 2;
+      frame = 0;
+      score = 0;
+      gameOver = false;
+      scoreDiv.textContent = "Score: 0";
+      canvas.style.background = "#70c5ce";
+    }
+    function drawBird() {
+      ctx.save();
+      ctx.fillStyle = "#FFD800";
+      ctx.beginPath();
+      ctx.ellipse(bird.x, bird.y, bird.w/2, bird.h/2, 0, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.strokeStyle = "#222";
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.ellipse(bird.x, bird.y, bird.w/2, bird.h/2, 0, 0, Math.PI * 2);
+      ctx.stroke();
+      ctx.fillStyle = "#fff";
+      ctx.beginPath();
+      ctx.arc(bird.x + 9, bird.y - 3, 5, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = "#222";
+      ctx.beginPath();
+      ctx.arc(bird.x + 11, bird.y - 3, 2, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = "#FF9000";
+      ctx.beginPath();
+      ctx.moveTo(bird.x + 15, bird.y);
+      ctx.lineTo(bird.x + 22, bird.y - 3);
+      ctx.lineTo(bird.x + 17, bird.y + 3);
+      ctx.closePath();
+      ctx.fill();
+      ctx.restore();
+    }
+    function drawPipes() {
+      ctx.fillStyle = "#00B200";
+      for (const pipe of pipes) {
+        ctx.fillRect(pipe.x, 0, pipeWidth, pipe.top);
+        ctx.fillRect(pipe.x, pipe.top + pipeGap, pipeWidth, canvas.height - pipe.top - pipeGap);
+      }
+    }
+    function drawGround() {
+      ctx.fillStyle = "#DEB887";
+      ctx.fillRect(0, canvas.height - 60, canvas.width, 60);
+      ctx.fillStyle = "#A0522D";
+      for (let i = 0; i < canvas.width; i += 40) {
+        ctx.fillRect(i, canvas.height - 60, 24, 24);
+      }
+    }
+    function updateFlappyBird() {
+      if (gameOver) return;
+      bird.velocity += bird.gravity;
+      bird.y += bird.velocity;
+      if (frame % 90 === 0) {
+        const top = Math.random() * (canvas.height - pipeGap - 120) + 40;
+        pipes.push({ x: canvas.width, top: top, passed: false });
+      }
+      for (const pipe of pipes) {
+        pipe.x -= pipeSpeed;
+        if (!pipe.passed && bird.x > pipe.x + pipeWidth) {
+          score++;
+          scoreDiv.textContent = "Score: " + score;
+          pipe.passed = true;
+        }
+      }
+      pipes = pipes.filter(pipe => pipe.x + pipeWidth > 0);
+      for (const pipe of pipes) {
+        if (
+          bird.x + bird.w/2 > pipe.x &&
+          bird.x - bird.w/2 < pipe.x + pipeWidth &&
+          (bird.y - bird.h/2 < pipe.top || bird.y + bird.h/2 > pipe.top + pipeGap)
+        ) {
+          endFlappyBird();
+        }
+      }
+      if (bird.y + bird.h/2 > canvas.height - 60 || bird.y - bird.h/2 < 0) {
+        endFlappyBird();
+      }
+    }
+    function endFlappyBird() {
+      gameOver = true;
+      scoreDiv.textContent = `Game Over! Score: ${score} - Press Space or Click to Restart`;
+      if (score > highScore) highScore = score;
+    }
+    function drawFlappyBird() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      drawGround();
+      drawPipes();
+      drawBird();
+    }
+    function flappyBirdLoop() {
+      updateFlappyBird();
+      drawFlappyBird();
+      frame++;
+      frameId = requestAnimationFrame(flappyBirdLoop);
+    }
+    function startFlappyBird() {
+      resetFlappyBird();
+      removeAllListeners();
+      canvas.onclick = function() {
+        if (gameOver) {
+          resetFlappyBird();
+        } else {
+          bird.velocity = bird.jump;
+        }
+      };
+      window.onkeydown = function(e) {
+        if (gameList[currentGameIdx] !== "flappy") return;
+        if (e.code === "Space") {
+          if (gameOver) {
+            resetFlappyBird();
+          } else {
+            bird.velocity = bird.jump;
+          }
+        }
+      };
+      flappyBirdLoop();
+    }
+    function stopFlappyBird() {
+      cancelAnimationFrame(frameId);
+      removeAllListeners();
+    }
 
-function FlappyBirdScreen({ onReturn }) {
-  return (
-    <div style={styles.screen}>
-      <h2>Flappy Bird Screen</h2>
-      <div style={styles.gameArea}>Flappy Bird Game goes here</div>
-      <button style={styles.returnButton} onClick={onReturn}>Return</button>
-    </div>
-  );
-}
+    // =========================
+    // ---- SPACE INVADERS -----
+    // =========================
+    let invaders, bullets, player, leftPressed, rightPressed, invaderDir, invaderStep, invaderSpeed, invaderDown, spaceScore, spaceGameOver;
+    function resetSpaceInvaders() {
+      canvas.style.background = "#000";
+      player = {
+        x: canvas.width / 2 - 20,
+        y: canvas.height - 60,
+        w: 40,
+        h: 20,
+        color: "#0f0"
+      };
+      bullets = [];
+      invaders = [];
+      leftPressed = rightPressed = false;
+      invaderDir = 1;
+      invaderSpeed = 25;
+      invaderStep = 0;
+      invaderDown = false;
+      spaceScore = 0;
+      spaceGameOver = false;
+      scoreDiv.textContent = "Score: 0";
+      let rows = 4, cols = 8, invW = 30, invH = 20, padX = 16, padY = 24;
+      for (let r = 0; r < rows; r++) {
+        for (let c = 0; c < cols; c++) {
+          invaders.push({
+            x: 50 + c * (invW + padX),
+            y: 30 + r * (invH + padY),
+            w: invW,
+            h: invH,
+            alive: true
+          });
+        }
+      }
+    }
+    function drawPlayer() {
+      ctx.fillStyle = player.color;
+      ctx.fillRect(player.x, player.y, player.w, player.h);
+      ctx.fillStyle = "#fff";
+      ctx.fillRect(player.x + player.w/2 - 4, player.y - 8, 8, 8);
+    }
+    function drawInvaders() {
+      ctx.fillStyle = "#f00";
+      for (const inv of invaders) {
+        if (inv.alive) {
+          ctx.fillRect(inv.x, inv.y, inv.w, inv.h);
+          ctx.fillStyle = "#fff";
+          ctx.fillRect(inv.x + inv.w/2 - 3, inv.y + 4, 6, 6);
+          ctx.fillStyle = "#f00";
+        }
+      }
+    }
+    function drawBullets() {
+      ctx.fillStyle = "#ff0";
+      for (const b of bullets) {
+        ctx.fillRect(b.x, b.y, 4, 10);
+      }
+    }
+    function updateSpaceInvaders() {
+      if (spaceGameOver) return;
+      if (leftPressed) player.x -= 8;
+      if (rightPressed) player.x += 8;
+      player.x = Math.max(0, Math.min(canvas.width - player.w, player.x));
+      for (const b of bullets) {
+        b.y -= 8;
+      }
+      bullets = bullets.filter(b => b.y > 0);
+      invaderStep++;
+      if (invaderStep > invaderSpeed) {
+        let hitWall = false;
+        for (const inv of invaders) {
+          if (inv.alive) {
+            inv.x += invaderDir * 20;
+            if (inv.x < 0 || inv.x + inv.w > canvas.width) hitWall = true;
+          }
+        }
+        if (hitWall) {
+          invaderDir *= -1;
+          for (const inv of invaders) {
+            if (inv.alive) inv.y += 20;
+            if (inv.alive && inv.y + inv.h >= player.y) spaceGameOver = true;
+          }
+        }
+        invaderStep = 0;
+      }
+      for (const b of bullets) {
+        for (const inv of invaders) {
+          if (inv.alive &&
+            b.x < inv.x + inv.w &&
+            b.x + 4 > inv.x &&
+            b.y < inv.y + inv.h &&
+            b.y + 10 > inv.y
+          ) {
+            inv.alive = false;
+            b.y = -100;
+            spaceScore++;
+            scoreDiv.textContent = "Score: " + spaceScore;
+          }
+        }
+      }
+      for (const inv of invaders) {
+        if (inv.alive &&
+          inv.y + inv.h > player.y &&
+          inv.x < player.x + player.w &&
+          inv.x + inv.w > player.x
+        ) {
+          spaceGameOver = true;
+        }
+      }
+      if (invaders.every(inv => !inv.alive)) {
+        spaceGameOver = true;
+        scoreDiv.textContent = `You Win! Score: ${spaceScore} - Press Space or Click to Restart`;
+      }
+      if (spaceGameOver && invaders.some(inv => inv.alive)) {
+        scoreDiv.textContent = `Game Over! Score: ${spaceScore} - Press Space or Click to Restart`;
+      }
+    }
+    function drawSpaceInvaders() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      drawPlayer();
+      drawInvaders();
+      drawBullets();
+    }
+    function spaceInvadersLoop() {
+      updateSpaceInvaders();
+      drawSpaceInvaders();
+      frameId = requestAnimationFrame(spaceInvadersLoop);
+    }
+    function startSpaceInvaders() {
+      resetSpaceInvaders();
+      removeAllListeners();
+      window.onkeydown = function(e) {
+        if (gameList[currentGameIdx] !== "space") return;
+        if (e.code === "ArrowLeft") leftPressed = true;
+        if (e.code === "ArrowRight") rightPressed = true;
+        if (e.code === "Space") {
+          if (spaceGameOver) {
+            resetSpaceInvaders();
+          } else {
+            if (bullets.length < 10) {
+              bullets.push({ x: player.x + player.w/2 - 2, y: player.y - 10 });
+            }
+          }
+        }
+      };
+      window.onkeyup = function(e) {
+        if (gameList[currentGameIdx] !== "space") return;
+        if (e.code === "ArrowLeft") leftPressed = false;
+        if (e.code === "ArrowRight") rightPressed = false;
+      };
+      canvas.onclick = function() {
+        if (spaceGameOver) {
+          resetSpaceInvaders();
+        } else {
+          if (bullets.length < 10) {
+            bullets.push({ x: player.x + player.w/2 - 2, y: player.y - 10 });
+          }
+        }
+      };
+      spaceInvadersLoop();
+    }
+    function stopSpaceInvaders() {
+      cancelAnimationFrame(frameId);
+      removeAllListeners();
+    }
 
-export default function App() {
-  const [screen, setScreen] = useState('home');
+    // =========================
+    // ---- PACMAN (Mini) ------
+    // =========================
+    let pacman, pacdir, pacmanScore, pacmanDots, pacmanGameOver;
+    const pacmanMap = [
+      "####################",
+      "#........#.........#",
+      "#.##.###.#.###.##..#",
+      "#.................##",
+      "###.#.#######.#.###",
+      "#....#...#...#....#",
+      "#.######.#.######.#",
+      "#................##",
+      "#.##.#.#####.#.##.#",
+      "#....#..#..#.....##",
+      "####################"
+    ];
+    function resetPacman() {
+      canvas.style.background = "#000";
+      pacman = { x: 1, y: 1 };
+      pacdir = { x: 1, y: 0 };
+      pacmanScore = 0;
+      pacmanDots = [];
+      pacmanGameOver = false;
+      scoreDiv.textContent = "Score: 0";
+      for (let y = 0; y < pacmanMap.length; y++) {
+        for (let x = 0; x < pacmanMap[y].length; x++) {
+          if (pacmanMap[y][x] === ".") pacmanDots.push({ x, y, eaten: false });
+        }
+      }
+    }
+    function drawPacmanMap() {
+      const cellW = canvas.width / pacmanMap[0].length;
+      const cellH = canvas.height / pacmanMap.length;
+      for (let y = 0; y < pacmanMap.length; y++) {
+        for (let x = 0; x < pacmanMap[y].length; x++) {
+          if (pacmanMap[y][x] === "#") {
+            ctx.fillStyle = "#2222ff";
+            ctx.fillRect(x * cellW, y * cellH, cellW, cellH);
+          }
+        }
+      }
+      for (const dot of pacmanDots) {
+        if (!dot.eaten) {
+          ctx.fillStyle = "#ffff00";
+          ctx.beginPath();
+          ctx.arc(dot.x * cellW + cellW / 2, dot.y * cellH + cellH / 2, 4, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      }
+    }
+    function drawPacman() {
+      const cellW = canvas.width / pacmanMap[0].length;
+      const cellH = canvas.height / pacmanMap.length;
+      ctx.save();
+      ctx.fillStyle = "#ffd800";
+      ctx.beginPath();
+      ctx.arc(
+        pacman.x * cellW + cellW / 2,
+        pacman.y * cellH + cellH / 2,
+        Math.min(cellW, cellH) / 2 - 2,
+        0.25 * Math.PI + Math.atan2(pacdir.y, pacdir.x),
+        1.75 * Math.PI + Math.atan2(pacdir.y, pacdir.x)
+      );
+      ctx.lineTo(
+        pacman.x * cellW + cellW / 2,
+        pacman.y * cellH + cellH / 2
+      );
+      ctx.closePath();
+      ctx.fill();
+      ctx.restore();
+    }
+    function updatePacman() {
+      if (pacmanGameOver) return;
+      let nx = pacman.x + pacdir.x;
+      let ny = pacman.y + pacdir.y;
+      if (
+        nx >= 0 &&
+        ny >= 0 &&
+        ny < pacmanMap.length &&
+        nx < pacmanMap[0].length &&
+        pacmanMap[ny][nx] !== "#"
+      ) {
+        pacman.x = nx;
+        pacman.y = ny;
+      }
+      for (const dot of pacmanDots) {
+        if (!dot.eaten && dot.x === pacman.x && dot.y === pacman.y) {
+          dot.eaten = true;
+          pacmanScore++;
+          scoreDiv.textContent = "Score: " + pacmanScore;
+        }
+      }
+      if (pacmanDots.every(dot => dot.eaten)) {
+        pacmanGameOver = true;
+        scoreDiv.textContent = `You Win! Score: ${pacmanScore} - Press Space or Click to Restart`;
+      }
+    }
+    function drawPacmanGame() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      drawPacmanMap();
+      drawPacman();
+    }
+    function pacmanLoop() {
+      updatePacman();
+      drawPacmanGame();
+      frameId = requestAnimationFrame(pacmanLoop);
+    }
+    function startPacman() {
+      resetPacman();
+      removeAllListeners();
+      window.onkeydown = function(e) {
+        if (gameList[currentGameIdx] !== "pacman") return;
+        if (e.code === "ArrowUp") pacdir = { x: 0, y: -1 };
+        if (e.code === "ArrowDown") pacdir = { x: 0, y: 1 };
+        if (e.code === "ArrowLeft") pacdir = { x: -1, y: 0 };
+        if (e.code === "ArrowRight") pacdir = { x: 1, y: 0 };
+        if (e.code === "Space") {
+          if (pacmanGameOver) resetPacman();
+        }
+      };
+      canvas.onclick = function() {
+        if (pacmanGameOver) resetPacman();
+      };
+      pacmanLoop();
+    }
+    function stopPacman() {
+      cancelAnimationFrame(frameId);
+      removeAllListeners();
+    }
 
-  const handleSelectGame = (game) => {
-    setScreen(game);
-  };
-
-  const handleReturn = () => {
-    setScreen('home');
-  };
-
-  switch (screen) {
-    case 'pacman':
-      return <PacManScreen onReturn={handleReturn} />;
-    case 'spaceinvaders':
-      return <SpaceInvadersScreen onReturn={handleReturn} />;
-    case 'flappybird':
-      return <FlappyBirdScreen onReturn={handleReturn} />;
-    default:
-      return <HomeScreen onSelectGame={handleSelectGame} />;
-  }
-}
-
-const styles = {
-  screen: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    paddingTop: '40px'
-  },
-  title: {
-    marginBottom: '32px'
-  },
-  button: {
-    margin: '12px',
-    padding: '16px 32px',
-    fontSize: '18px',
-    borderRadius: '8px',
-    cursor: 'pointer'
-  },
-  gameArea: {
-    margin: '40px',
-    fontSize: '20px',
-    minHeight: '150px',
-    minWidth: '300px',
-    border: '2px dashed #aaa',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center'
-  },
-  returnButton: {
-    marginTop: '24px',
-    padding: '12px 24px',
-    fontSize: '16px',
-    borderRadius: '6px',
-    cursor: 'pointer'
-  }
-};
+    // Start with Flappy Bird
+    startFlappyBird();
+  </script>
+</body>
+</html>
