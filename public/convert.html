@@ -1,0 +1,85 @@
+<!doctype html>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Free File Converters</title>
+<style>
+  body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif; background:#0b1220; color:#e5e7eb; margin:0; padding:2rem; }
+  .card { max-width: 720px; margin: 0 auto; background: #111827; border: 1px solid #374151; border-radius: 12px; padding: 1.25rem; }
+  .row { display:flex; gap:12px; align-items:center; flex-wrap:wrap; }
+  input[type="file"], select, button { font-size: 16px; }
+  button { background:#06b6d4; color:white; border:none; padding:10px 14px; border-radius:8px; cursor:pointer; }
+  button:disabled { opacity: .6; cursor: not-allowed; }
+  progress { width:100%; height: 16px; }
+  .muted { color:#9ca3af; font-size: 14px; }
+  .mt { margin-top: 1rem; }
+</style>
+
+<div class="card">
+  <h1>Free File Converters</h1>
+  <p class="muted">Convert images, audio, video, and office docs. Max 100 MB per file.</p>
+  <div class="mt row">
+    <input id="file" type="file" />
+    <label for="target">Target format:</label>
+    <select id="target">
+      <option value="pdf">pdf</option>
+      <option value="png">png</option>
+      <option value="jpg">jpg</option>
+      <option value="webp">webp</option>
+      <option value="mp3">mp3</option>
+      <option value="mp4">mp4</option>
+    </select>
+    <button id="go">Convert</button>
+  </div>
+  <div class="mt">
+    <progress id="p" max="100" value="0"></progress>
+  </div>
+  <pre id="log" class="mt muted" style="white-space:pre-wrap"></pre>
+</div>
+
+<script>
+const $ = (id) => document.getElementById(id);
+const apiBase = ""; // leave empty if proxying /convert to backend via Nginx; set to "http://localhost:8000" for direct dev
+
+$("go").onclick = async () => {
+  const f = $("file").files[0];
+  const target = $("target").value;
+  if (!f) { alert("Pick a file"); return; }
+
+  const fd = new FormData();
+  fd.append("file", f);
+  fd.append("target", target);
+
+  $("go").disabled = true;
+  $("p").value = 0;
+  $("log").textContent = "";
+
+  const xhr = new XMLHttpRequest();
+  xhr.open("POST", apiBase + "/convert");
+  xhr.responseType = "blob";
+  xhr.upload.onprogress = (e) => {
+    if (e.lengthComputable) $("p").value = (e.loaded / e.total) * 100;
+  };
+  xhr.onload = () => {
+    $("go").disabled = false;
+    if (xhr.status >= 200 && xhr.status < 300) {
+      const blob = xhr.response;
+      const disp = xhr.getResponseHeader("Content-Disposition") || "";
+      const m = /filename="?([^";]+)"?/i.exec(disp);
+      const filename = m ? m[1] : `converted-${Date.now()}`;
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = filename;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      URL.revokeObjectURL(link.href);
+    } else {
+      blobToText(xhr.response).then((txt) => $("log").textContent = txt || `Error ${xhr.status}`);
+    }
+  };
+  xhr.onerror = () => { $("go").disabled = false; $("log").textContent = "Network error"; };
+  xhr.send(fd);
+};
+
+function blobToText(blob){ return new Response(blob).text().catch(() => ""); }
+</script>
