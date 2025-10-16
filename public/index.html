@@ -1,10 +1,439 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-    <title>Jeremy World</title>
-    <link rel="stylesheet" href="styles.css">
+  <script src="https://cdn.amplitude.com/libs/analytics-browser-2.11.1-min.js.gz"></script><script src="https://cdn.amplitude.com/libs/plugin-session-replay-browser-1.8.0-min.js.gz"></script><script>window.amplitude.add(window.sessionReplay.plugin({sampleRate: 1}));window.amplitude.init('97f3728a2fd64313884b262d4d2a4cd', {"autocapture":{"elementInteractions":true}});</script>
+  <!-- Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-L4156EV21N"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){ dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'G-L4156EV21N');
+  </script>
+  <script type="text/javascript">
+    (function(c,l,a,r,i,t,y){
+        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+    })(window, document, "clarity", "script", "tidz5x6kwe");
+</script>
+  <!-- Paste this right before your closing </head> tag -->
+<script type="text/javascript">
+  (function(e,c){if(!c.__SV){var l,h;window.mixpanel=c;c._i=[];c.init=function(q,r,f){function t(d,a){var g=a.split(".");2==g.length&&(d=d[g[0]],a=g[1]);d[a]=function(){d.push([a].concat(Array.prototype.slice.call(arguments,0)))}}var b=c;"undefined"!==typeof f?b=c[f]=[]:f="mixpanel";b.people=b.people||[];b.toString=function(d){var a="mixpanel";"mixpanel"!==f&&(a+="."+f);d||(a+=" (stub)");return a};b.people.toString=function(){return b.toString(1)+".people (stub)"};l="disable time_event track track_pageview track_links track_forms track_with_groups add_group set_group remove_group register register_once alias unregister identify name_tag set_config reset opt_in_tracking opt_out_tracking has_opted_in_tracking has_opted_out_tracking clear_opt_in_out_tracking start_batch_senders start_session_recording stop_session_recording people.set people.set_once people.unset people.increment people.append people.union people.track_charge people.clear_charges people.delete_user people.remove".split(" ");
+  for(h=0;h<l.length;h++)t(b,l[h]);var n="set set_once union unset remove delete".split(" ");b.get_group=function(){function d(p){a[p]=function(){b.push([g,[p].concat(Array.prototype.slice.call(arguments,0))])}}for(var a={},g=["get_group"].concat(Array.prototype.slice.call(arguments,0)),m=0;m<n.length;m++)d(n[m]);return a};c._i.push([q,r,f])};c.__SV=1.2;var k=e.createElement("script");k.type="text/javascript";k.async=!0;k.src="undefined"!==typeof MIXPANEL_CUSTOM_LIB_URL?MIXPANEL_CUSTOM_LIB_URL:"file:"===
+  e.location.protocol&&"//cdn.mxpnl.com/libs/mixpanel-2-latest.min.js".match(/^\/\//)?"https://cdn.mxpnl.com/libs/mixpanel-2-latest.min.js":"//cdn.mxpnl.com/libs/mixpanel-2-latest.min.js";e=e.getElementsByTagName("script")[0];e.parentNode.insertBefore(k,e)}})(document,window.mixpanel||[])
+
+  mixpanel.init('402c44875e3035ddcf05a9ba7a5904f7', {
+    autocapture: true,
+    record_sessions_percent: 100,
+  })
+
+</script>
+<!-- Hiring Popup -->
+<div id="hiringPopup" class="fixed inset-0 bg-black/60 flex items-center justify-center z-[2000] hidden">
+  <div class="glass rounded-2xl p-6 w-80 text-center">
+    <h2 class="text-xl font-bold mb-4">We’re looking for employees!</h2>
+    <div class="flex flex-col gap-3">
+      <a href="https://jeremyworld.org/gethired.html" 
+         class="btn-primary text-white px-4 py-2 rounded-lg shadow-md">
+        Get Hired
+      </a>
+      <label class="flex items-center gap-2 text-sm text-gray-300 justify-center">
+        <input type="checkbox" id="dontAskAgain" class="accent-sky-500">
+        Don’t ask me again
+      </label>
+      <button id="closePopup" class="bg-gray-700 hover:bg-gray-600 px-4 py-2 rounded-lg">
+        Close this message
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+  const hiringPopup = document.getElementById("hiringPopup");
+  const closePopup = document.getElementById("closePopup");
+  const dontAskAgain = document.getElementById("dontAskAgain");
+
+  // Show popup only if "dontAskAgain" not set
+  window.addEventListener("load", () => {
+    if (!localStorage.getItem("hideHiringPopup")) {
+      hiringPopup.classList.remove("hidden");
+    }
+  });
+
+  // Close button logic
+  closePopup.addEventListener("click", () => {
+    if (dontAskAgain.checked) {
+      localStorage.setItem("hideHiringPopup", "true");
+    }
+    hiringPopup.classList.add("hidden");
+  });
+</script>
+
+
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Jeremy’s World — Home</title>
+  <meta name="description" content="Jeremy’s World: a curated playground of AI chatbots, games, and playful experiments." />
+
+  <!-- Inter font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind CSS CDN + config -->
+  <script>
+    window.tailwind = {
+      config: {
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['Inter', 'ui-sans-serif', 'system-ui', 'Segoe UI', 'Helvetica', 'Arial'],
+            },
+            colors: {
+              brand: {500: '#06B6D4'},
+              skybrand: {400: '#63b3ed', 500: '#3b82f6'},
+            },
+            keyframes: {
+              glow: {
+                '0%,100%': { boxShadow: '0 0 12px rgba(99,179,237,0.25), 0 0 24px rgba(129,230,217,0.15)' },
+                '50%': { boxShadow: '0 0 20px rgba(99,179,237,0.45), 0 0 36px rgba(129,230,217,0.25)' },
+              }
+            },
+            animation: {
+              glow: 'glow 2.4s ease-in-out infinite',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <style>
+    :root{
+      --bg1:#0b1220;
+      --bg2:#0e1424;
+      --gradA:#81e6d9;
+      --gradB:#63b3ed;
+    }
+    body {
+      background:
+        radial-gradient(1200px 600px at 10% -10%, rgba(6,182,212,.12) 0%, transparent 60%),
+        radial-gradient(900px 500px at 110% 110%, rgba(59,130,246,.12) 0%, transparent 60%),
+        linear-gradient(140deg, var(--bg1), var(--bg2));
+      background-attachment: fixed;
+    }
+    .bg-grid {
+      --c: rgba(255,255,255,0.04);
+      background-image:
+        linear-gradient(var(--c) 1px, transparent 1px),
+        linear-gradient(90deg, var(--c) 1px, transparent 1px);
+      background-size: 28px 28px;
+      mask-image: radial-gradient(ellipse at 50% 50%, black 60%, transparent 100%);
+      -webkit-mask-image: radial-gradient(ellipse at 50% 50%, black 60%, transparent 100%);
+    }
+    .text-gradient {
+      background-image: linear-gradient(45deg, var(--gradA), var(--gradB));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    .glass {
+      background: linear-gradient(180deg, rgba(17,24,39,.55), rgba(17,24,39,.38));
+      border: 1px solid rgba(99,179,237,.22);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      box-shadow: 0 8px 30px rgba(0,0,0,.35), 0 0 0 1px rgba(99,179,237,.18);
+    }
+    .btn-primary {
+      background: linear-gradient(90deg, #0ea5e9, #06b6d4);
+    }
+    .btn-primary:hover {
+      filter: brightness(1.05);
+      transform: translateY(-1px);
+    }
+    .focus-ring:focus-visible {
+      outline: 2px solid #22D3EE;
+      outline-offset: 2px;
+    }
+    /* Employees Corner styles */
+    #overlay {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      background: rgba(0,0,0,0.7);
+      color: #fff;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+    #nametags {
+      margin-bottom: 1em;
+    }
+    #nametags div {
+      font-size: 1.3em;
+      margin: 0.5em 0;
+    }
+    #passwordPrompt {
+      position: fixed;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      background: #222;
+      padding: 2em;
+      border-radius: 8px;
+      color: #fff;
+      box-shadow: 0 2px 10px #000;
+      z-index: 1100;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+    }
+    #passwordPrompt input[type="password"] {
+      font-size: 1.1em;
+      padding: 0.4em;
+      margin: 0.5em 0;
+      border-radius: 4px;
+      border: none;
+    }
+    #passwordPrompt button {
+      background: #3b82f6;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      padding: 0.5em 1em;
+      margin-top: 0.5em;
+      cursor: pointer;
+    }
+    #errorMsg {
+      color: #ff6b6b;
+      margin-top: 0.5em;
+      font-size: 1em;
+    }
+  </style>
 </head>
-<body>
-    <h1>Welcome to Jeremy World</h1>
-    <p>This is a placeholder for the original content before any modifications.</p>
+<body class="font-sans text-gray-100 antialiased">
+  <a href="#main" class="sr-only focus:not-sr-only focus-ring fixed top-3 left-3 z-[100] bg-gray-900/80 text-white px-3 py-2 rounded-md">Skip to content</a>
+
+  <!-- Background grid -->
+  <div aria-hidden="true" class="bg-grid fixed inset-0 pointer-events-none"></div>
+
+<!-- Header -->
+<header class="fixed top-0 inset-x-0 z-50">
+  <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <div class="mt-3"></div>
+    <nav class="glass rounded-2xl px-4 sm:px-6 py-3 flex items-center justify-between">
+      <a href="index.html" class="inline-flex items-center gap-2 group focus-ring">
+        <img 
+          src="https://wiki-images.artofproblemsolving.com//thumb/7/73/Jeremyworld-high-resolution-logo-transparent.png/1600px-Jeremyworld-high-resolution-logo-transparent.png" 
+          alt="Jeremy's World" 
+          class="h-10 sm:h-12 w-auto"
+          style="filter: brightness(0) invert(1);"
+        >
+      </a>
+      <button id="menuBtn" class="md:hidden inline-flex items-center justify-center h-10 w-10 rounded-md bg-white/5 hover:bg-white/10 transition focus-ring" aria-expanded="false" aria-controls="mobileNav">
+        <svg class="h-6 w-6 text-gray-300" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/>
+        </svg>
+      </button>
+      <ul class="hidden md:flex items-center gap-2">
+        <li><a href="index.html" class="focus-ring px-3 py-2 rounded-md text-sm font-semibold bg-white/5 text-white">Home</a></li>
+        <li><a href="projects.html" class="focus-ring px-3 py-2 rounded-md text-sm font-semibold text-gray-200 hover:text-white hover:bg-white/5 transition">Projects</a></li>
+        <li><a href="https://login.jeremyworld.org" class="focus-ring px-3 py-2 rounded-md text-sm font-semibold text-gray-200 hover:text-white hover:bg-white/5 transition">Login/Register</a></li>
+      </ul>
+    </nav>
+
+    <div id="mobileNav" class="hidden md:hidden mt-2">
+      <div class="glass rounded-2xl px-4 py-3">
+        <a href="index.html" class="block px-3 py-2 rounded-md text-sm font-semibold bg-white/5 text-white">Home</a>
+        <a href="projects.html" class="block px-3 py-2 rounded-md text-sm font-semibold text-gray-200 hover:text-white hover:bg-white/5 transition">Projects</a>
+        <a href="https://login.jeremyworld.org" class="block px-3 py-2 rounded-md text-sm font-semibold text-gray-200 hover:text-white hover:bg-white/5 transition">Login/Register</a>
+      </div>
+    </div>
+  </div>
+</header>
+
+  <!-- HERO moved to top -->
+  <main id="main" class="pt-36 sm:pt-40">
+    <section class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div class="text-center">
+        <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold leading-[1.05] tracking-tight">
+          Welcome to <span class="text-gradient">JeremyWorld</span>
+        </h1>
+        <p class="mt-5 text-lg sm:text-xl text-gray-300 max-w-2xl mx-auto">
+          A curated playground of AI chatbots, games, and playful experiments—built to spark curiosity and delight.
+        </p>
+        <div class="mt-8 flex flex-col sm:flex-row justify-center gap-3">
+          <a href="projects.html" class="btn-primary focus-ring animate-glow inline-flex items-center justify-center gap-2 text-white font-semibold px-5 py-3 rounded-xl shadow-lg transition">
+            Explore Projects
+            <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0-4 4m4-4H3"/></svg>
+          </a>
+          <a href="#featured" class="focus-ring inline-flex items-center justify-center gap-2 text-gray-200 font-semibold px-5 py-3 rounded-xl bg-white/5 hover:bg-white/10 transition">
+            Featured
+            <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-5-5"/></svg>
+          </a>
+        </div>
+        <div class="mt-5 flex items-center justify-center gap-3 text-sm text-gray-400">
+          <span class="inline-flex h-2 w-2 rounded-full bg-emerald-400 animate-pulse"></span>
+          <span>Always evolving. Always fun. [BONUS: easter eggs and stuff i think will come two weeks from now, no promises. ALSO, NEW WEBSITE!! ITS-ITS-ITS...A....file converter?]</span>
+        </div>
+      </div>
+
+      <!-- Employees Corner Overlay HTML -->
+      <div id="overlay">
+        <div id="nametags">
+          <div>🛠️Jeremy</div>
+          <div>🛠️Cade</div>
+        </div>
+        <a href="https://github.com/jeremyhuangmiami/jeremyworld-website" style="color:#81e6d9; text-decoration:underline;">GitHub Repo</a>
+      </div>
+      <!-- Password Popup HTML -->
+      <div id="passwordPrompt">
+        <div>Enter Employees Corner Password:</div>
+        <input type="password" id="empPassword" placeholder="Password" autocomplete="current-password">
+        <button id="submitPassword">Submit</button>
+        <div id="errorMsg"></div>
+      </div>
+      <!-- End Employees Corner HTML -->
+
+      <!-- Mini highlights (kept: AI Chatbots, Games; removed Experiments & Snappy UX) -->
+      <div class="mt-10 grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-3xl mx-auto">
+        <div class="glass rounded-2xl p-5 hover:bg-white/10 transition">
+          <div class="text-3xl">🤖</div>
+          <h3 class="mt-3 font-semibold">AI Chatbots</h3>
+          <p class="mt-1 text-sm text-gray-300">Talk with custom-built bots that surprise and help.</p>
+        </div>
+        <div class="glass rounded-2xl p-5 hover:bg-white/10 transition">
+          <div class="text-3xl">🎮</div>
+          <h3 class="mt-3 font-semibold">Games</h3>
+          <p class="mt-1 text-sm text-gray-300">Fast, free-to-play, and delightfully weird.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Featured -->
+    <section id="featured" class="mt-16 sm:mt-24">
+      <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div class="flex items-end justify-between gap-4">
+          <h2 class="text-2xl sm:text-3xl font-extrabold text-gradient">Featured</h2>
+          <a href="projects.html" class="text-sm text-gray-300 hover:text-white focus-ring rounded-md px-2 py-1">See all</a>
+        </div>
+
+        <div class="mt-6 grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <a href="/j-games.html" class="group glass rounded-2xl p-5 hover:translate-y-[-2px] transition will-change-transform focus-ring block">
+            <div class="flex items-center justify-between">
+              <h3 class="text-lg font-bold">J‑Games</h3>
+              <span class="text-2xl">🎮</span>
+            </div>
+            <p class="mt-2 text-sm text-gray-300">A big collection of free‑to‑play games.</p>
+            <div class="mt-4 text-xs text-gray-400">Open collection →</div>
+          </a>
+
+          <a href="https://streetview.jeremyworld.org" target="_blank" rel="noopener" class="group glass rounded-2xl p-5 hover:translate-y-[-2px] transition will-change-transform focus-ring block">
+            <div class="flex items-center justify-between">
+              <h3 class="text-lg font-bold">Street View Explorer</h3>
+              <span class="text-2xl">🌍</span>
+            </div>
+            <p class="mt-2 text-sm text-gray-300">Jump to random, surprising locations.</p>
+            <div class="mt-4 text-xs text-gray-400">Launch app →</div>
+          </a>
+
+          <a href="https://jerrymarkten.jeremyworld.org" target="_blank" rel="noopener" class="group glass rounded-2xl p-5 hover:translate-y-[-2px] transition will-change-transform focus-ring block">
+            <div class="flex items-center justify-between">
+              <h3 class="text-lg font-bold">Jerry Mark Ten</h3>
+              <span class="text-2xl">🤖</span>
+            </div>
+            <p class="mt-2 text-sm text-gray-300">The tenth version of JeremyWorld AI.</p>
+            <div class="mt-4 text-xs text-gray-400">Try it →</div>
+          </a>
+
+          <!-- New: Pointer Pointer -->
+          <a href="https://pointerpointer.jeremyworld.org" target="_blank" rel="noopener" class="group glass rounded-2xl p-5 hover:translate-y-[-2px] transition will-change-transform focus-ring block">
+            <div class="flex items-center justify-between">
+              <h3 class="text-lg font-bold">Pointer Pointer</h3>
+              <span class="text-2xl">🖱️</span>
+            </div>
+            <p class="mt-2 text-sm text-gray-300">An amusing classic that always finds your cursor.</p>
+            <div class="mt-4 text-xs text-gray-400">Play now →</div>
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="mt-20">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div class="glass rounded-2xl px-5 sm:px-8 py-8">
+        <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
+          <p class="text-sm text-gray-300">&copy; 2025 Jeremy’s World. Crafted with passion.</p>
+          <div class="flex items-center gap-6 text-sm">
+            <a href="privacypolicy.html" class="text-gray-300 hover:text-white focus-ring rounded-md px-2 py-1">Privacy Policy</a>
+            <a href="termsofservice.html" class="text-gray-300 hover:text-white focus-ring rounded-md px-2 py-1">Terms of Service</a>
+            <a href="projects.html" class="text-gray-300 hover:text-white focus-ring rounded-md px-2 py-1">Projects</a>
+            <a href="contact.html" class="text-gray-300 hover:text-white focus-ring rounded-md px-2 py-1">Contact</a>
+            <a href="about.html" class="text-gray-300 hover:text-white focus-ring rounded-md px-2 py-1">About</a>
+            <a href="donate.html" class="text-gray-300 hover:text-white focus-ring rounded-md px-2 py-1">Donate!!! :)</a>
+            <a href="gethired.html" class="text-gray-300 hover:text-white focus-ring rounded-md px-2 py-1">Get Hired</a>
+            <a href="contributors.html" class="text-gray-300 hover:text-white focus-ring rounded-md px-2 py-1">contributors</a>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="h-6"></div>
+    </div>
+  </footer>
+
+  <script>
+    // Mobile nav logic
+    const btn = document.getElementById('menuBtn');
+    const mobile = document.getElementById('mobileNav');
+    if (btn && mobile) {
+      btn.addEventListener('click', () => {
+        const open = mobile.classList.contains('hidden') ? 'true' : 'false';
+        btn.setAttribute('aria-expanded', open);
+        mobile.classList.toggle('hidden');
+      });
+    }
+    // Employees Corner logic
+    const empBtn = document.getElementById('employeesCornerBtn');
+    const overlay = document.getElementById('overlay');
+    const passwordPrompt = document.getElementById('passwordPrompt');
+    const empPassword = document.getElementById('empPassword');
+    const submitPassword = document.getElementById('submitPassword');
+    const errorMsg = document.getElementById('errorMsg');
+
+    empBtn.onclick = () => {
+      passwordPrompt.style.display = 'flex';
+      empPassword.value = '';
+      errorMsg.textContent = '';
+      empPassword.focus();
+    };
+
+    submitPassword.onclick = () => {
+      if(empPassword.value === 'j312gh') {
+        passwordPrompt.style.display = 'none';
+        overlay.style.display = 'flex';
+      } else {
+        errorMsg.textContent = 'Incorrect password. Please try again.';
+        empPassword.value = '';
+        empPassword.focus();
+      }
+    };
+
+    empPassword.addEventListener('keyup', function(e) {
+      if (e.key === 'Enter') {
+        submitPassword.onclick();
+      }
+    });
+
+    // Allow closing overlay by clicking outside
+    overlay.onclick = (e) => {
+      if (e.target === overlay) overlay.style.display = 'none';
+    };
+  </script>
 </body>
 </html>
